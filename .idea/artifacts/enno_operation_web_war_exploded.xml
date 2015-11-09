@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="enno-operation-web:war exploded">
+    <output-path>$PROJECT_DIR$/enno-operation-web/target/Web</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="enno-operation-web" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/enno-operation-web/target/Web/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="enno-operation-web/web/Web" />
+    </root>
+  </artifact>
+</component>

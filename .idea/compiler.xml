@@ -22,11 +22,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="enno-operation" />
+        <module name="enno-operation-Core" />
+        <module name="enno-operation-DAL" />
+        <module name="enno-operation-web" />
+        <module name="enno-operation-ZKL" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="enno-operation" target="1.5" />
+      <module name="enno-operation-Core" target="1.5" />
+      <module name="enno-operation-DAL" target="1.5" />
+      <module name="enno-operation-web" target="1.5" />
+      <module name="enno-operation-ZKL" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

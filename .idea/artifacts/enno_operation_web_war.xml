@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="enno-operation-web:war">
+    <output-path>$PROJECT_DIR$/enno-operation-web/target</output-path>
+    <root id="archive" name="Web.war">
+      <element id="artifact" artifact-name="enno-operation-web:war exploded" />
+    </root>
+  </artifact>
+</component>
