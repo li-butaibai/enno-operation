@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/enno-operation.iml" filepath="$PROJECT_DIR$/enno-operation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/enno-operation-Core/enno-operation-Core.iml" filepath="$PROJECT_DIR$/enno-operation-Core/enno-operation-Core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/enno-operation-DAL/enno-operation-DAL.iml" filepath="$PROJECT_DIR$/enno-operation-DAL/enno-operation-DAL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/enno-operation-ZKL/enno-operation-ZKL.iml" filepath="$PROJECT_DIR$/enno-operation-ZKL/enno-operation-ZKL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/enno-operation-web/enno-operation-web.iml" filepath="$PROJECT_DIR$/enno-operation-web/enno-operation-web.iml" />
+    </modules>
+  </component>
+</project>
