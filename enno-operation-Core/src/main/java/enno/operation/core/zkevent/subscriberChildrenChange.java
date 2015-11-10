@@ -9,6 +9,7 @@ import java.util.Map;
  */
 public class subscriberChildrenChange implements ZKListener {
     public void process(Map<String, String> nodes) {
-
+        if(!nodes.isEmpty())
+        {}
     }
 }

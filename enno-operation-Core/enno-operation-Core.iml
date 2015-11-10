@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="enno-operation-ZKL" />
+    <orderEntry type="module" module-name="enno-operation-ZKL" exported="" />
+    <orderEntry type="module" module-name="enno-operation-DAL" exported="" />
   </component>
 </module>
