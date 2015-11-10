@@ -11,40 +11,40 @@ import java.util.Map;
  */
 public class ZKClient {
     private ZooKeeper zooKeeper = null;
-    private ZKListener ennoClusterNodeChangeEvent = null;
+    private ZKListener subscriberNodeChangeEvent = null;
     private ZKListener eventSourceDataChangeEvent = null;
     private ZKListener eventSourceChildNodeChangeEvent = null;
     private String connectString = "";
     private int sessionTimeout = 1000;
     //    private long sessionId = 0;
-//    private String sessionPasswd = "";
-    private Map<String, String> eventSourceList = new HashMap<String, String>();
-    private String ennoClusterRootName = "/EnnoClusterRoot";
+    //private String sessionPasswd = "";
+    //private Map<String, String> eventSourceList = new HashMap<String, String>();
+    private String subscriberRootName = "/EnnoClusterRoot";
     private String eventSourceRootName = "/EventSourceRoot";
 
     public ZKClient() {
 
     }
 
-    public void start() {
+    public void start(Map<String, String> eventSourceList) {
         try {
             zooKeeper = new ZooKeeper(connectString, sessionTimeout, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        initializeSchema();
+        initializeSchema(eventSourceList);
     }
     private  void  processChildNodeAndData(List<String> nodes,ZKListener zkListener)
     {
-        Map<String, String> ennoNodes =null;
+        Map<String, String> nodeDatas = null;
         try {
-            ennoNodes = new HashMap<String, String>();
+            nodeDatas = new HashMap<String, String>();
             for (String node : nodes) {
                 String nodeData = new String(zooKeeper.getData(node, false, null));
-                ennoNodes.put(node, nodeData);
+                nodeDatas.put(node, nodeData);
             }
             if (zkListener != null) {
-                zkListener.process(ennoNodes);
+                zkListener.process(nodeDatas);
             }
         }catch (Exception ex)
         {
@@ -53,12 +53,12 @@ public class ZKClient {
     }
     private void processNodeAndData(String node,String data, ZKListener zkListener)
     {
-        Map<String, String> ennoNodes =null;
+        Map<String, String> nodeDatas = null;
         try {
-            ennoNodes = new HashMap<String, String>();
-            ennoNodes.put(node, data);
+            nodeDatas = new HashMap<String, String>();
+            nodeDatas.put(node, data);
             if (zkListener != null) {
-                zkListener.process(ennoNodes);
+                zkListener.process(nodeDatas);
             }
         }catch (Exception ex)
         {
@@ -66,26 +66,30 @@ public class ZKClient {
         }
     }
     //initialize the zookeeper schema, and add the watch to the event
-    private boolean initializeSchema() {
+    private boolean initializeSchema(Map<String, String> eventSourceList) {
         try {
             //initialize the enno cluster root node
-            if (zooKeeper.exists(ennoClusterRootName, false) == null) {
-                zooKeeper.create(ennoClusterRootName, ennoClusterRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            boolean newSubscriberRoot = false;
+            if (zooKeeper.exists(subscriberRootName, false) == null) {
+                zooKeeper.create(subscriberRootName, subscriberRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                newSubscriberRoot = true;
             }
             // watch the enno cluster root child node
-            Map<String,String> ennoNodes = new HashMap<String, String>();
-            List<String> ennoClusterChildrenNodes = zooKeeper.getChildren(ennoClusterRootName, new Watcher() {
+            List<String> ennoClusterChildrenNodes = zooKeeper.getChildren(subscriberRootName, new Watcher() {
                 //@Override
                 public void process(WatchedEvent event) {
                     try {
                         List<String> ennoClusterChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                        processChildNodeAndData(ennoClusterChildrenNodes,ennoClusterNodeChangeEvent);
+                        processChildNodeAndData(ennoClusterChildrenNodes, subscriberNodeChangeEvent);
                     }catch (Exception ex){
                         ex.printStackTrace();
                     }
                 }
             }, null);
-            processChildNodeAndData(ennoClusterChildrenNodes,ennoClusterNodeChangeEvent);
+            if (newSubscriberRoot == false) {
+                processChildNodeAndData(ennoClusterChildrenNodes, subscriberNodeChangeEvent);
+            }
+
             //initialize the event source root node
             if (zooKeeper.exists(eventSourceRootName, false) == null) {
                 zooKeeper.create(eventSourceRootName, eventSourceRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -94,8 +98,10 @@ public class ZKClient {
             for (Map.Entry<String, String> eventSource : eventSourceList.entrySet()) {
                 String path = eventSourceRootName + "/" + eventSource.getKey();
                 //create the sub event source node
+                boolean newEventSource = false;
                 if (zooKeeper.exists(path, false) == null) {
                     zooKeeper.create(path, eventSource.getValue().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                    newEventSource = true;
                 }
                 //watch the event source node data change event
                 byte[] nodeData = zooKeeper.getData(path, new Watcher() {
@@ -109,7 +115,9 @@ public class ZKClient {
                         }
                     }
                 }, null);
-                processNodeAndData(path,new String(nodeData), eventSourceDataChangeEvent);
+                if (newEventSource) {
+                    processNodeAndData(path, new String(nodeData), eventSourceDataChangeEvent);
+                }
                 //watch the event source children node change event
                 List<String> eventSourceChildrenNodes = zooKeeper.getChildren(path, new Watcher() {
                     //@Override
@@ -188,7 +196,7 @@ public class ZKClient {
     public void setEnnoData(String ennoName, String data)
     {
         try{
-            String path = String.format("%s/%s", ennoClusterRootName, ennoName);
+            String path = String.format("%s/%s", subscriberRootName, ennoName);
             if(zooKeeper.exists(path, false) != null) {
                 zooKeeper.setData(path, data.getBytes(), -1);
             }
@@ -201,8 +209,8 @@ public class ZKClient {
         return zooKeeper;
     }
 
-    public void setEnnoClusterNodeChangeEvent(ZKListener zkListener) {
-        ennoClusterNodeChangeEvent = zkListener;
+    public void setSubscriberNodeChangeEvent(ZKListener zkListener) {
+        subscriberNodeChangeEvent = zkListener;
     }
 
     public void setEventSourceDataChangeEvent(ZKListener zkListener) {
@@ -229,12 +237,12 @@ public class ZKClient {
         sessionTimeout = _sessionTimeout;
     }
 
-    public String getEnnoClusterRootName() {
-        return ennoClusterRootName;
+    public String getSubscriberRootName() {
+        return subscriberRootName;
     }
 
-    public void setEnnoClusterRootName(String _ennoClusterRootName) {
-        this.ennoClusterRootName = _ennoClusterRootName;
+    public void setSubscriberRootName(String _ennoClusterRootName) {
+        this.subscriberRootName = _ennoClusterRootName;
     }
 
     public String getEventSourceRootName() {
@@ -245,11 +253,40 @@ public class ZKClient {
         eventSourceRootName = _eventSourceRootName;
     }
 
-    public void setEventSourceList(Map<String, String> _eventSourceList) {
-        eventSourceList = _eventSourceList;
-    }
 
     public Map<String,String> getEventSourceList() {
+        Map<String,String> eventSourceList = new HashMap<String, String>();
+        try {
+            List<String> children = zooKeeper.getChildren(eventSourceRootName, false);
+            for(String child : children)
+            {
+                String childData = new String(zooKeeper.getData(child,false,null));
+                eventSourceList.put(child,childData);
+            }
+        }
+        catch (Exception ex)
+        {
+            eventSourceList.clear();
+            ex.printStackTrace();
+        }
         return eventSourceList;
+    }
+
+    public Map<String, String> getSubscriberList() {
+        Map<String,String> subscriberList = new HashMap<String, String>();
+        try {
+            List<String> children = zooKeeper.getChildren(subscriberRootName, false);
+            for(String child : children)
+            {
+                String childData = new String(zooKeeper.getData(child,false,null));
+                subscriberList.put(child, childData);
+            }
+        }
+        catch (Exception ex)
+        {
+            subscriberList.clear();
+            ex.printStackTrace();
+        }
+        return subscriberList;
     }
 }
