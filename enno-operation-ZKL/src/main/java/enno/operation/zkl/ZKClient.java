@@ -34,6 +34,7 @@ public class ZKClient {
         }
         initializeSchema(eventSourceList);
     }
+
     private  void  processChildNodeAndData(List<String> nodes,ZKListener zkListener)
     {
         Map<String, String> nodeDatas = null;
@@ -51,6 +52,7 @@ public class ZKClient {
             ex.printStackTrace();
         }
     }
+    
     private void processNodeAndData(String node,String data, ZKListener zkListener)
     {
         Map<String, String> nodeDatas = null;
@@ -125,12 +127,16 @@ public class ZKClient {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
                             processChildNodeAndData(eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
+                            for(String child : eventSourceChildrenNodes)
+                            {
+                                zooKeeper.delete(child,-1);
+                            }
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
                     }
                 }, null);
-                processChildNodeAndData(eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
+                processChildNodeAndData(eventSourceChildrenNodes, eventSourceChildNodeChangeEvent);
             }
             return true;
         } catch (Exception ex) {
@@ -164,8 +170,8 @@ public class ZKClient {
                     public void process(WatchedEvent event) {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                            processChildNodeAndData(eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
-                        }catch (Exception ex){
+                            processChildNodeAndData(eventSourceChildrenNodes, eventSourceChildNodeChangeEvent);
+                        } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     }
@@ -193,16 +199,64 @@ public class ZKClient {
         }
     }
 
-    public void setEnnoData(String ennoName, String data)
+    public void setSubscriberData(String subscriberId, String data)
     {
         try{
-            String path = String.format("%s/%s", subscriberRootName, ennoName);
+            String path = String.format("%s/%s", subscriberRootName, subscriberId);
             if(zooKeeper.exists(path, false) != null) {
                 zooKeeper.setData(path, data.getBytes(), -1);
             }
         }catch (Exception ex){
             ex.printStackTrace();
         }
+    }
+
+    public void setEventSourceData(String eventSourceId, String data)
+    {
+        try{
+            String path = String.format("%s/%s", eventSourceRootName, eventSourceId);
+            if(zooKeeper.exists(path, false) != null) {
+                zooKeeper.setData(path, data.getBytes(), -1);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public Map<String,String> getEventSourceList() {
+        Map<String,String> eventSourceList = new HashMap<String, String>();
+        try {
+            List<String> children = zooKeeper.getChildren(eventSourceRootName, false);
+            for(String child : children)
+            {
+                String childData = new String(zooKeeper.getData(child,false,null));
+                eventSourceList.put(child,childData);
+            }
+        }
+        catch (Exception ex)
+        {
+            eventSourceList.clear();
+            ex.printStackTrace();
+        }
+        return eventSourceList;
+    }
+
+    public Map<String, String> getSubscriberList() {
+        Map<String,String> subscriberList = new HashMap<String, String>();
+        try {
+            List<String> children = zooKeeper.getChildren(subscriberRootName, false);
+            for(String child : children)
+            {
+                String childData = new String(zooKeeper.getData(child,false,null));
+                subscriberList.put(child, childData);
+            }
+        }
+        catch (Exception ex)
+        {
+            subscriberList.clear();
+            ex.printStackTrace();
+        }
+        return subscriberList;
     }
 
     public ZooKeeper getZooKeeper() {
@@ -241,8 +295,8 @@ public class ZKClient {
         return subscriberRootName;
     }
 
-    public void setSubscriberRootName(String _ennoClusterRootName) {
-        this.subscriberRootName = _ennoClusterRootName;
+    public void setSubscriberRootName(String _subscriberRootName) {
+        this.subscriberRootName = _subscriberRootName;
     }
 
     public String getEventSourceRootName() {
@@ -251,42 +305,5 @@ public class ZKClient {
 
     public void setEventSourceRootName(String _eventSourceRootName) {
         eventSourceRootName = _eventSourceRootName;
-    }
-
-
-    public Map<String,String> getEventSourceList() {
-        Map<String,String> eventSourceList = new HashMap<String, String>();
-        try {
-            List<String> children = zooKeeper.getChildren(eventSourceRootName, false);
-            for(String child : children)
-            {
-                String childData = new String(zooKeeper.getData(child,false,null));
-                eventSourceList.put(child,childData);
-            }
-        }
-        catch (Exception ex)
-        {
-            eventSourceList.clear();
-            ex.printStackTrace();
-        }
-        return eventSourceList;
-    }
-
-    public Map<String, String> getSubscriberList() {
-        Map<String,String> subscriberList = new HashMap<String, String>();
-        try {
-            List<String> children = zooKeeper.getChildren(subscriberRootName, false);
-            for(String child : children)
-            {
-                String childData = new String(zooKeeper.getData(child,false,null));
-                subscriberList.put(child, childData);
-            }
-        }
-        catch (Exception ex)
-        {
-            subscriberList.clear();
-            ex.printStackTrace();
-        }
-        return subscriberList;
     }
 }

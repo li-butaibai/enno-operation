@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3757acc2-9b94-4f65-b67e-ac7449d383b7" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enno-operation-ZKL/src/main/java/enno/operation/zkl/ZKClient.java" afterPath="$PROJECT_DIR$/enno-operation-ZKL/src/main/java/enno/operation/zkl/ZKClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Enno.Operation.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,48 +63,34 @@
       <file leaf-file-name="ZKClient.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/enno-operation-ZKL/src/main/java/enno/operation/zkl/ZKClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.70731705">
-              <caret line="276" column="13" selection-start-line="276" selection-start-column="13" selection-end-line="276" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.7138211">
+              <caret line="297" column="56" selection-start-line="297" selection-start-column="56" selection-end-line="297" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#ZKClient#0;class#ZKClient#0" expanded="false" />
                 <element signature="method#start#0;class#ZKClient#0" expanded="false" />
+                <element signature="method#processChildNodeAndData#0;class#ZKClient#0" expanded="false" />
+                <element signature="method#processNodeAndData#0;class#ZKClient#0" expanded="false" />
                 <element signature="method#initializeSchema#0;class#ZKClient#0" expanded="false" />
-                <element signature="e#2774#3262#0" expanded="true" />
-                <element signature="e#3261#3262#0" expanded="true" />
-                <element signature="e#4395#4905#0" expanded="true" />
-                <element signature="e#4904#4905#0" expanded="true" />
-                <element signature="e#5218#5751#0" expanded="true" />
-                <element signature="e#5750#5751#0" expanded="true" />
+                <element signature="e#2780#3268#0" expanded="true" />
+                <element signature="e#3267#3268#0" expanded="true" />
+                <element signature="e#4401#4911#0" expanded="true" />
+                <element signature="e#4910#4911#0" expanded="true" />
+                <element signature="e#5224#5950#0" expanded="true" />
+                <element signature="e#5949#5950#0" expanded="true" />
                 <element signature="method#addEventSource#0;class#ZKClient#0" expanded="false" />
-                <element signature="e#6499#7009#0" expanded="true" />
-                <element signature="e#7008#7009#0" expanded="true" />
-                <element signature="e#7130#7663#0" expanded="true" />
-                <element signature="e#7662#7663#0" expanded="true" />
-                <element signature="e#8598#8599#0" expanded="true" />
-                <element signature="e#8630#8631#0" expanded="true" />
-                <element signature="e#8701#8702#0" expanded="true" />
-                <element signature="e#8755#8756#0" expanded="true" />
-                <element signature="e#8827#8828#0" expanded="true" />
-                <element signature="e#8882#8883#0" expanded="true" />
-                <element signature="e#9059#9060#0" expanded="true" />
-                <element signature="e#9095#9096#0" expanded="true" />
-                <element signature="e#9151#9152#0" expanded="true" />
-                <element signature="e#9194#9195#0" expanded="true" />
-                <element signature="e#9232#9233#0" expanded="true" />
-                <element signature="e#9269#9270#0" expanded="true" />
-                <element signature="e#9327#9328#0" expanded="true" />
-                <element signature="e#9375#9376#0" expanded="true" />
-                <element signature="e#9420#9421#0" expanded="true" />
-                <element signature="e#9461#9462#0" expanded="true" />
-                <element signature="e#9531#9532#0" expanded="true" />
-                <element signature="e#9593#9594#0" expanded="true" />
-                <element signature="e#9639#9640#0" expanded="true" />
-                <element signature="e#9681#9682#0" expanded="true" />
-                <element signature="e#9752#9753#0" expanded="true" />
-                <element signature="e#9810#9811#0" expanded="true" />
-                <element signature="e#9923#9939#0" expanded="true" />
-                <element signature="e#10528#10544#0" expanded="true" />
+                <element signature="e#6699#7209#0" expanded="true" />
+                <element signature="e#7208#7209#0" expanded="true" />
+                <element signature="e#7330#7866#0" expanded="true" />
+                <element signature="e#7865#7866#0" expanded="true" />
+                <element signature="method#removeEventSource#0;class#ZKClient#0" expanded="false" />
+                <element signature="method#setSubscriberData#0;class#ZKClient#0" expanded="false" />
+                <element signature="method#setEventSourceData#0;class#ZKClient#0" expanded="false" />
+                <element signature="method#getEventSourceList#0;class#ZKClient#0" expanded="false" />
+                <element signature="e#9277#9293#0" expanded="true" />
+                <element signature="method#getSubscriberList#0;class#ZKClient#0" expanded="false" />
+                <element signature="e#9882#9898#0" expanded="true" />
+                <element signature="method#setEventSourceChildNodeChangeEvent#0;class#ZKClient#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -357,41 +341,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="operation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="zkl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Enno.Operation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="enno-operation" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="enno-operation-ZKL" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="operation" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -995,7 +945,7 @@
       <option name="number" value="Default" />
       <updated>1447059889779</updated>
       <workItem from="1447059894055" duration="1855000" />
-      <workItem from="1447136033892" duration="2940000" />
+      <workItem from="1447136033892" duration="3354000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1447138398700</created>
@@ -1007,7 +957,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4795000" />
+    <option name="totallyTimeSpent" value="5209000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="735" extended-state="6" />
@@ -1050,7 +1000,9 @@
     <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -1198,48 +1150,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/enno-operation-ZKL/src/main/java/enno/operation/zkl/ZKClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70731705">
-          <caret line="276" column="13" selection-start-line="276" selection-start-column="13" selection-end-line="276" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.7138211">
+          <caret line="297" column="56" selection-start-line="297" selection-start-column="56" selection-end-line="297" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#ZKClient#0;class#ZKClient#0" expanded="false" />
             <element signature="method#start#0;class#ZKClient#0" expanded="false" />
+            <element signature="method#processChildNodeAndData#0;class#ZKClient#0" expanded="false" />
+            <element signature="method#processNodeAndData#0;class#ZKClient#0" expanded="false" />
             <element signature="method#initializeSchema#0;class#ZKClient#0" expanded="false" />
-            <element signature="e#2774#3262#0" expanded="true" />
-            <element signature="e#3261#3262#0" expanded="true" />
-            <element signature="e#4395#4905#0" expanded="true" />
-            <element signature="e#4904#4905#0" expanded="true" />
-            <element signature="e#5218#5751#0" expanded="true" />
-            <element signature="e#5750#5751#0" expanded="true" />
+            <element signature="e#2780#3268#0" expanded="true" />
+            <element signature="e#3267#3268#0" expanded="true" />
+            <element signature="e#4401#4911#0" expanded="true" />
+            <element signature="e#4910#4911#0" expanded="true" />
+            <element signature="e#5224#5950#0" expanded="true" />
+            <element signature="e#5949#5950#0" expanded="true" />
             <element signature="method#addEventSource#0;class#ZKClient#0" expanded="false" />
-            <element signature="e#6499#7009#0" expanded="true" />
-            <element signature="e#7008#7009#0" expanded="true" />
-            <element signature="e#7130#7663#0" expanded="true" />
-            <element signature="e#7662#7663#0" expanded="true" />
-            <element signature="e#8598#8599#0" expanded="true" />
-            <element signature="e#8630#8631#0" expanded="true" />
-            <element signature="e#8701#8702#0" expanded="true" />
-            <element signature="e#8755#8756#0" expanded="true" />
-            <element signature="e#8827#8828#0" expanded="true" />
-            <element signature="e#8882#8883#0" expanded="true" />
-            <element signature="e#9059#9060#0" expanded="true" />
-            <element signature="e#9095#9096#0" expanded="true" />
-            <element signature="e#9151#9152#0" expanded="true" />
-            <element signature="e#9194#9195#0" expanded="true" />
-            <element signature="e#9232#9233#0" expanded="true" />
-            <element signature="e#9269#9270#0" expanded="true" />
-            <element signature="e#9327#9328#0" expanded="true" />
-            <element signature="e#9375#9376#0" expanded="true" />
-            <element signature="e#9420#9421#0" expanded="true" />
-            <element signature="e#9461#9462#0" expanded="true" />
-            <element signature="e#9531#9532#0" expanded="true" />
-            <element signature="e#9593#9594#0" expanded="true" />
-            <element signature="e#9639#9640#0" expanded="true" />
-            <element signature="e#9681#9682#0" expanded="true" />
-            <element signature="e#9752#9753#0" expanded="true" />
-            <element signature="e#9810#9811#0" expanded="true" />
-            <element signature="e#9923#9939#0" expanded="true" />
-            <element signature="e#10528#10544#0" expanded="true" />
+            <element signature="e#6699#7209#0" expanded="true" />
+            <element signature="e#7208#7209#0" expanded="true" />
+            <element signature="e#7330#7866#0" expanded="true" />
+            <element signature="e#7865#7866#0" expanded="true" />
+            <element signature="method#removeEventSource#0;class#ZKClient#0" expanded="false" />
+            <element signature="method#setSubscriberData#0;class#ZKClient#0" expanded="false" />
+            <element signature="method#setEventSourceData#0;class#ZKClient#0" expanded="false" />
+            <element signature="method#getEventSourceList#0;class#ZKClient#0" expanded="false" />
+            <element signature="e#9277#9293#0" expanded="true" />
+            <element signature="method#getSubscriberList#0;class#ZKClient#0" expanded="false" />
+            <element signature="e#9882#9898#0" expanded="true" />
+            <element signature="method#setEventSourceChildNodeChangeEvent#0;class#ZKClient#0" expanded="false" />
           </folding>
         </state>
       </provider>
