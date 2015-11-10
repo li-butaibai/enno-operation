@@ -25,7 +25,7 @@ public class eventSourceOperation {
 
         try {
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("");
+            Query q = session.createQuery("from EventsourceEntity es where es.status = 1 and es.dataStatus = 1");
             esList = (List<EventsourceEntity>)q.list();
             return esList;
         }
@@ -34,12 +34,13 @@ public class eventSourceOperation {
         }
     }
 
+    //通过Id获取指定的EventSource
     public EventsourceEntity getEventSourceById(int Id) throws Exception{
         List<EventsourceEntity> esList = null;
 
         try {
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("");
+            Query q = session.createQuery("from EventsourceEntity es where es.id = " + Id);
             esList = (List<EventsourceEntity>)q.list();
             return esList.get(0);
         }
