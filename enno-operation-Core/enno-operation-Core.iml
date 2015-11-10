@@ -13,5 +13,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="enno-operation-ZKL" exported="" />
     <orderEntry type="module" module-name="enno-operation-DAL" exported="" />
+    <orderEntry type="library" name="Hibernate 4.2.2-4.2.2" level="project" />
   </component>
 </module>
