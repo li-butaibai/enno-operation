@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="enno.operation.dal.EventsourceTemplateEntity" table="eventsource_template" schema=""
+           catalog="enno_operationserverdb">
+        <id name="id">
+            <column name="Id" sql-type="int unsigned" not-null="true"/>
+        </id>
+        <property name="name">
+            <column name="Name" sql-type="varchar" length="45"/>
+        </property>
+        <property name="protocol">
+            <column name="Protocol" sql-type="varchar" length="45"/>
+        </property>
+        <property name="createTime">
+            <column name="CreateTime" sql-type="datetime"/>
+        </property>
+        <property name="updateTime">
+            <column name="UpdateTime" sql-type="datetime"/>
+        </property>
+        <property name="comments">
+            <column name="Comments" sql-type="varchar" length="200"/>
+        </property>
+    </class>
+</hibernate-mapping>
