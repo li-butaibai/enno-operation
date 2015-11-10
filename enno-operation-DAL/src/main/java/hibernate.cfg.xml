@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://el-dev.chinacloudapp.cn:3306/enno_operationserverdb</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <mapping resource="enno/operation/dal/EventLogEntity.hbm.xml"/>
+        <mapping class="enno.operation.dal.EventLogEntity"/>
+        <mapping class="enno.operation.dal.EventsourceEntity"/>
+        <mapping resource="enno/operation/dal/EventsourceEntity.hbm.xml"/>
+        <mapping resource="enno/operation/dal/EventsourceActivityEntity.hbm.xml"/>
+        <mapping class="enno.operation.dal.EventsourceActivityEntity"/>
+        <mapping resource="enno/operation/dal/EventsourceSubscriberMapEntity.hbm.xml"/>
+        <mapping class="enno.operation.dal.EventsourceSubscriberMapEntity"/>
+        <mapping resource="enno/operation/dal/EventsourceTemplateEntity.hbm.xml"/>
+        <mapping class="enno.operation.dal.EventsourceTemplateEntity"/>
+        <mapping resource="enno/operation/dal/EventsourceTemplateActivityEntity.hbm.xml"/>
+        <mapping class="enno.operation.dal.EventsourceTemplateActivityEntity"/>
+        <mapping resource="enno/operation/dal/SubscriberEntity.hbm.xml"/>
+        <mapping class="enno.operation.dal.SubscriberEntity"/>
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hbm2ddl.auto">update</property> -->
+    </session-factory>
+</hibernate-configuration>
