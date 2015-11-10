@@ -16,9 +16,6 @@ public class ZKClient {
     private ZKListener eventSourceChildNodeChangeEvent = null;
     private String connectString = "";
     private int sessionTimeout = 1000;
-    //private long sessionId = 0;
-    //private String sessionPasswd = "";
-    //private Map<String, String> eventSourceList = new HashMap<String, String>();
     private String subscriberRootName = "/EnnoClusterRoot";
     private String eventSourceRootName = "/EventSourceRoot";
 
