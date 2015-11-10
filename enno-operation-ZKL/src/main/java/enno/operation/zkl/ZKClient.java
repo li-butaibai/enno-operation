@@ -32,13 +32,13 @@ public class ZKClient {
         initializeSchema(eventSourceList);
     }
 
-    private  void  processChildNodeAndData(List<String> nodes,ZKListener zkListener)
+    private  void  processChildNodeAndData(String path, List<String> nodes,ZKListener zkListener)
     {
         Map<String, String> nodeDatas = null;
         try {
             nodeDatas = new HashMap<String, String>();
             for (String node : nodes) {
-                String nodeData = new String(zooKeeper.getData(node, false, null));
+                String nodeData = new String(zooKeeper.getData(path+"/"+node, false, null));
                 nodeDatas.put(node, nodeData);
             }
             if (zkListener != null) {
@@ -79,14 +79,14 @@ public class ZKClient {
                 public void process(WatchedEvent event) {
                     try {
                         List<String> ennoClusterChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                        processChildNodeAndData(ennoClusterChildrenNodes, subscriberNodeChangeEvent);
+                        processChildNodeAndData(event.getPath(),ennoClusterChildrenNodes, subscriberNodeChangeEvent);
                     }catch (Exception ex){
                         ex.printStackTrace();
                     }
                 }
             }, null);
             if (newSubscriberRoot == false) {
-                processChildNodeAndData(ennoClusterChildrenNodes, subscriberNodeChangeEvent);
+                processChildNodeAndData(subscriberRootName, ennoClusterChildrenNodes, subscriberNodeChangeEvent);
             }
 
             //initialize the event source root node
@@ -123,7 +123,7 @@ public class ZKClient {
                     public void process(WatchedEvent event) {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                            processChildNodeAndData(eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
+                            processChildNodeAndData(event.getPath(),eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
                             for(String child : eventSourceChildrenNodes)
                             {
                                 zooKeeper.delete(child,-1);
@@ -133,7 +133,7 @@ public class ZKClient {
                         }
                     }
                 }, null);
-                processChildNodeAndData(eventSourceChildrenNodes, eventSourceChildNodeChangeEvent);
+                processChildNodeAndData(eventSourceRootName,eventSourceChildrenNodes, eventSourceChildNodeChangeEvent);
             }
             return true;
         } catch (Exception ex) {
@@ -143,7 +143,7 @@ public class ZKClient {
     }
 
     //add new event source to zookeeper
-    public void addEventSource(String eventSourceName, String eventSourceData)
+    public void addEventSource(String eventSourceName, final String eventSourceData)
     {
         try {
             String path = eventSourceRootName + "/" + eventSourceName;
@@ -167,7 +167,7 @@ public class ZKClient {
                     public void process(WatchedEvent event) {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                            processChildNodeAndData(eventSourceChildrenNodes, eventSourceChildNodeChangeEvent);
+                            processChildNodeAndData(event.getPath(), eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
