@@ -20,7 +20,7 @@ public class Main {
         try {
             Configuration configuration = new Configuration();
             //configuration.configure();
-            configuration.configure("hibernate.cfg.xml");
+            configuration.configure();
             serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
             ourSessionFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
