@@ -4,7 +4,6 @@ import enno.operation.dal.EventsourceEntity;
 import enno.operation.dal.hibernateHelper;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.List;
