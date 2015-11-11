@@ -23,5 +23,8 @@
         <property name="message">
             <column name="Message" sql-type="varchar" length="200"/>
         </property>
+        <property name="createTime">
+            <column name="CreateTime" sql-type="datetime"/>
+        </property>
     </class>
 </hibernate-mapping>

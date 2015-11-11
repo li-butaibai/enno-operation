@@ -1,6 +1,7 @@
 package enno.operation.dal;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
  * Created by EriclLee on 15/11/10.
@@ -14,6 +15,7 @@ public class EventLogEntity {
     private String title;
     private Integer level;
     private String message;
+    private Timestamp createTime;
 
     @Id
     @Column(name = "Id", nullable = false, insertable = true, updatable = true)
@@ -100,5 +102,15 @@ public class EventLogEntity {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Basic
+    @Column(name = "CreateTime", nullable = true, insertable = true, updatable = true)
+    public java.sql.Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(java.sql.Timestamp createTime) {
+        this.createTime = createTime;
     }
 }
