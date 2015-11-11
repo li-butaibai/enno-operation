@@ -13,6 +13,7 @@ public class EventLogModel {
     private int subscriberId;
     private SubscriberModel subscriberModel;
     private String title;
+    private String message;
 
     public int getId() {
         return id;
@@ -37,6 +38,7 @@ public class EventLogModel {
     public void setEventSourceModel(EventSourceModel eventSourceModel) {
         this.eventSourceModel = eventSourceModel;
     }
+
     public int getLevel() {
         return level;
     }
@@ -52,6 +54,7 @@ public class EventLogModel {
     public void setSubscriberId(int subscriberId) {
         this.subscriberId = subscriberId;
     }
+
     public SubscriberModel getSubscriberModel() {
         return subscriberModel;
     }
@@ -66,5 +69,13 @@ public class EventLogModel {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

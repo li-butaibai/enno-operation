@@ -20,5 +20,8 @@
         <property name="level">
             <column name="Level" sql-type="int unsigned"/>
         </property>
+        <property name="message">
+            <column name="Message" sql-type="varchar" length="200"/>
+        </property>
     </class>
 </hibernate-mapping>
