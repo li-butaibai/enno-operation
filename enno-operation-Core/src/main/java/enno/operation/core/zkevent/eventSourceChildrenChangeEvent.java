@@ -20,25 +20,23 @@ public class eventSourceChildrenChangeEvent implements ZKListener {
         Session session = null;
         try {
             session = hibernateHelper.getSessionFactory().openSession();
-
-            for(Map.Entry<String,String> node : nodes.entrySet()){
-            String path = node.getKey();
+            for (Map.Entry<String, String> node : nodes.entrySet()) {
+                String path = node.getKey();
                 String data = node.getValue();
                 try {
-                DataConversionFactory<EventLogModel> dataConversionFactory = new DataConversionFactory<EventLogModel>();
-                IDataConversion<EventLogModel> dataConversion = dataConversionFactory.createDataConversion(LogDataConversion.class);
-                EventLogModel eventLogModel = dataConversion.Decode(path, data);
-                EventLogEntity eventLogEntity = new EventLogEntity();
-                eventLogEntity.setEventSourceId(eventLogModel.getEventSourceModel().getId());
-                eventLogEntity.setSubscriberId(eventLogModel.getSubscriberModel().getId());
-                eventLogEntity.setLevel(eventLogModel.getLevel());
-                eventLogEntity.setTitle(eventLogModel.getTitle());
+                    DataConversionFactory<EventLogModel> dataConversionFactory = new DataConversionFactory<EventLogModel>();
+                    IDataConversion<EventLogModel> dataConversion = dataConversionFactory.createDataConversion(LogDataConversion.class);
+                    EventLogModel eventLogModel = dataConversion.Decode(path, data);
+                    EventLogEntity eventLogEntity = new EventLogEntity();
+                    eventLogEntity.setEventSourceId(eventLogModel.getEventSourceModel().getId());
+                    eventLogEntity.setSubscriberId(eventLogModel.getSubscriberModel().getId());
+                    eventLogEntity.setLevel(eventLogModel.getLevel());
+                    eventLogEntity.setTitle(eventLogModel.getTitle());
                     session.save(eventLogEntity);
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
