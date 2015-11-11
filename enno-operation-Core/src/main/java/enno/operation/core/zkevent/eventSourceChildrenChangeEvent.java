@@ -9,7 +9,6 @@ import enno.operation.dal.hibernateHelper;
 import enno.operation.zkl.ZKListener;
 import org.hibernate.Session;
 
-import java.awt.*;
 import java.util.Map;
 
 /**
@@ -18,11 +17,14 @@ import java.util.Map;
 public class eventSourceChildrenChangeEvent implements ZKListener {
 
     public void process(Map<String, String> nodes) {
-        Session session = hibernateHelper.getSessionFactory().openSession();
-        for(Map.Entry<String,String> node : nodes.entrySet()){
+        Session session = null;
+        try {
+            session = hibernateHelper.getSessionFactory().openSession();
+
+            for(Map.Entry<String,String> node : nodes.entrySet()){
             String path = node.getKey();
-            String data = node.getValue();
-            try {
+                String data = node.getValue();
+                try {
                 DataConversionFactory<EventLogModel> dataConversionFactory = new DataConversionFactory<EventLogModel>();
                 IDataConversion<EventLogModel> dataConversion = dataConversionFactory.createDataConversion(LogDataConversion.class);
                 EventLogModel eventLogModel = dataConversion.Decode(path, data);
@@ -31,9 +33,17 @@ public class eventSourceChildrenChangeEvent implements ZKListener {
                 eventLogEntity.setSubscriberId(eventLogModel.getSubscriberModel().getId());
                 eventLogEntity.setLevel(eventLogModel.getLevel());
                 eventLogEntity.setTitle(eventLogModel.getTitle());
+                    session.save(eventLogEntity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
         }
     }
 }
