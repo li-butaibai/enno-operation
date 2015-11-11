@@ -13,6 +13,7 @@ public class EventLogEntity {
     private Integer subscriberId;
     private String title;
     private Integer level;
+    private String message;
 
     @Id
     @Column(name = "Id", nullable = false, insertable = true, updatable = true)
@@ -89,5 +90,15 @@ public class EventLogEntity {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (level != null ? level.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "Message", nullable = true, insertable = true, updatable = true, length = 200)
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

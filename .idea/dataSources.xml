@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3020545901">
+  <component name="DataSourceManagerImpl" format="xml" hash="772277488">
     <data-source source="LOCAL" name="MySQL - enno_operationserverdb@el-dev.chinacloudapp.cn" uuid="32339cb3-eb8d-4102-8cbe-df6acb8ddaf4">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
