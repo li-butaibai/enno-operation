@@ -11,7 +11,7 @@ public class EventSourceDataConversion implements IDataConversion<EventSourceMod
     {
         return null;
     }
-    public EventSourceModel Decode(String data)
+    public EventSourceModel Decode(String path,String data)
     {
         return null;
     }

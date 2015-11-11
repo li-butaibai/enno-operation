@@ -10,7 +10,7 @@ public class SubscriberDataConversion implements IDataConversion<SubscriberModel
     {
         return null;
     }
-    public SubscriberModel Decode(String data)
+    public SubscriberModel Decode(String path,String data)
     {
         return null;
     }
