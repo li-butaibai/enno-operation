@@ -7,6 +7,7 @@ import java.util.List;
  * Created by sabermai on 2015/11/11.
  */
 public class SubscriberModel {
+    private int id;
     private String name;
     private String address;
     private String comments;
@@ -14,6 +15,13 @@ public class SubscriberModel {
     private Timestamp createTime;
     private Timestamp updateTime;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getName() {
         return name;
     }
