@@ -9,6 +9,7 @@ public class DataConversionFactory<T> {
             Class cls = Class.forName(className);
             return createDataConversion(cls);
         } catch (Exception ex) {
+            getClass().getGenericSuperclass();
             ex.printStackTrace();
         }
         return null;

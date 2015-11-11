@@ -40,6 +40,7 @@ public class subscriberChildrenChange implements ZKListener {
                         transaction.rollback();
                     }
                     ex.printStackTrace();
+
                 }
             } else {
 //
