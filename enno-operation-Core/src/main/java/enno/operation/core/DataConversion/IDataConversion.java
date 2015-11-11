@@ -7,5 +7,5 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public interface IDataConversion<T> {
     public String Encode(T model);
-    public T Decode(String data);
+    public T Decode(String path, String data);
 }
