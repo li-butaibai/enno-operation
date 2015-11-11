@@ -6,6 +6,10 @@
     <session-factory>
         <property name="connection.url">jdbc:mysql://el-dev.chinacloudapp.cn:3306/enno_operationserverdb</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <!--<property name="hibernate.connection.username">root</property>-->
+        <!--<property name="hibernate.connection.password">abcd1234!</property>-->
+        <!--<property name="dialect">org.hibernate.dialect.MySQLDialect</property>-->
+        <!--<property name="hibernate.current_session_context_class">thread</property>-->
         <mapping resource="enno/operation/dal/EventLogEntity.hbm.xml"/>
         <mapping class="enno.operation.dal.EventLogEntity"/>
         <mapping class="enno.operation.dal.EventsourceEntity"/>
