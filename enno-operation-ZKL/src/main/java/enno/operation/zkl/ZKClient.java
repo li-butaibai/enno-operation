@@ -1,7 +1,14 @@
 package enno.operation.zkl;
 
+import enno.operation.ZKListener.EventLogListener;
+import enno.operation.ZKListener.EventSourceListener;
+import enno.operation.ZKListener.SubscriberClusterListener;
+import enno.operation.zkmodel.EventLogData;
+import enno.operation.zkmodel.EventSourceData;
+import enno.operation.zkmodel.SubscriberData;
+import net.sf.json.JSONObject;
 import org.apache.zookeeper.*;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +18,14 @@ import java.util.Map;
  */
 public class ZKClient {
     private ZooKeeper zooKeeper = null;
-    private ZKListener subscriberNodeChangeEvent = null;
-    private ZKListener eventSourceDataChangeEvent = null;
-    private ZKListener eventSourceChildNodeChangeEvent = null;
+    private SubscriberClusterListener subscriberClusterEvent = null;
+    private EventLogListener eventLogEvent = null;
+    private EventSourceListener eventSourceEvent = null;
     private String connectString = "";
     private int sessionTimeout = 1000;
     private String subscriberRootName = "/EnnoClusterRoot";
     private String eventSourceRootName = "/EventSourceRoot";
+    private String eventLogRootName = "/EventLogRoot";
 
     public ZKClient() {
 
@@ -32,38 +40,71 @@ public class ZKClient {
         initializeSchema(eventSourceList);
     }
 
-    private  void  processChildNodeAndData(String path, List<String> nodes,ZKListener zkListener)
+    private void processSubscriberList(List<String> nodes)
     {
-        Map<String, String> nodeDatas = null;
         try {
-            nodeDatas = new HashMap<String, String>();
+            List<SubscriberData> subscriberDataList = new ArrayList<SubscriberData>();
             for (String node : nodes) {
-                String nodeData = new String(zooKeeper.getData(path+"/"+node, false, null));
-                nodeDatas.put(node, nodeData);
+                SubscriberData subscriberData = new SubscriberData();
+                subscriberData.setSubscriberId(node);
+                String nodeData = new String(zooKeeper.getData(subscriberRootName + "/" + node, false, null));
+                subscriberData.setSubscriberData(nodeData);
+                subscriberDataList.add(subscriberData);
             }
-            if (zkListener != null) {
-                zkListener.process(nodeDatas);
+            if(subscriberClusterEvent != null)
+            {
+                subscriberClusterEvent.process(subscriberDataList);
             }
         }catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
-    
-    private void processNodeAndData(String node,String data, ZKListener zkListener)
+
+    private void processEventSource(String parentNode, List<String> nodes)
     {
-        Map<String, String> nodeDatas = null;
         try {
-            nodeDatas = new HashMap<String, String>();
-            nodeDatas.put(node, data);
-            if (zkListener != null) {
-                zkListener.process(nodeDatas);
+            EventSourceData eventSourceData = new EventSourceData();
+            eventSourceData.setEventSourceId(parentNode);
+            List<SubscriberData> subscriberDataList = new ArrayList<SubscriberData>();
+            for (String node : nodes) {
+                SubscriberData subscriberData = new SubscriberData();
+                subscriberData.setSubscriberId(node);
+                String nodeData = new String(zooKeeper.getData(subscriberRootName + "/" + node, false, null));
+                subscriberData.setSubscriberData(nodeData);
+                subscriberDataList.add(subscriberData);
+            }
+            eventSourceData.setSubscribers(subscriberDataList);
+            if(eventSourceEvent != null)
+            {
+                eventSourceEvent.process(eventSourceData);
             }
         }catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
+
+    private void processEventLog(List<String> nodes)
+    {
+        try {
+            List<EventLogData> eventLogDataList = new ArrayList<EventLogData>();
+            for (String node : nodes) {
+                String nodeData = new String(zooKeeper.getData(eventLogRootName + "/" + node, false, null));
+                JSONObject jsonObject = JSONObject.fromObject(nodeData);
+                EventLogData eventLogData =(EventLogData)JSONObject.toBean(jsonObject, EventLogData.class);
+                eventLogDataList.add(eventLogData);
+            }
+            if(eventLogEvent != null)
+            {
+                eventLogEvent.process(eventLogDataList);
+            }
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
     //initialize the zookeeper schema, and add the watch to the event
     private boolean initializeSchema(Map<String, String> eventSourceList) {
         try {
@@ -74,19 +115,19 @@ public class ZKClient {
                 newSubscriberRoot = true;
             }
             // watch the enno cluster root child node
-            List<String> ennoClusterChildrenNodes = zooKeeper.getChildren(subscriberRootName, new Watcher() {
+            List<String> clusterChildrenNodes = zooKeeper.getChildren(subscriberRootName, new Watcher() {
                 //@Override
                 public void process(WatchedEvent event) {
                     try {
-                        List<String> ennoClusterChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                        processChildNodeAndData(event.getPath(),ennoClusterChildrenNodes, subscriberNodeChangeEvent);
+                        List<String> clusterChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
+                        processSubscriberList(clusterChildrenNodes);
                     }catch (Exception ex){
                         ex.printStackTrace();
                     }
                 }
             }, null);
             if (newSubscriberRoot == false) {
-                processChildNodeAndData(subscriberRootName, ennoClusterChildrenNodes, subscriberNodeChangeEvent);
+                processSubscriberList(clusterChildrenNodes);
             }
 
             //initialize the event source root node
@@ -94,7 +135,7 @@ public class ZKClient {
                 zooKeeper.create(eventSourceRootName, eventSourceRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
             //initialize the sub event source node
-            for (Map.Entry<String, String> eventSource : eventSourceList.entrySet()) {
+            for (final Map.Entry<String, String> eventSource : eventSourceList.entrySet()) {
                 String path = eventSourceRootName + "/" + eventSource.getKey();
                 //create the sub event source node
                 boolean newEventSource = false;
@@ -102,39 +143,37 @@ public class ZKClient {
                     zooKeeper.create(path, eventSource.getValue().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
                     newEventSource = true;
                 }
-                //watch the event source node data change event
-                byte[] nodeData = zooKeeper.getData(path, new Watcher() {
-                    //@Override
-                    public void process(WatchedEvent event) {
-                        try {
-                            String nodeData = new String(zooKeeper.getData(event.getPath(), this, null));
-                            processNodeAndData(event.getPath(),nodeData, eventSourceDataChangeEvent);
-                        }catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                }, null);
-                if (newEventSource) {
-                    processNodeAndData(path, new String(nodeData), eventSourceDataChangeEvent);
-                }
                 //watch the event source children node change event
                 List<String> eventSourceChildrenNodes = zooKeeper.getChildren(path, new Watcher() {
                     //@Override
                     public void process(WatchedEvent event) {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                            processChildNodeAndData(event.getPath(),eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
-                            for(String child : eventSourceChildrenNodes)
-                            {
-                                zooKeeper.delete(child,-1);
-                            }
+                            processEventSource(eventSource.getKey(), eventSourceChildrenNodes);
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
                     }
                 }, null);
-                processChildNodeAndData(eventSourceRootName,eventSourceChildrenNodes, eventSourceChildNodeChangeEvent);
+                processEventSource(eventSource.getKey(), eventSourceChildrenNodes);
             }
+
+            //initialize the event log root node
+            if (zooKeeper.exists(eventLogRootName, false) == null) {
+                zooKeeper.create(eventLogRootName, eventLogRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            }
+            zooKeeper.getChildren(eventLogRootName, new Watcher() {
+                //@Override
+                public void process(WatchedEvent event) {
+                    try {
+                        List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
+                        processEventLog(eventSourceChildrenNodes);
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }, null);
+
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -149,25 +188,13 @@ public class ZKClient {
             String path = eventSourceRootName + "/" + eventSourceName;
             if (zooKeeper.exists(path, false) == null) {
                 zooKeeper.create(path, eventSourceData.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-                //watch the event source node data change event
-                zooKeeper.getData(path, new Watcher() {
-                    //@Override
-                    public void process(WatchedEvent event) {
-                        try {
-                            String nodeData = new String(zooKeeper.getData(event.getPath(), this, null));
-                            processNodeAndData(event.getPath(),nodeData, eventSourceDataChangeEvent);
-                        }catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                }, null);
                 //watch the event source children node change event
                 zooKeeper.getChildren(path, new Watcher() {
                     //@Override
                     public void process(WatchedEvent event) {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
-                            processChildNodeAndData(event.getPath(), eventSourceChildrenNodes,eventSourceChildNodeChangeEvent);
+                            processEventSource(eventSourceData, eventSourceChildrenNodes);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -260,16 +287,16 @@ public class ZKClient {
         return zooKeeper;
     }
 
-    public void setSubscriberNodeChangeEvent(ZKListener zkListener) {
-        subscriberNodeChangeEvent = zkListener;
+    public void setSubscriberClusterEvent(SubscriberClusterListener zkListener) {
+        subscriberClusterEvent = zkListener;
     }
 
-    public void setEventSourceDataChangeEvent(ZKListener zkListener) {
-        eventSourceDataChangeEvent = zkListener;
+    public void setEventLogEvent(EventLogListener zkListener) {
+         eventLogEvent= zkListener;
     }
 
-    public void setEventSourceChildNodeChangeEvent(ZKListener zkListener) {
-        eventSourceChildNodeChangeEvent = zkListener;
+    public void setEventSourceEvent(EventSourceListener zkListener) {
+        eventSourceEvent = zkListener;
     }
 
     public String getConnectString() {
@@ -302,5 +329,13 @@ public class ZKClient {
 
     public void setEventSourceRootName(String _eventSourceRootName) {
         eventSourceRootName = _eventSourceRootName;
+    }
+
+    public String getEventLogRootName() {
+        return eventLogRootName;
+    }
+
+    public void setEventLogRootName(String eventLogRootName) {
+        this.eventLogRootName = eventLogRootName;
     }
 }
