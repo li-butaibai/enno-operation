@@ -9,7 +9,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
 /**
  * Created by sabermai on 2015/11/10.
  */
-public class hibernateHelper {
+public class hibernateUtil {
     private static final SessionFactory ourSessionFactory;
     private static final ServiceRegistry serviceRegistry;
 

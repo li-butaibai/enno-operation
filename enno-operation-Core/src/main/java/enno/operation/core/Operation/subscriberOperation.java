@@ -2,8 +2,7 @@ package enno.operation.core.Operation;
 
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.PageDivisionQueryResultModel;
-import enno.operation.dal.SubscriberEntity;
-import enno.operation.dal.hibernateHelper;
+import enno.operation.dal.hibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -15,7 +14,7 @@ public class subscriberOperation {
     private Session session = null;
 
     public subscriberOperation(){
-        this.session = hibernateHelper.getSessionFactory().openSession();
+        this.session = hibernateUtil.getSessionFactory().openSession();
     }
 
     //获取Subscriber列表，分页

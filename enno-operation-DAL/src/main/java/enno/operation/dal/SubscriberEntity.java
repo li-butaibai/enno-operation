@@ -1,13 +1,10 @@
 package enno.operation.dal;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by EriclLee on 15/11/10.
+ * Created by sabermai on 2015/11/13.
  */
-@Entity
-@Table(name = "subscriber", schema = "", catalog = "enno_operationserverdb")
 public class SubscriberEntity {
     private int id;
     private String name;
@@ -18,8 +15,6 @@ public class SubscriberEntity {
     private Integer status;
     private Integer dataStatus;
 
-    @Id
-    @Column(name = "Id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -28,8 +23,6 @@ public class SubscriberEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "Name", nullable = true, insertable = true, updatable = true, length = 45)
     public String getName() {
         return name;
     }
@@ -38,8 +31,6 @@ public class SubscriberEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "Address", nullable = true, insertable = true, updatable = true, length = 45)
     public String getAddress() {
         return address;
     }
@@ -48,8 +39,6 @@ public class SubscriberEntity {
         this.address = address;
     }
 
-    @Basic
-    @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
         return comments;
     }
@@ -58,8 +47,6 @@ public class SubscriberEntity {
         this.comments = comments;
     }
 
-    @Basic
-    @Column(name = "CreateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -68,8 +55,6 @@ public class SubscriberEntity {
         this.createTime = createTime;
     }
 
-    @Basic
-    @Column(name = "UpdateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getUpdateTime() {
         return updateTime;
     }
@@ -78,8 +63,6 @@ public class SubscriberEntity {
         this.updateTime = updateTime;
     }
 
-    @Basic
-    @Column(name = "Status", nullable = true, insertable = true, updatable = true)
     public Integer getStatus() {
         return status;
     }
@@ -88,8 +71,6 @@ public class SubscriberEntity {
         this.status = status;
     }
 
-    @Basic
-    @Column(name = "DataStatus", nullable = true, insertable = true, updatable = true)
     public Integer getDataStatus() {
         return dataStatus;
     }

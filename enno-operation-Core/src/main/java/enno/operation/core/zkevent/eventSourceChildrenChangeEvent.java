@@ -4,8 +4,7 @@ import enno.operation.core.DataConversion.DataConversionFactory;
 import enno.operation.core.DataConversion.IDataConversion;
 import enno.operation.core.DataConversion.LogDataConversion;
 import enno.operation.core.model.EventLogModel;
-import enno.operation.dal.EventLogEntity;
-import enno.operation.dal.hibernateHelper;
+import enno.operation.dal.hibernateUtil;
 import enno.operation.zkl.ZKListener;
 import org.hibernate.Session;
 
@@ -19,7 +18,7 @@ public class eventSourceChildrenChangeEvent implements ZKListener {
     public void process(Map<String, String> nodes) {
         Session session = null;
         try {
-            session = hibernateHelper.getSessionFactory().openSession();
+            session = hibernateUtil.getSessionFactory().openSession();
             for (Map.Entry<String, String> node : nodes.entrySet()) {
                 String path = node.getKey();
                 String data = node.getValue();

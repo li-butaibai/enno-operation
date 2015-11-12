@@ -9,9 +9,6 @@
         <id name="id">
             <column name="Id" sql-type="int unsigned" not-null="true"/>
         </id>
-        <property name="eventSourceTemplateId">
-            <column name="EventSourceTemplateId" sql-type="int unsigned" not-null="true"/>
-        </property>
         <property name="name">
             <column name="Name" sql-type="varchar" length="45"/>
         </property>

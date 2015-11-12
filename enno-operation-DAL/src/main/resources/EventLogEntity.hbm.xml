@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
     <class name="enno.operation.dal.EventLogEntity" table="event_log" schema="" catalog="enno_operationserverdb">
         <id name="id">
             <column name="Id" sql-type="int unsigned" not-null="true"/>
         </id>
-        <property name="eventSourceId">
+        <!--<property name="eventSourceId">
             <column name="EventSourceId" sql-type="int unsigned"/>
-        </property>
+        </property>-->
         <property name="subscriberId">
             <column name="SubscriberId" sql-type="int unsigned"/>
         </property>
@@ -26,5 +26,6 @@
         <property name="createTime">
             <column name="CreateTime" sql-type="datetime"/>
         </property>
+        <many-to-one name="eventsourceEntity" column="EventSourceId" class="enno.operation.dal.EventsourceEntity"/>
     </class>
 </hibernate-mapping>

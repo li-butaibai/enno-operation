@@ -1,22 +1,15 @@
 package enno.operation.dal;
 
-import javax.persistence.*;
-
 /**
- * Created by EriclLee on 15/11/10.
+ * Created by sabermai on 2015/11/13.
  */
-@Entity
-@Table(name = "eventsource_template_activity", schema = "", catalog = "enno_operationserverdb")
 public class EventsourceTemplateActivityEntity {
     private int id;
-    private int eventSourceTemplateId;
     private String name;
     private String displayName;
     private String comments;
     private Integer allowNull;
 
-    @Id
-    @Column(name = "Id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -25,18 +18,6 @@ public class EventsourceTemplateActivityEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "EventSourceTemplateId", nullable = false, insertable = true, updatable = true)
-    public int getEventSourceTemplateId() {
-        return eventSourceTemplateId;
-    }
-
-    public void setEventSourceTemplateId(int eventSourceTemplateId) {
-        this.eventSourceTemplateId = eventSourceTemplateId;
-    }
-
-    @Basic
-    @Column(name = "Name", nullable = true, insertable = true, updatable = true, length = 45)
     public String getName() {
         return name;
     }
@@ -45,8 +26,6 @@ public class EventsourceTemplateActivityEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "DisplayName", nullable = true, insertable = true, updatable = true, length = 45)
     public String getDisplayName() {
         return displayName;
     }
@@ -55,8 +34,6 @@ public class EventsourceTemplateActivityEntity {
         this.displayName = displayName;
     }
 
-    @Basic
-    @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
         return comments;
     }
@@ -65,8 +42,6 @@ public class EventsourceTemplateActivityEntity {
         this.comments = comments;
     }
 
-    @Basic
-    @Column(name = "AllowNull", nullable = true, insertable = true, updatable = true)
     public Integer getAllowNull() {
         return allowNull;
     }
@@ -83,7 +58,6 @@ public class EventsourceTemplateActivityEntity {
         EventsourceTemplateActivityEntity that = (EventsourceTemplateActivityEntity) o;
 
         if (id != that.id) return false;
-        if (eventSourceTemplateId != that.eventSourceTemplateId) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
         if (comments != null ? !comments.equals(that.comments) : that.comments != null) return false;
@@ -95,7 +69,6 @@ public class EventsourceTemplateActivityEntity {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + eventSourceTemplateId;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);

@@ -1,13 +1,10 @@
 package enno.operation.dal;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by EriclLee on 15/11/10.
+ * Created by sabermai on 2015/11/13.
  */
-@Entity
-@Table(name = "eventsource_template", schema = "", catalog = "enno_operationserverdb")
 public class EventsourceTemplateEntity {
     private int id;
     private String name;
@@ -16,8 +13,6 @@ public class EventsourceTemplateEntity {
     private Timestamp updateTime;
     private String comments;
 
-    @Id
-    @Column(name = "Id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -26,8 +21,6 @@ public class EventsourceTemplateEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "Name", nullable = true, insertable = true, updatable = true, length = 45)
     public String getName() {
         return name;
     }
@@ -36,8 +29,6 @@ public class EventsourceTemplateEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "Protocol", nullable = true, insertable = true, updatable = true, length = 45)
     public String getProtocol() {
         return protocol;
     }
@@ -46,8 +37,6 @@ public class EventsourceTemplateEntity {
         this.protocol = protocol;
     }
 
-    @Basic
-    @Column(name = "CreateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -56,8 +45,6 @@ public class EventsourceTemplateEntity {
         this.createTime = createTime;
     }
 
-    @Basic
-    @Column(name = "UpdateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getUpdateTime() {
         return updateTime;
     }
@@ -66,8 +53,6 @@ public class EventsourceTemplateEntity {
         this.updateTime = updateTime;
     }
 
-    @Basic
-    @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
         return comments;
     }

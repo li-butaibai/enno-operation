@@ -1,15 +1,11 @@
 package enno.operation.core.common;
 
 import enno.operation.core.model.PageDivisionQueryResultModel;
-import enno.operation.dal.hibernateHelper;
-import org.hibernate.Criteria;
+import enno.operation.dal.hibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -19,7 +15,7 @@ public class pageDivisionQueryUtil<T> {
     private static Session session = null;
 
     public pageDivisionQueryUtil() {
-        session = hibernateHelper.getSessionFactory().openSession();
+        session = hibernateUtil.getSessionFactory().openSession();
     }
 
     public PageDivisionQueryResultModel<T> excutePageDivisionQuery(int currentPageIndex, int pageSize, String queryHqlStatement, String countHqlStatement) throws Exception {

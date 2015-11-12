@@ -2,8 +2,7 @@ package enno.operation.core.Operation;
 
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.PageDivisionQueryResultModel;
-import enno.operation.dal.EventLogEntity;
-import enno.operation.dal.hibernateHelper;
+import enno.operation.dal.hibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -17,7 +16,7 @@ public class eventLogOperation {
     private Session session = null;
 
     public eventLogOperation(){
-        this.session = hibernateHelper.getSessionFactory().openSession();
+        this.session = hibernateUtil.getSessionFactory().openSession();
     }
 
     //获取EventLog列表，分页

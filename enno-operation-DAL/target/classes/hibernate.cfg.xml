@@ -8,23 +8,21 @@
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.username">dbadmin</property>
         <property name="hibernate.connection.password">abcd1234!</property>
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-        <!--<property name="hibernate.current_session_context_class">thread</property>-->
-        <!--<mapping resource="enno/operation/dal/EventLogEntity.hbm.xml"/>-->
-        <mapping resource="EventLogEntity.hbm.xml"/>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
         <mapping class="enno.operation.dal.EventLogEntity"/>
         <mapping class="enno.operation.dal.EventsourceEntity"/>
-        <mapping resource="EventsourceEntity.hbm.xml"/>
-        <mapping resource="EventsourceActivityEntity.hbm.xml"/>
-        <mapping class="enno.operation.dal.EventsourceActivityEntity"/>
-        <mapping resource="EventsourceSubscriberMapEntity.hbm.xml"/>
+        <!--<mapping class="enno.operation.dal.EventsourceActivityEntity"/>
         <mapping class="enno.operation.dal.EventsourceSubscriberMapEntity"/>
-        <mapping resource="EventsourceTemplateEntity.hbm.xml"/>
         <mapping class="enno.operation.dal.EventsourceTemplateEntity"/>
-        <mapping resource="EventsourceTemplateActivityEntity.hbm.xml"/>
         <mapping class="enno.operation.dal.EventsourceTemplateActivityEntity"/>
-        <mapping resource="SubscriberEntity.hbm.xml"/>
-        <mapping class="enno.operation.dal.SubscriberEntity"/>
+        <mapping class="enno.operation.dal.SubscriberEntity"/>-->
+        <mapping resource="EventLogEntity.hbm.xml"/>
+        <mapping resource="EventsourceEntity.hbm.xml"/>
+        <!--<mapping resource="EventsourceActivityEntity.hbm.xml"/>
+        <mapping resource="EventsourceSubscriberMapEntity.hbm.xml"/>
+        <mapping resource="EventsourceTemplateEntity.hbm.xml"/>
+        <mapping resource="EventsourceTemplateActivityEntity.hbm.xml"/>
+        <mapping resource="SubscriberEntity.hbm.xml"/>-->
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

@@ -3,8 +3,6 @@ package enno.operation.core.zkevent;
 import enno.operation.core.DataConversion.DataConversionFactory;
 import enno.operation.core.DataConversion.EventSourceDataConversion;
 import enno.operation.core.DataConversion.IDataConversion;
-import enno.operation.core.DataConversion.LogDataConversion;
-import enno.operation.core.model.EventLogModel;
 import enno.operation.core.model.EventSourceModel;
 import enno.operation.core.model.SubscriberModel;
 import enno.operation.dal.*;
@@ -22,7 +20,7 @@ public class eventSourceDataChangeEvent implements ZKListener {
     public void process(Map<String, String> nodes) {
         Session session = null;
         try {
-            session = hibernateHelper.getSessionFactory().openSession();
+            session = hibernateUtil.getSessionFactory().openSession();
             for (Map.Entry<String, String> node : nodes.entrySet()) {
                 Transaction transaction = null;
                 try {

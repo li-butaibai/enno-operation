@@ -1,13 +1,10 @@
 package enno.operation.dal;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by EriclLee on 15/11/10.
+ * Created by sabermai on 2015/11/13.
  */
-@Entity
-@Table(name = "eventsource", schema = "", catalog = "enno_operationserverdb")
 public class EventsourceEntity {
     private int id;
     private String sourceId;
@@ -19,8 +16,6 @@ public class EventsourceEntity {
     private Integer status;
     private Integer dataStatus;
 
-    @Id
-    @Column(name = "Id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -29,8 +24,6 @@ public class EventsourceEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "SourceId", nullable = true, insertable = true, updatable = true, length = 45)
     public String getSourceId() {
         return sourceId;
     }
@@ -39,8 +32,6 @@ public class EventsourceEntity {
         this.sourceId = sourceId;
     }
 
-    @Basic
-    @Column(name = "EventSourceTemplateId", nullable = false, insertable = true, updatable = true)
     public int getEventSourceTemplateId() {
         return eventSourceTemplateId;
     }
@@ -49,8 +40,6 @@ public class EventsourceEntity {
         this.eventSourceTemplateId = eventSourceTemplateId;
     }
 
-    @Basic
-    @Column(name = "EventDecoder", nullable = true, insertable = true, updatable = true, length = 45)
     public String getEventDecoder() {
         return eventDecoder;
     }
@@ -59,8 +48,6 @@ public class EventsourceEntity {
         this.eventDecoder = eventDecoder;
     }
 
-    @Basic
-    @Column(name = "CreateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -69,8 +56,6 @@ public class EventsourceEntity {
         this.createTime = createTime;
     }
 
-    @Basic
-    @Column(name = "UpdateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getUpdateTime() {
         return updateTime;
     }
@@ -79,8 +64,6 @@ public class EventsourceEntity {
         this.updateTime = updateTime;
     }
 
-    @Basic
-    @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
         return comments;
     }
@@ -89,8 +72,6 @@ public class EventsourceEntity {
         this.comments = comments;
     }
 
-    @Basic
-    @Column(name = "Status", nullable = true, insertable = true, updatable = true)
     public Integer getStatus() {
         return status;
     }
@@ -99,8 +80,6 @@ public class EventsourceEntity {
         this.status = status;
     }
 
-    @Basic
-    @Column(name = "DataStatus", nullable = true, insertable = true, updatable = true)
     public Integer getDataStatus() {
         return dataStatus;
     }

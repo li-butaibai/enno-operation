@@ -1,8 +1,6 @@
 package enno.operation.core.zkevent;
 
-import enno.operation.dal.EventsourceSubscriberMapEntity;
-import enno.operation.dal.SubscriberEntity;
-import enno.operation.dal.hibernateHelper;
+import enno.operation.dal.hibernateUtil;
 import enno.operation.zkl.ZKListener;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -17,7 +15,7 @@ public class subscriberChildrenChange implements ZKListener {
     public void process(Map<String, String> nodes) {
         Session session = null;
         try {
-            session = hibernateHelper.getSessionFactory().openSession();
+            session = hibernateUtil.getSessionFactory().openSession();
             Transaction transaction = null;
             if (nodes.isEmpty()) {
                 try {
