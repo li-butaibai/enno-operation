@@ -4,9 +4,12 @@ import enno.operation.ZKListener.EventLogListener;
 import enno.operation.ZKListener.EventSourceListener;
 import enno.operation.ZKListener.SubscriberClusterListener;
 import enno.operation.zkmodel.EventLogData;
+import enno.operation.zkmodel.EventSourceConnectModel;
 import enno.operation.zkmodel.EventSourceData;
 import enno.operation.zkmodel.SubscriberData;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import org.apache.zookeeper.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -223,24 +226,13 @@ public class ZKClient {
         }
     }
 
-    public void setSubscriberData(String subscriberId, String data)
+    public void setSubscriberData(String subscriberId, List<EventSourceConnectModel> connectModelList)
     {
         try{
+            String data = JSONArray.fromObject(connectModelList).toString();
             String path = String.format("%s/%s", subscriberRootName, subscriberId);
             if(zooKeeper.exists(path, false) != null) {
-                zooKeeper.setData(path, data.getBytes(), -1);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
-    public void setEventSourceData(String eventSourceId, String data)
-    {
-        try{
-            String path = String.format("%s/%s", eventSourceRootName, eventSourceId);
-            if(zooKeeper.exists(path, false) != null) {
-                zooKeeper.setData(path, data.getBytes(), -1);
+                zooKeeper.setData(path, data.toString().getBytes(), -1);
             }
         }catch (Exception ex){
             ex.printStackTrace();
