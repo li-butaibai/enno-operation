@@ -3,6 +3,7 @@ package enno.operation.zkl;
 import enno.operation.ZKListener.EventLogListener;
 import enno.operation.ZKListener.EventSourceListener;
 import enno.operation.ZKListener.SubscriberClusterListener;
+import enno.operation.zkException.InitializeSchemaFailedException;
 import enno.operation.zkmodel.EventLogData;
 import enno.operation.zkmodel.EventSourceConnectModel;
 import enno.operation.zkmodel.EventSourceData;
@@ -20,27 +21,40 @@ import java.util.Map;
  * Created by v-zoli on 2015/10/22.
  */
 public class ZKClient {
+    private static class ZKClientHolder{
+        private static final ZKClient INSTANCE=new ZKClient();
+    }
+    private ZKClient() {}
+    public  static final ZKClient getIntance(){
+        return ZKClientHolder.INSTANCE;
+    }
     private ZooKeeper zooKeeper = null;
     private SubscriberClusterListener subscriberClusterEvent = null;
     private EventLogListener eventLogEvent = null;
     private EventSourceListener eventSourceEvent = null;
     private String connectString = "";
     private int sessionTimeout = 1000;
-    private String subscriberRootName = "/EnnoClusterRoot";
+    private String subscriberRootName = "/SubscriberClusterRoot";
     private String eventSourceRootName = "/EventSourceRoot";
     private String eventLogRootName = "/EventLogRoot";
 
-    public ZKClient() {
-
-    }
-
-    public void start(Map<String, String> eventSourceList) {
+    public void connect() {
         try {
             zooKeeper = new ZooKeeper(connectString, sessionTimeout, null);
-        } catch (Exception ex) {
+    } catch (Exception ex) {
             ex.printStackTrace();
         }
-        initializeSchema(eventSourceList);
+    }
+
+    public void close(){
+        try {
+            if(zooKeeper!=null) {
+                zooKeeper.close();
+            }
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     private void processSubscriberList(List<String> nodes)
@@ -109,7 +123,7 @@ public class ZKClient {
     }
 
     //initialize the zookeeper schema, and add the watch to the event
-    private boolean initializeSchema(Map<String, String> eventSourceList) {
+    public void initializeSchemaAndBeginTranscation(Map<String, String> eventSourceList) throws InitializeSchemaFailedException {
         try {
             //initialize the enno cluster root node
             boolean newSubscriberRoot = false;
@@ -124,7 +138,7 @@ public class ZKClient {
                     try {
                         List<String> clusterChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
                         processSubscriberList(clusterChildrenNodes);
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -153,7 +167,7 @@ public class ZKClient {
                         try {
                             List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
                             processEventSource(eventSource.getKey(), eventSourceChildrenNodes);
-                        }catch (Exception ex){
+                        } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     }
@@ -171,16 +185,15 @@ public class ZKClient {
                     try {
                         List<String> eventSourceChildrenNodes = zooKeeper.getChildren(event.getPath(), this, null);
                         processEventLog(eventSourceChildrenNodes);
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
             }, null);
-
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
+        }
+        catch (Exception ex)
+        {
+            throw new InitializeSchemaFailedException(ex.getMessage(), ex.getCause());
         }
     }
 
