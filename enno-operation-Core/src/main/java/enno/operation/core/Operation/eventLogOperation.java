@@ -64,7 +64,7 @@ public class eventLogOperation {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from EventLogEntity el where el.subscriber.id = :SubscriberId");
+            Query q = session.createQuery("from EventLogEntity el where el.subscriber.id = :SubscriberId order by el.createTime desc");
             q.setParameter("SubscriberId", SubscriberId);
             elList = (List<EventLogEntity>) q.list();
             return elList;
@@ -82,7 +82,7 @@ public class eventLogOperation {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from EventLogEntity el where el.eventsource.id = :EventsourceId");
+            Query q = session.createQuery("from EventLogEntity el where el.eventsource.id = :EventsourceId order by el.createTime desc");
             q.setParameter("EventsourceId", EventsourceId);
             elList = (List<EventLogEntity>) q.list();
             return elList;
