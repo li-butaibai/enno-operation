@@ -14,7 +14,12 @@
       <column name="Title" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
       <column name="Level" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="Message" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <column name="CreateTime" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <foreign-key name="FK_event_log_2" columns="SubscriberId" ref-table="subscriber" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_event_log_1" columns="EventSourceId" ref-table="eventsource" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_event_log_1" unique="false" columns="EventSourceId"/>
+      <index name="FK_event_log_2" unique="false" columns="SubscriberId"/>
     </table>
     <table name="eventsource" schema="" catalog="enno_operationserverdb" type="TABLE">
       <column name="Id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -27,6 +32,11 @@
       <column name="Status" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="DataStatus" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <foreign-key name="FK_eventsource_1" columns="EventSourceTemplateId" ref-table="eventsource_template" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_event_log_1" table="event_log" schema="" catalog="enno_operationserverdb" columns="EventSourceId"/>
+      <exported-key name="FK_eventsource_activity_1" table="eventsource_activity" schema="" catalog="enno_operationserverdb" columns="EventSourceId"/>
+      <exported-key name="FK_eventsource_subscriber_map_1" table="eventsource_subscriber_map" schema="" catalog="enno_operationserverdb" columns="EventSourceId"/>
+      <index name="FK_eventsource_1" unique="false" columns="EventSourceTemplateId"/>
     </table>
     <table name="eventsource_activity" schema="" catalog="enno_operationserverdb" type="TABLE">
       <column name="Id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -34,12 +44,20 @@
       <column name="TemplateActivityId" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="Value" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <foreign-key name="FK_eventsource_activity_2" columns="TemplateActivityId" ref-table="eventsource_template_activity" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_eventsource_activity_1" columns="EventSourceId" ref-table="eventsource" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_eventsource_activity_1" unique="false" columns="EventSourceId"/>
+      <index name="FK_eventsource_activity_2" unique="false" columns="TemplateActivityId"/>
     </table>
     <table name="eventsource_subscriber_map" schema="" catalog="enno_operationserverdb" type="TABLE">
       <column name="Id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="EventSourceId" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="SubscriberId" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <foreign-key name="FK_eventsource_subscriber_map_1" columns="EventSourceId" ref-table="eventsource" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_eventsource_subscriber_map_2" columns="SubscriberId" ref-table="subscriber" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_eventsource_subscriber_map_1" unique="false" columns="EventSourceId"/>
+      <index name="FK_eventsource_subscriber_map_2" unique="false" columns="SubscriberId"/>
     </table>
     <table name="eventsource_template" schema="" catalog="enno_operationserverdb" type="TABLE">
       <column name="Id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -49,6 +67,8 @@
       <column name="UpdateTime" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
       <column name="Comments" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <exported-key name="FK_eventsource_1" table="eventsource" schema="" catalog="enno_operationserverdb" columns="EventSourceTemplateId"/>
+      <exported-key name="FK_eventsource_template_activity_1" table="eventsource_template_activity" schema="" catalog="enno_operationserverdb" columns="EventSourceTemplateId"/>
     </table>
     <table name="eventsource_template_activity" schema="" catalog="enno_operationserverdb" type="TABLE">
       <column name="Id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -58,6 +78,9 @@
       <column name="Comments" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
       <column name="AllowNull" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <foreign-key name="FK_eventsource_template_activity_1" columns="EventSourceTemplateId" ref-table="eventsource_template" ref-schema="" ref-catalog="enno_operationserverdb" ref-columns="Id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_eventsource_activity_2" table="eventsource_activity" schema="" catalog="enno_operationserverdb" columns="TemplateActivityId"/>
+      <index name="FK_eventsource_template_activity_1" unique="false" columns="EventSourceTemplateId"/>
     </table>
     <table name="subscriber" schema="" catalog="enno_operationserverdb" type="TABLE">
       <column name="Id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -69,6 +92,8 @@
       <column name="Status" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="DataStatus" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="Id"/>
+      <exported-key name="FK_event_log_2" table="event_log" schema="" catalog="enno_operationserverdb" columns="SubscriberId"/>
+      <exported-key name="FK_eventsource_subscriber_map_2" table="eventsource_subscriber_map" schema="" catalog="enno_operationserverdb" columns="SubscriberId"/>
     </table>
   </data-source>
 </component>
