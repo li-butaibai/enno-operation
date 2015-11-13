@@ -31,7 +31,7 @@ public class LogEvent implements EventLogListener{
                     SubscriberEntity subscriberEntity = (SubscriberEntity)sQuery.uniqueResult();
                     eventLogEntity.setSubscriber(subscriberEntity);
                     eventLogEntity.setEventsource(eventsourceEntitiy);
-                    //TODO£ºeventLogEntity.setLevel(eventLogData.getLevel());
+                    eventLogEntity.setLevel(eventLogData.getEventType().ordinal());
                     eventLogEntity.setTitle(eventLogData.getTitle());
                     session.save(eventLogEntity);
                 } catch (Exception e) {
