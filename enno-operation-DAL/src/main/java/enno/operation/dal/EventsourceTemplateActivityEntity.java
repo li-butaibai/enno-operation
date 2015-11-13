@@ -1,15 +1,22 @@
 package enno.operation.dal;
 
+import javax.persistence.*;
+
 /**
  * Created by sabermai on 2015/11/13.
  */
+@Entity
+@Table(name = "eventsource_template_activity", schema = "", catalog = "enno_operationserverdb")
 public class EventsourceTemplateActivityEntity {
     private int id;
     private String name;
     private String displayName;
     private String comments;
     private Integer allowNull;
+    private EventsourceTemplateEntity eventsourceTemplate;
 
+    @Id
+    @Column(name = "Id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -18,6 +25,8 @@ public class EventsourceTemplateActivityEntity {
         this.id = id;
     }
 
+    @Basic
+    @Column(name = "Name", nullable = true, insertable = true, updatable = true, length = 45)
     public String getName() {
         return name;
     }
@@ -26,6 +35,8 @@ public class EventsourceTemplateActivityEntity {
         this.name = name;
     }
 
+    @Basic
+    @Column(name = "DisplayName", nullable = true, insertable = true, updatable = true, length = 45)
     public String getDisplayName() {
         return displayName;
     }
@@ -34,6 +45,8 @@ public class EventsourceTemplateActivityEntity {
         this.displayName = displayName;
     }
 
+    @Basic
+    @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
         return comments;
     }
@@ -42,6 +55,8 @@ public class EventsourceTemplateActivityEntity {
         this.comments = comments;
     }
 
+    @Basic
+    @Column(name = "AllowNull", nullable = true, insertable = true, updatable = true)
     public Integer getAllowNull() {
         return allowNull;
     }
@@ -74,5 +89,15 @@ public class EventsourceTemplateActivityEntity {
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (allowNull != null ? allowNull.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "EventSourceTemplateId", referencedColumnName = "Id", nullable = false)
+    public EventsourceTemplateEntity getEventsourceTemplate() {
+        return eventsourceTemplate;
+    }
+
+    public void setEventsourceTemplate(EventsourceTemplateEntity eventsourceTemplate) {
+        this.eventsourceTemplate = eventsourceTemplate;
     }
 }

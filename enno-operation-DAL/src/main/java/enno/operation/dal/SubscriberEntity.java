@@ -1,20 +1,18 @@
 package enno.operation.dal;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
  * Created by sabermai on 2015/11/13.
  */
+@Entity
+@Table(name = "subscriber", schema = "", catalog = "enno_operationserverdb")
 public class SubscriberEntity {
     private int id;
-    private String name;
-    private String address;
-    private String comments;
-    private Timestamp createTime;
-    private Timestamp updateTime;
-    private Integer status;
-    private Integer dataStatus;
 
+    @Id
+    @Column(name = "Id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -23,6 +21,10 @@ public class SubscriberEntity {
         this.id = id;
     }
 
+    private String name;
+
+    @Basic
+    @Column(name = "Name", nullable = true, insertable = true, updatable = true, length = 45)
     public String getName() {
         return name;
     }
@@ -31,6 +33,10 @@ public class SubscriberEntity {
         this.name = name;
     }
 
+    private String address;
+
+    @Basic
+    @Column(name = "Address", nullable = true, insertable = true, updatable = true, length = 45)
     public String getAddress() {
         return address;
     }
@@ -39,6 +45,10 @@ public class SubscriberEntity {
         this.address = address;
     }
 
+    private String comments;
+
+    @Basic
+    @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
         return comments;
     }
@@ -47,6 +57,10 @@ public class SubscriberEntity {
         this.comments = comments;
     }
 
+    private Timestamp createTime;
+
+    @Basic
+    @Column(name = "CreateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -55,14 +69,22 @@ public class SubscriberEntity {
         this.createTime = createTime;
     }
 
+    private Timestamp updateTime;
+
+    @Basic
+    @Column(name = "UpdateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getUpdateTime() {
         return updateTime;
     }
+
+    private Integer status;
 
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 
+    @Basic
+    @Column(name = "Status", nullable = true, insertable = true, updatable = true)
     public Integer getStatus() {
         return status;
     }
@@ -71,6 +93,10 @@ public class SubscriberEntity {
         this.status = status;
     }
 
+    private Integer dataStatus;
+
+    @Basic
+    @Column(name = "DataStatus", nullable = true, insertable = true, updatable = true)
     public Integer getDataStatus() {
         return dataStatus;
     }

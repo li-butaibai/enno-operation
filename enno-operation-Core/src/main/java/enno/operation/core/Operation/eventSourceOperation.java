@@ -42,7 +42,7 @@ public class eventSourceOperation {
                     esModel.setComments(esEntity.getComments());
                     esModel.setCreateTime(esEntity.getCreateTime());
                     esModel.setEventDecoder(esEntity.getEventDecoder());
-                    esModel.setEventSourceTemplateId(esEntity.getEventSourceTemplateId());
+                    esModel.setEventSourceTemplateId(esEntity.getEventsourceTemplate().getId());
                     esModel.setId(esEntity.getId());
                     esModel.setSourceId(esEntity.getSourceId());
                     esModel.setUpdateTime(esEntity.getUpdateTime());

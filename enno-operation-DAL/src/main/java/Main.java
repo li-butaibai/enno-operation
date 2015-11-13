@@ -1,4 +1,3 @@
-import enno.operation.dal.EventLogEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -46,7 +45,7 @@ public class Main {
 //                for (Object o : query.list()) {
 //                    System.out.println("  " + o);
 //                }
-            Query q = session.createQuery("select b.sourceId,a.title,a.message from EventLogEntity a join a.eventsourceEntity b");
+            Query q = session.createQuery("select b.sourceId,a.title,a.message from EventLogEntity a join a.eventsource b ");
             List<Object[]> result = q.list();
             for (Object[] objs: result){
                 System.out.println(Arrays.asList(objs));
