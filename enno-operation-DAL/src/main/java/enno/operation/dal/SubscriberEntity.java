@@ -2,6 +2,7 @@ package enno.operation.dal;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Created by sabermai on 2015/11/13.
@@ -10,6 +11,27 @@ import java.sql.Timestamp;
 @Table(name = "subscriber", schema = "", catalog = "enno_operationserverdb")
 public class SubscriberEntity {
     private int id;
+    private String name;
+    private String address;
+    private String comments;
+    private Timestamp createTime;
+    private Timestamp updateTime;
+    private Integer status;
+    private Integer dataStatus;
+    private Set<EventsourceEntity> eventsourceEntities;
+
+    @ManyToMany(targetEntity = EventsourceEntity.class)
+    @JoinTable(name = "eventsource_subscriber_map",
+            joinColumns = @JoinColumn(name = "SubscriberId", referencedColumnName = "Id"),
+            inverseJoinColumns = @JoinColumn(name = "EventsourceId", referencedColumnName = "Id")
+    )
+    public Set<EventsourceEntity> getEventsourceEntities() {
+        return eventsourceEntities;
+    }
+
+    public void setEventsourceEntities(Set<EventsourceEntity> eventsourceEntities) {
+        this.eventsourceEntities = eventsourceEntities;
+    }
 
     @Id
     @Column(name = "Id", nullable = false, insertable = true, updatable = true)
@@ -21,8 +43,6 @@ public class SubscriberEntity {
         this.id = id;
     }
 
-    private String name;
-
     @Basic
     @Column(name = "Name", nullable = true, insertable = true, updatable = true, length = 45)
     public String getName() {
@@ -32,8 +52,6 @@ public class SubscriberEntity {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String address;
 
     @Basic
     @Column(name = "Address", nullable = true, insertable = true, updatable = true, length = 45)
@@ -45,8 +63,6 @@ public class SubscriberEntity {
         this.address = address;
     }
 
-    private String comments;
-
     @Basic
     @Column(name = "Comments", nullable = true, insertable = true, updatable = true, length = 200)
     public String getComments() {
@@ -56,8 +72,6 @@ public class SubscriberEntity {
     public void setComments(String comments) {
         this.comments = comments;
     }
-
-    private Timestamp createTime;
 
     @Basic
     @Column(name = "CreateTime", nullable = true, insertable = true, updatable = true)
@@ -69,15 +83,11 @@ public class SubscriberEntity {
         this.createTime = createTime;
     }
 
-    private Timestamp updateTime;
-
     @Basic
     @Column(name = "UpdateTime", nullable = true, insertable = true, updatable = true)
     public Timestamp getUpdateTime() {
         return updateTime;
     }
-
-    private Integer status;
 
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
@@ -92,8 +102,6 @@ public class SubscriberEntity {
     public void setStatus(Integer status) {
         this.status = status;
     }
-
-    private Integer dataStatus;
 
     @Basic
     @Column(name = "DataStatus", nullable = true, insertable = true, updatable = true)

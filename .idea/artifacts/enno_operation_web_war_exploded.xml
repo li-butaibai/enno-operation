@@ -6,6 +6,11 @@
         <element id="directory" name="classes">
           <element id="module-output" name="enno-operation-web" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.15" />
+          <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+        </element>
       </element>
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/enno-operation-web/target/Web/META-INF/MANIFEST.MF" />

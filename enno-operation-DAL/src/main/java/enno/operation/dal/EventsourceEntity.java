@@ -2,6 +2,7 @@ package enno.operation.dal;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Created by sabermai on 2015/11/13.
@@ -18,6 +19,20 @@ public class EventsourceEntity {
     private Integer status;
     private Integer dataStatus;
     private EventsourceTemplateEntity eventsourceTemplate;
+    private Set<SubscriberEntity> subscriberEntities;
+
+    @ManyToMany(targetEntity = SubscriberEntity.class)
+    @JoinTable(name = "eventsource_subscriber_map",
+            joinColumns = @JoinColumn(name = "EventsourceId", referencedColumnName = "Id"),
+            inverseJoinColumns = @JoinColumn(name = "SubscriberId", referencedColumnName = "Id")
+    )
+    public Set<SubscriberEntity> getSubscriberEntities() {
+        return subscriberEntities;
+    }
+
+    public void setSubscriberEntities(Set<SubscriberEntity> subscriberEntities) {
+        this.subscriberEntities = subscriberEntities;
+    }
 
     @Id
     @Column(name = "Id", nullable = false, insertable = true, updatable = true)
