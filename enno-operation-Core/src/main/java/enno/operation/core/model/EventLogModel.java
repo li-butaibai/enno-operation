@@ -7,10 +7,8 @@ import java.awt.*;
  */
 public class EventLogModel {
     private int id;
-    private int eventsourceId;
     private EventSourceModel eventSourceModel;
     private int level;
-    private int subscriberId;
     private SubscriberModel subscriberModel;
     private String title;
     private String message;
@@ -21,14 +19,6 @@ public class EventLogModel {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getEventsourceId() {
-        return eventsourceId;
-    }
-
-    public void setEventsourceId(int eventsourceId) {
-        this.eventsourceId = eventsourceId;
     }
 
     public EventSourceModel getEventSourceModel() {
@@ -45,14 +35,6 @@ public class EventLogModel {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public int getSubscriberId() {
-        return subscriberId;
-    }
-
-    public void setSubscriberId(int subscriberId) {
-        this.subscriberId = subscriberId;
     }
 
     public SubscriberModel getSubscriberModel() {
