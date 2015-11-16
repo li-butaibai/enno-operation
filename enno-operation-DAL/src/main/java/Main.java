@@ -1,3 +1,4 @@
+import enno.operation.dal.*;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -6,6 +7,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
+import javax.transaction.Transaction;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,11 +48,20 @@ public class Main {
 //                for (Object o : query.list()) {
 //                    System.out.println("  " + o);
 //                }
-            Query q = session.createQuery("select b.sourceId,a.title,a.message from EventLogEntity a join a.eventsource b ");
-            List<Object[]> result = q.list();
-            for (Object[] objs: result){
-                System.out.println(Arrays.asList(objs));
-            }
+            org.hibernate.Transaction tx = session.beginTransaction();
+            /*EventsourceActivityEntity e = new EventsourceActivityEntity();
+            EventsourceTemplateActivityEntity t = new EventsourceTemplateActivityEntity();
+            EventsourceEntity es = new EventsourceEntity();
+            t.setId(1);
+            es.setId(1);
+            e.setValue("100");
+            e.setEventsourceTemplateActivity(t);
+            e.setEventsource(es);
+            session.save(e);*/
+            Query q = session.createQuery("From EventsourceActivityEntity e where e.id = 4");
+            EventsourceActivityEntity e = (EventsourceActivityEntity)q.uniqueResult();
+            session.delete(e);
+            tx.commit();
             }
         catch (Exception ex){
 

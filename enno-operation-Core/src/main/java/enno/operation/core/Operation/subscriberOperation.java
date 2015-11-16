@@ -73,6 +73,41 @@ public class subscriberOperation {
         }
     }
 
+    public void DeleteSubscriber(int SubscriberId) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("update SubscriberEntity e set e.dataStatus = 0, e.status = 0 where e.id = :SubscriberId").setParameter("SubscriberId", SubscriberId);
+            q.executeUpdate();
+            tx.commit();
+        } catch (Exception ex) {
+
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    public void UpdateSubscriber(SubscriberModel Subscriber) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from SubscriberEntity sub where sub.id = :SubscriberId").setParameter("SubscriberId", Subscriber.getId());
+            SubscriberEntity sub = (SubscriberEntity) q.uniqueResult();
+            sub.setName(Subscriber.getName());
+            sub.setComments(Subscriber.getComments());
+            sub.setAddress(Subscriber.getAddress());
+            tx.commit();
+        } catch (Exception ex) {
+
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
     private SubscriberEntity getSubscriberEntityById(int SubscriberId) throws Exception {
         try {
             session = hibernateUtil.getSessionFactory().openSession();

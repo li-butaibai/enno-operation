@@ -1,15 +1,17 @@
 package enno.operation.core.Operation;
 
 import enno.operation.core.common.pageDivisionQueryUtil;
-import enno.operation.core.model.EventSourceActivityModel;
-import enno.operation.core.model.EventSourceModel;
-import enno.operation.core.model.PageDivisionQueryResultModel;
-import enno.operation.dal.EventsourceEntity;
-import enno.operation.dal.hibernateUtil;
+import enno.operation.core.model.*;
+import enno.operation.dal.*;
+import enno.operation.zkl.ZKClient;
+import enno.operation.zkmodel.EventSourceConnectModel;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.event.spi.EventSource;
 
+import javax.print.attribute.standard.DateTimeAtCreation;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -57,6 +59,158 @@ public class eventSourceOperation {
             return eventsources;
         } catch (Exception ex) {
             throw ex;
+        }
+    }
+
+    public void AddEventsource(EventSourceModel eventSource) throws Exception {
+        try {
+            ZKClient zkCilent = ZKClient.getIntance();
+            zkCilent.addEventSource(eventSource.getSourceId(), "");
+
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+
+            //Query Event Source Template
+            int templateId = eventSource.getId();
+            Query q = session.createQuery("from EventsourceTemplateEntity t where t.id = :templateId");
+            q.setParameter("templateId", templateId);
+            EventsourceTemplateEntity templateEntity = (EventsourceTemplateEntity) q.uniqueResult();
+
+            //Query Event Source Activity Template
+            q = session.createQuery("from EventsourceTemplateActivityEntity ta where ta.eventsourceTemplate.id = :templateId");
+            q.setParameter("templateId", templateId);
+            List<EventsourceTemplateActivityEntity> templateActivities = q.list();
+
+            EventsourceEntity entity = new EventsourceEntity();
+            entity.setComments(eventSource.getComments());
+            entity.setCreateTime(eventSource.getCreateTime());
+            entity.setEventDecoder(eventSource.getEventDecoder());
+            entity.setEventsourceTemplate(templateEntity);
+            entity.setUpdateTime(new Timestamp((new Date()).getTime()));
+            entity.setSourceId(eventSource.getSourceId());
+            entity.setDataStatus(1);
+            entity.setStatus(1);
+
+            for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
+                EventsourceActivityEntity activityEntity = new EventsourceActivityEntity();
+                activityEntity.setEventsource(entity);
+                for (EventsourceTemplateActivityEntity tempActivity : templateActivities) {
+                    if (tempActivity.getId() == activity.getTemplateActivityId()) {
+                        activityEntity.setEventsourceTemplateActivity(tempActivity);
+                    }
+                    activityEntity.setValue(activity.getValue());
+                }
+            }
+            session.save(entity);
+            tx.commit();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    public void DeleteEventsource(int EventsourceId) throws Exception {
+        try {
+            ZKClient zkClient = ZKClient.getIntance();
+            zkClient.removeEventSource(getEventSourceById(EventsourceId).getSourceId());
+
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId");
+            q.setParameter("EventsourceId", EventsourceId);
+            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+            for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
+                session.delete(MapEntity);
+            }
+            q = session.createQuery("update EventsourceEntity e set e.dataStatus = 0, e.status = 0 where e.id = :EventsourceId").setParameter("EventsourceId", EventsourceId);
+            q.executeUpdate();
+            tx.commit();
+        } catch (Exception ex) {
+
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    public void AssignEventsource(int eventsourceId, int subscriberId) throws Exception {
+        try {
+            ZKClient zkClient = ZKClient.getIntance();
+            zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
+
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId and m.subscriber.id = :SubscriberId");
+            q.setParameter("EventsourceId", eventsourceId);
+            q.setParameter("SubscriberId", subscriberId);
+            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+            if (MapEntities == null || MapEntities.size() <= 0) {
+                EventsourceSubscriberMapEntity map = new EventsourceSubscriberMapEntity();
+                EventsourceEntity es = new EventsourceEntity();
+                es.setId(eventsourceId);
+                SubscriberEntity sub = new SubscriberEntity();
+                sub.setId(subscriberId);
+                map.setEventsource(es);
+                map.setSubscriber(sub);
+                session.save(map);
+                tx.commit();
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    public void RemoveEventsourceSubscription(int eventsourceId, int subscriberId) throws Exception {
+        try {
+            ZKClient zkClient = ZKClient.getIntance();
+            zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
+
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId and m.subscriber.id = :SubscriberId");
+            q.setParameter("EventsourceId", eventsourceId);
+            q.setParameter("SubscriberId", subscriberId);
+            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+            for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
+                session.delete(MapEntity);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    public void UpdateEventsource(EventSourceModel eventSource) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventsourceEntity e where e.id = :EventsourceId").setParameter("EventsourceId", eventSource.getId());
+            EventsourceEntity es = (EventsourceEntity) q.uniqueResult();
+            es.setSourceId(eventSource.getSourceId());
+            es.setComments(eventSource.getComments());
+            es.setEventDecoder(eventSource.getEventDecoder());
+            tx.commit();
+        } catch (Exception ex) {
+
+        } finally {
+            if (null != session) {
+                session.close();
+            }
         }
     }
 
@@ -136,5 +290,32 @@ public class eventSourceOperation {
         } catch (Exception ex) {
             throw ex;
         }
+    }
+
+    private List<EventSourceConnectModel> GetEventSourceConnectModels(int subscriberId) throws Exception {
+        List<EventSourceConnectModel> ConnList = new ArrayList<EventSourceConnectModel>();
+
+        session = hibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
+        q.setParameter("SubscriberId", subscriberId);
+        List<EventsourceSubscriberMapEntity> SuberMapEntities = q.list();
+
+        for (EventsourceSubscriberMapEntity mapEntity : SuberMapEntities) {
+            EventSourceModel eventSource = ConvertEventsourceEntity2Model(mapEntity.getEventsource());
+            EventSourceConnectModel connInfo = new EventSourceConnectModel();
+            connInfo.setSourceId(eventSource.getSourceId());
+            connInfo.setProtocol(eventSource.getProtocol());
+            connInfo.setEventDecoder(eventSource.getEventDecoder());
+            //获取原有的Activity信息
+            Map<String, String> map = new HashMap<String, String>();
+            for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
+                map.put(activity.getName(), activity.getValue());
+            }
+            connInfo.setEventSourceActivities(map);
+            ConnList.add(connInfo);
+        }
+
+        return ConnList;
     }
 }
