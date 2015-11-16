@@ -16,7 +16,18 @@
             <artifactId>hibernate-core</artifactId>
             <version>4.2.2.Final</version>
         </dependency>
+        <dependency>
+            <groupId>Enno.Operation</groupId>
+            <artifactId>DAL</artifactId>
+            <version>1.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>Enno.Operation</groupId>
+            <artifactId>ZKL</artifactId>
+            <version>1.0.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
-
 
 </project>
