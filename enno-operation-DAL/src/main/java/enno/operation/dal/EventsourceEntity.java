@@ -36,6 +36,7 @@ public class EventsourceEntity {
 
     @Id
     @Column(name = "Id", nullable = false, insertable = true, updatable = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
