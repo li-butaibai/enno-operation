@@ -35,6 +35,7 @@ public class eventSourceOperation {
             qr.setRecordCount(entityQR.getRecordCount());
             qr.setPageSize(pageSize);
             qr.setQueryResult(esModelList);
+            qr.setPageCount();
             return qr;
         } catch (Exception ex) {
             throw ex;

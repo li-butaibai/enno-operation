@@ -25,17 +25,18 @@ public class pageDivisionQueryUtil<T> {
         try {
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery(queryHqlStatement);
-            q.setFirstResult((--currentPageIndex) * pageSize + 1);
+            q.setFirstResult((currentPageIndex - 1) * pageSize);
             q.setMaxResults(pageSize);
             result = (List<T>) q.list();
 
             q = session.createQuery(countHqlStatement);
-            int count = (Integer)q.uniqueResult();
+            long count = (Long) q.uniqueResult();
 
             resultModel.setCurrentPageIndex(currentPageIndex);
             resultModel.setPageSize(pageSize);
-            resultModel.setRecordCount(count);
+            resultModel.setRecordCount((int) count);
             resultModel.setQueryResult(result);
+            resultModel.setPageCount();
             return resultModel;
         } catch (Exception ex) {
             throw ex;

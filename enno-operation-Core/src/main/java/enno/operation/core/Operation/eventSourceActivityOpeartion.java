@@ -27,23 +27,21 @@ public class eventSourceActivityOpeartion {
             q.setParameter("EventsourceTemplateId", EventsourceTemplateId);
             List list = q.list();
             Iterator it = list.iterator();
-            while(it.hasNext()){
-                Object[] results = (Object[])it.next();
+            while (it.hasNext()) {
+                Object[] results = (Object[]) it.next();
                 EventSourceActivityModel activity = new EventSourceActivityModel();
                 activity.setName(results[0].toString());
-                activity.setComments(results[1].toString());
-                activity.setDisplayName(results[2].toString());
-                activity.setTemplateActivityId((Integer)results[3]);
-                activity.setValue(results[4].toString());
+                activity.setComments(results[1] != null ? results[1].toString() : null);
+                activity.setDisplayName(results[2] != null ? results[2].toString() : null);
+                activity.setTemplateActivityId((Integer) results[3]);
+                activity.setValue(results[4] != null ? results[4].toString() : null);
                 activities.add(activity);
             }
             return activities;
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             throw ex;
-        }
-        finally {
-            if(null!=session){
+        } finally {
+            if (null != session) {
                 session.close();
             }
         }

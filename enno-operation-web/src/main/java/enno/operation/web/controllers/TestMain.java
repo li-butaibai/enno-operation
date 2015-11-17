@@ -14,7 +14,7 @@ public class TestMain {
     {
         try {
             EventSourceController eventSourceController = new EventSourceController();
-            ModelAndView d = eventSourceController.list(0, 10);
+            ModelAndView d = eventSourceController.list(1, 10);
             System.in.read();
         }catch (Exception ex)
         {ex.printStackTrace();}

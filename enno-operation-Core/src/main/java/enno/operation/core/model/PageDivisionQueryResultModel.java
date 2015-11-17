@@ -40,7 +40,11 @@ public class PageDivisionQueryResultModel<T> {
     }
 
     public int getPageCount() {
-        return pageSize == 0 ? 0: (int)Math.ceil(recordCount/pageSize);
+        return pageCount;
+    }
+
+    public void setPageCount() {
+        this.pageCount = pageSize == 0 ? 0: (int)Math.ceil((double)recordCount/pageSize);
     }
 
     private int recordCount;
