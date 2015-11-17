@@ -1,6 +1,6 @@
 <div class="zone-items">
     <ul class="level-1">
-        <li class="cate no-items console">
+        <li class="cate no-items home">
             <a class="" href="#" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Console</span>
@@ -19,7 +19,7 @@
             </a>
         </li>
         <li class="cate no-items eventlogs">
-            <a class=""  href="#" data-permalink="">
+            <a class="" href="#" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Event Log</span>
             </a>
@@ -32,9 +32,9 @@
             $(".selected").removeClass("selected");
             $(this).parent().addClass("selected");
         });
-        var u='<%=request.getContextPath()%>';
-        var pathName = document.location.pathname;
-        pathName = pathName.replace(u,"");
+        var contextPath =  '<%=request.getContextPath()%>';
+        var pathName = location.pathname;
+        pathName = pathName.replace(contextPath,"");
         var urls = pathName.split('/');
         if (urls[1] == undefined) {
             $(".index").addClass("selected");
