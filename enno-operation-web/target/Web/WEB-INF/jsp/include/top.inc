@@ -11,6 +11,11 @@
 </head>
 
 <body class="enno-body">
+
+<div id="dialogDiv"></div>
+<div id="waiting" class="waiting" style="display: none; z-index: 99999;">
+	<img src="/Images/waiting.gif" />
+</div>
 <div class="container">
 	<div class="viewport" id="console">
 		<div class="nav-global">
@@ -19,9 +24,7 @@
 					<p class="site-title">Enno-Operation Platform</p>
 				</div>
 				<div class="items-inner">
-					<section id="login">
 
-					</section>
 				</div>
 			</div>
 		</div>
@@ -31,6 +34,3 @@
 			</div>
 		</div>
 		<div class="content" id="content">
-
-
-
