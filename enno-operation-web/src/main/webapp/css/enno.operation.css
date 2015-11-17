@@ -1,6 +1,45 @@
+.enno-body {
+    height: 100%;
+    font-family: "Calibri", "Khmer UI", arial;
+    color: #333333;
+    padding: 0px;
+}
+
+.enno-container {
+    position: relative;
+    min-height: 100%;
+    background-color: #f0ad4e;
+    width: 100%;
+}
+
+.enno-content {
+    /*background-color: #000088;*/
+
+    height: 100%;
+    width: 100%;
+
+}
+
+.enno-left-menu{
+    position:fixed;
+    top:0px; left:8px;
+    width:200px;
+    bottom: 0px;
+    background-color:#CCCCCC
+}
+
+.enno-main-body{
+    padding-top: 48px;
+    bottom: 0px;
+    margin-left:200px; height:100%; background-color:#0099FF; width: 100%;
+}
+
 .enno-top-bar{
-    background-color: #fff;
+    background-color:red;
     height: 48px;
     width:100%;
     z-index: 99;
+    position: fixed;
+    top:0px;
+    lfet:0px;
 }

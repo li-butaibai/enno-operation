@@ -1,4 +1,6 @@
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 
 <html class="sw-body">
@@ -12,13 +14,13 @@
 <script src="${pageContext.request.contextPath}/scripts/timeago.js"></script>
 <link href="${pageContext.request.contextPath}/css/sitewhere.css" rel="stylesheet" />
 <link href="${pageContext.request.contextPath}/css/kendo.bootstrap.min.css" rel="stylesheet" />
-<link href="${pageContext.request.contextPath}/../../css/enno.operation.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/css/enno.operation.css" rel="stylesheet" />
 </head>
 <body class="enno-body">
 	<div class="enno-container">
 		<div class="enno-top-bar"></div>
 		<div class="enno-content">
-			<div class="enno-leftmenu"></div>
+			<div class="enno-left-menu"></div>
 			<!-- SiteWhere alert dialog -->
 			<div id="alert-dialog" class="modal hide" style="z-index: 5000;">
 
@@ -27,4 +29,4 @@
 			<div id="confirm-dialog" class="modal hide" style="z-index: 5000;">
 
 			</div>
-			<div id="enno-maincontent">
+			<div class="enno-main-body">
