@@ -18,4 +18,10 @@
               <property name="prefix" value="/WEB-INF/jsp/" />
               <property name="suffix" value=".jsp" />
        </bean>
+       <mvc:resources mapping="/css/**" location="css/"/>
+       <mvc:resources mapping="/lib/**" location="lib/"/>
+       <mvc:resources mapping="/font/**" location="font/"/>
+       <mvc:resources mapping="/img/**" location="img/"/>
+       <mvc:resources mapping="/locales/**" location="locales/"/>
+       <mvc:resources mapping="/scripts/**" location="scripts"/>
 </beans>

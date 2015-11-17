@@ -8,6 +8,5 @@
         Copyright � 2009-2015 Opentech MS LLC.
     </div>
 </div>
-<script src="${pageContext.request.contextPath}/scripts/bootstrap.min.js"></script>
 </body>
 </html>
