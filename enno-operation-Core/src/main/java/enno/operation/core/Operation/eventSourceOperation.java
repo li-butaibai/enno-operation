@@ -19,8 +19,10 @@ import java.util.*;
  */
 public class eventSourceOperation {
     private Session session = null;
-    eventSourceActivityOpeartion activityOp = new eventSourceActivityOpeartion();
-    subscriberOperation subOp = new subscriberOperation();
+    eventSourceActivityOpeartion activityOp = null;
+    subscriberOperation subOp = null;
+
+    //region 对外提供的Public方法
 
     //获取EventSource列表，分页，PageIndex：当前页码，PageSize：每页记录条数
     public PageDivisionQueryResultModel<EventSourceModel> getEventSourceList(int pageIndex, int pageSize) throws Exception {
@@ -41,6 +43,7 @@ public class eventSourceOperation {
 
     //EventSource详情
     public EventSourceModel GetEventsourceById(int EventsourceId) throws Exception {
+        subOp = new subscriberOperation();
         EventsourceEntity entity = getEventSourceById(EventsourceId);
         EventSourceModel eventsource = ConvertEventsourceEntity2Model(entity);
         eventsource.setSubscriberList(subOp.getSubscriberListByEventSourceId(EventsourceId));
@@ -213,7 +216,9 @@ public class eventSourceOperation {
             }
         }
     }
+    //endregion
 
+    //region private方法
     //通过Id获取指定的EventSource
     private EventsourceEntity getEventSourceById(int EventsourceId) throws Exception {
         EventsourceEntity es = new EventsourceEntity();
@@ -235,6 +240,7 @@ public class eventSourceOperation {
     }
 
     public EventSourceModel ConvertEventsourceEntity2Model(EventsourceEntity esEntity) throws Exception {
+        activityOp = new eventSourceActivityOpeartion();
         EventSourceModel esModel = new EventSourceModel();
         List<EventSourceActivityModel> activities = activityOp.GetEventSourceActivityByEventsourceId(esEntity.getId(), esEntity.getEventsourceTemplate().getId());
         esModel.setCreateTime(esEntity.getCreateTime());
@@ -250,6 +256,7 @@ public class eventSourceOperation {
     }
 
     private List<EventSourceModel> ConvertEventsourceEntityList2ModelList(List<EventsourceEntity> entityList) throws Exception {
+        subOp = new subscriberOperation();
         List<EventSourceModel> result = new ArrayList<EventSourceModel>();
         for (EventsourceEntity entity : entityList) {
             EventSourceModel es = new EventSourceModel();
@@ -318,4 +325,5 @@ public class eventSourceOperation {
 
         return ConnList;
     }
+    //endregion
 }

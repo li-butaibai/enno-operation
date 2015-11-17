@@ -1,12 +1,13 @@
 package enno.operation.web.controllers;
 
-import enno.operation.core.Operation.*;
+import enno.operation.core.Operation.eventLogOperation;
+import enno.operation.core.Operation.eventSourceOperation;
+import enno.operation.core.Operation.eventSourceTemplateOperation;
 import enno.operation.core.model.EventLogModel;
 import enno.operation.core.model.EventSourceModel;
 import enno.operation.core.model.EventSourceTemplateModel;
 import enno.operation.core.model.PageDivisionQueryResultModel;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by EriclLee on 15/11/15.
@@ -29,7 +29,6 @@ public class EventSourceController {
     {
         ModelAndView modelAndView = new ModelAndView("/eventsources/list");
         try {
-
             eventSourceOperation esOperation = new eventSourceOperation();
             PageDivisionQueryResultModel<EventSourceModel> eventSourceModelPageDivisionQueryResultModel
                     = esOperation.getEventSourceList(pageIndex, pageSize);
@@ -96,6 +95,8 @@ public class EventSourceController {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             //TODO: add new event source
+            eventSourceOperation esOperation = new eventSourceOperation();
+            esOperation.AddEventsource(eventSourceModel);
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
@@ -108,10 +109,12 @@ public class EventSourceController {
 
     @RequestMapping(value="/update",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateEventSource(){
+    public Map<String, Object> updateEventSource(@RequestBody EventSourceModel eventSourceModel){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             //TODO: update event source
+            eventSourceOperation esOperation = new eventSourceOperation();
+            esOperation.UpdateEventsource(eventSourceModel);
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
@@ -122,12 +125,14 @@ public class EventSourceController {
         }
     }
 
-    @RequestMapping(value="/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/{eventSourceId}",method = RequestMethod.DELETE)
     @ResponseBody
-    public Map<String, Object> deleteEventSource(){
+    public Map<String, Object> deleteEventSource(String eventSourceId){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             //TODO: delete event source
+            eventSourceOperation esOperation = new eventSourceOperation();
+            esOperation.DeleteEventsource(Integer.parseInt(eventSourceId));
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
@@ -160,6 +165,8 @@ public class EventSourceController {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             //TODO: add subscriber for event source
+            eventSourceOperation esOperation = new eventSourceOperation();
+            esOperation.AssignEventsource(Integer.parseInt(eventSourceId),Integer.parseInt(subscriberId));
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();

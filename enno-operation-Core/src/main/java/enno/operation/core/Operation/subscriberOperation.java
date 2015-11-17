@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class subscriberOperation {
     private Session session = null;
-    private eventSourceOperation esOp = new eventSourceOperation();
+    private eventSourceOperation esOp = null;
 
     //获取订阅者列表，分页，PageIndex：当前页码，PageSize：每页记录条数
     public PageDivisionQueryResultModel<SubscriberModel> getPageDivisonSubscriberList(int pageIndex, int pageSize) throws Exception {
@@ -40,6 +40,7 @@ public class subscriberOperation {
     //获取订阅者详情 Done
     public SubscriberModel getSubscriberById(int SubscriberId) throws Exception {
         try {
+            esOp = new eventSourceOperation();
             SubscriberEntity subEntity = getSubscriberEntityById(SubscriberId);
             SubscriberModel suber = ConvertSubscriberEntity2Model(subEntity);
             suber.setEventsourceList(esOp.GetEventsourcesBySubscriberId(SubscriberId));
@@ -159,6 +160,7 @@ public class subscriberOperation {
     }
 
     private List<SubscriberModel> ConvertSubscriberEntityList2ModelList(List<SubscriberEntity> entityList) throws Exception {
+        esOp = new eventSourceOperation();
         List<SubscriberModel> result = new ArrayList<SubscriberModel>();
         for (SubscriberEntity entity : entityList) {
             SubscriberModel suber = new SubscriberModel();

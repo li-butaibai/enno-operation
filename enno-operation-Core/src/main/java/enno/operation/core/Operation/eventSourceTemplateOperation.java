@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class eventSourceTemplateOperation {
     private Session session = null;
-    private eventSourceTemplateActivityOperation etaOperation = new eventSourceTemplateActivityOperation();
+    private eventSourceTemplateActivityOperation etaOperation = null;
     public List<EventSourceTemplateModel> getEventSourceTemplateList() throws Exception {
 
         try {
@@ -52,6 +52,7 @@ public class eventSourceTemplateOperation {
     }
 
     private EventSourceTemplateModel ConvertESTempalteEntity2Model(EventsourceTemplateEntity estEntity) throws Exception {
+        etaOperation = new eventSourceTemplateActivityOperation();
         EventSourceTemplateModel estModel = new EventSourceTemplateModel();
         List<EventSourceTemplateActivityModel> activities = etaOperation.getEventSourceTemplateActivityByTemplateId(estEntity.getId());
         estModel.setCreateTime(estEntity.getCreateTime());

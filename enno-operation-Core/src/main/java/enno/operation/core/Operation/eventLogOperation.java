@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class eventLogOperation {
     private Session session = null;
-    private eventSourceOperation esOp = new eventSourceOperation();
-    private subscriberOperation subOp = new subscriberOperation();
+    private eventSourceOperation esOp = null;
+    private subscriberOperation subOp = null;
 
     public PageDivisionQueryResultModel<EventLogModel> getPageDivisionEventLogList(int pageIndex, int pageSize) throws Exception {
         PageDivisionQueryResultModel<EventLogModel> result = new PageDivisionQueryResultModel<EventLogModel>();
@@ -94,6 +94,8 @@ public class eventLogOperation {
     }
 
     private EventLogModel ConvertEventlogEntity2Model(EventLogEntity entity) throws Exception {
+        esOp = new eventSourceOperation();
+        subOp = new subscriberOperation();
         EventLogModel log = new EventLogModel();
         try {
             log.setTitle(entity.getTitle());
