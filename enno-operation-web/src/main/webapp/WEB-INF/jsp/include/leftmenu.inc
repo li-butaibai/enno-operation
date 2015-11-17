@@ -26,3 +26,21 @@
         </li>
     </ul>
 </div>
+<script>
+    $(document).ready(function () {
+        $(".level-1 > li > a").click(function () {
+            $(".selected").removeClass("selected");
+            $(this).parent().addClass("selected");
+        });
+        var contextPath ='<%=request.getContextPath()%>';
+        var pathName=location.pathname;
+        pathName=pathName.replace(contextPath,"");
+        var urls = pathName.split('/');
+        if (urls[1] == undefined) {
+            $(".index").addClass("selected");
+        }
+        else {
+            $("." + urls[1]).addClass("selected");
+        }
+    });
+</script>
