@@ -6,33 +6,31 @@
 <head>
 <title>Enno-Operation/></title>
 	<script src="${pageContext.request.contextPath}/scripts/jquery.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"  type="text/javascript"></script>
-	<link href="${pageContext.request.contextPath}/css/console.css" rel="stylesheet" />
-<link href="${pageContext.request.contextPath}/css/enno.operation.css" rel="stylesheet" />
-	<script type="text/javascript">
-		$(document).ready()(function(){
-			alert("ready");
-//			var total = document.documentElement.clientHeight;
-//			alert(total);
-//			$('.enno-container').css("height",total+"px");
-//			alert($('.enno-container').height);
-		});
-		function
-	</script>
+	<script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"  type="text/javascript"></script>
+	<link href="${pageContext.request.contextPath}/css/Console.css" rel="stylesheet" />
 </head>
 
 <body class="enno-body">
 
-<div class="enno-container">
-		<div class="enno-top-bar"></div>
-		<div class="enno-content">
-			<div class="enno-left-menu"></div>
-			<!-- SiteWhere alert dialog -->
-			<div id="alert-dialog" class="modal hide" style="z-index: 5000;">
+<div id="dialogDiv"></div>
+<div id="waiting" class="waiting" style="display: none; z-index: 99999;">
+	<img src="/Images/waiting.gif" />
+</div>
+<div class="container">
+	<div class="viewport" id="console">
+		<div class="nav-global">
+			<div>
+				<div class="global-logo">
+					<p class="site-title">Enno-Operation Platform</p>
+				</div>
+				<div class="items-inner">
 
+				</div>
 			</div>
-			<!-- SiteWhere confirm dialog -->
-			<div id="confirm-dialog" class="modal hide" style="z-index: 5000;">
-
+		</div>
+		<div class="nav-zone">
+			<div class="nav-zone-inner">
+				<%@ include file="leftmenu.inc"%>
 			</div>
-			<div id="enno-main-body" class="enno-main-body">
+		</div>
+		<div class="content" id="content">
