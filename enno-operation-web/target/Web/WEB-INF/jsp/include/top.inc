@@ -2,31 +2,35 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false" %>
 <!DOCTYPE html>
-
-<html class="sw-body">
+<html>
 <head>
 <title>Enno-Operation/></title>
-<script src="${pageContext.request.contextPath}/scripts/jquery-1.10.2.min.js"></script>
-<script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"></script>
-<script src="${pageContext.request.contextPath}/scripts/kendo.web.min.js"></script>
-<script src="${pageContext.request.contextPath}/scripts/modernizr.js"></script>
-<script src="${pageContext.request.contextPath}/scripts/sitewhere.js"></script>
-<script src="${pageContext.request.contextPath}/scripts/timeago.js"></script>
-<link href="${pageContext.request.contextPath}/css/sitewhere.css" rel="stylesheet" />
-<link href="${pageContext.request.contextPath}/css/kendo.bootstrap.min.css" rel="stylesheet" />
-<link href="${pageContext.request.contextPath}/css/enno.operation.css" rel="stylesheet" />
+	<script src="${pageContext.request.contextPath}/scripts/jquery.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"  type="text/javascript"></script>
+	<link href="${pageContext.request.contextPath}/css/Console.css" rel="stylesheet" />
 </head>
+
 <body class="enno-body">
-	<div class="enno-container">
-		<div class="enno-top-bar"></div>
-		<div class="enno-content">
-			<div class="enno-left-menu"></div>
-			<!-- SiteWhere alert dialog -->
-			<div id="alert-dialog" class="modal hide" style="z-index: 5000;">
+<div class="container">
+	<div class="viewport" id="console">
+		<div class="nav-global">
+			<div>
+				<div class="global-logo">
+					<p class="site-title">Enno-Operation Platform</p>
+				</div>
+				<div class="items-inner">
+					<section id="login">
 
+					</section>
+				</div>
 			</div>
-			<!-- SiteWhere confirm dialog -->
-			<div id="confirm-dialog" class="modal hide" style="z-index: 5000;">
+		</div>
+		<div class="nav-zone">
+			<div class="nav-zone-inner">
+				<%@ include file="leftmenu.inc"%>
+			</div>
+		</div>
+		<div class="content" id="content">
 
-			</div>
-			<div class="enno-main-body">
+
+
