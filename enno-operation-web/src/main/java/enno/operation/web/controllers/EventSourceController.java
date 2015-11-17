@@ -57,14 +57,14 @@ public class EventSourceController {
             List<EventLogModel> eventLogModels = elOperation.getEventLogsByEventsourceId(esId);
 
             model.put("EventSource",esModel);
-            model.put("EventLogList",eventLogModels);
-            model.put("success",true);
+            model.put("EventLogList", eventLogModels);
+            model.put("success", true);
             return model;
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
-            model.put("success",false);
+            model.put("success", false);
             return model;
         }
         finally {
@@ -94,7 +94,6 @@ public class EventSourceController {
     public Map<String, Object> newEventSource(@RequestBody EventSourceModel eventSourceModel){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: add new event source
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.AddEventsource(eventSourceModel);
             model.put("success", true);
@@ -112,7 +111,6 @@ public class EventSourceController {
     public Map<String, Object> updateEventSource(@RequestBody EventSourceModel eventSourceModel){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: update event source
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.UpdateEventsource(eventSourceModel);
             model.put("success", true);
@@ -130,7 +128,6 @@ public class EventSourceController {
     public Map<String, Object> deleteEventSource(String eventSourceId){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: delete event source
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.DeleteEventsource(Integer.parseInt(eventSourceId));
             model.put("success", true);
@@ -148,7 +145,6 @@ public class EventSourceController {
     public Map<String, Object> offlineEventSource(){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: offline event source
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
@@ -164,9 +160,25 @@ public class EventSourceController {
     public Map<String, Object> addSubscriber2EventSource(String eventSourceId, String subscriberId){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: add subscriber for event source
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.AssignEventsource(Integer.parseInt(eventSourceId),Integer.parseInt(subscriberId));
+            model.put("success", true);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            model.put("success", false);
+        }
+        finally {
+            return model;
+        }
+    }
+
+    @RequestMapping(value="/{eventSourceId}/removeSubscriber/{subscriberId}",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> RemoveSubscriber2EventSource(String eventSourceId, String subscriberId){
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            eventSourceOperation esOperation = new eventSourceOperation();
+            esOperation.RemoveEventsourceSubscription(Integer.parseInt(eventSourceId),Integer.parseInt(subscriberId));
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
