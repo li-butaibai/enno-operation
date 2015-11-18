@@ -1,8 +1,9 @@
 package enno.operation.core.Operation;
 
 import enno.operation.core.common.pageDivisionQueryUtil;
-import enno.operation.core.model.PageDivisionQueryResultModel;
-import enno.operation.core.model.SubscriberModel;
+import enno.operation.core.model.*;
+import enno.operation.core.model.Enum;
+import enno.operation.dal.EventsourceSubscriberMapEntity;
 import enno.operation.dal.SubscriberEntity;
 import enno.operation.dal.hibernateUtil;
 import org.hibernate.Query;
@@ -48,10 +49,6 @@ public class subscriberOperation {
             return suber;
         } catch (Exception ex) {
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 
@@ -79,8 +76,19 @@ public class subscriberOperation {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("update SubscriberEntity e set e.dataStatus = 0, e.status = 0 where e.id = :SubscriberId").setParameter("SubscriberId", SubscriberId);
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
+            q.setParameter("SubscriberId", SubscriberId);
+            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+            for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
+                session.delete(MapEntity);
+            }
+
+            q = session.createQuery("update SubscriberEntity e set e.dataStatus = :dataStatus, e.status = :status where e.id = :SubscriberId");
+            q.setParameter("dataStatus", Enum.State.Offline.ordinal());
+            q.setParameter("status", Enum.validity.invalid.ordinal());
+            q.setParameter("SubscriberId", SubscriberId);
             q.executeUpdate();
+
             tx.commit();
         } catch (Exception ex) {
 
