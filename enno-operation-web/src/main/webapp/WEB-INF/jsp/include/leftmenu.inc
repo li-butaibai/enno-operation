@@ -6,19 +6,19 @@
                 <span class="text">Console</span>
             </a>
         </li>
-        <li class="cate no-items tenant">
+        <li class="cate no-items eventsources">
             <a  class=""  href="#" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Event Source</span>
             </a>
         </li>
-        <li class="cate no-items order">
+        <li class="cate no-items subscribers">
             <a class="" href="#" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Subscriber</span>
             </a>
         </li>
-        <li class="cate no-items template">
+        <li class="cate no-items eventlogs">
             <a class="" href="#" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Event Log</span>
