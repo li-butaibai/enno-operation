@@ -32,9 +32,9 @@
             $(".selected").removeClass("selected");
             $(this).parent().addClass("selected");
         });
-        var contextPath =  '<%=request.getContextPath()%>';
-        var pathName = location.pathname;
-        pathName = pathName.replace(contextPath,"");
+        var contextPath ='<%=request.getContextPath()%>';
+        var pathName=location.pathname;
+        pathName=pathName.replace(contextPath,"");
         var urls = pathName.split('/');
         if (urls[1] == undefined) {
             $(".index").addClass("selected");

@@ -8,10 +8,7 @@ import enno.operation.core.model.EventSourceModel;
 import enno.operation.core.model.EventSourceTemplateModel;
 import enno.operation.core.model.PageDivisionQueryResultModel;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -44,17 +41,16 @@ public class EventSourceController {
         }
     }
 
-    @RequestMapping(value="/detail/{eventSourceId}", method = RequestMethod.GET)
-    public Map<String, Object> detail(String eventSourceId)
+    @RequestMapping(value="/detail", method = RequestMethod.GET)
+    public Map<String, Object> detail(@RequestParam("eventSourceId") int eventSourceId)
     {
         Map<String, Object> model = new HashMap<String,Object>();
         try{
-            int esId = Integer.parseInt(eventSourceId);
             eventSourceOperation esOperation = new eventSourceOperation();
-            EventSourceModel esModel = esOperation.GetEventsourceById(esId);
+            EventSourceModel esModel = esOperation.GetEventsourceById(eventSourceId);
 
             eventLogOperation elOperation = new eventLogOperation();
-            List<EventLogModel> eventLogModels = elOperation.getEventLogsByEventsourceId(esId);
+            List<EventLogModel> eventLogModels = elOperation.getEventLogsByEventsourceId(eventSourceId);
 
             model.put("EventSource",esModel);
             model.put("EventLogList", eventLogModels);
@@ -178,7 +174,7 @@ public class EventSourceController {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             eventSourceOperation esOperation = new eventSourceOperation();
-            esOperation.RemoveEventsourceSubscription(Integer.parseInt(eventSourceId),Integer.parseInt(subscriberId));
+            esOperation.RemoveEventsourceSubscription(Integer.parseInt(eventSourceId), Integer.parseInt(subscriberId));
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();

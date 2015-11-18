@@ -2,9 +2,11 @@
 <%@ include file="../include/top.inc"%>
 <div class="wrapper page">
     <div class="topbar">
-        <div class="breadcrumbs">
-            <a class="level level-zone gd1 pjaxA" href="#" data-permalink="">Event Source</a>
-        </div>
+        <div>
+            <div class="breadcrumbs">
+                <a class="level level-zone level-zone-2" href="/eventsources/list" data-permalink="">Event Sources</a>
+
+            </div></div>
     </div>
     <div class="pane">
         <div class="toolbar">
@@ -20,7 +22,7 @@
             <thead>
             <tr>
                 <th class="checkbox">
-                    <input type="checkbox" name="checkAll"/>
+
                 </th>
                 <th>
                    EventSource
@@ -46,7 +48,7 @@
                     <input  type="checkbox" name="checkItem" id="${es.id}"/>
                 </td>
                 <td >
-                    <span>${es.sourceId}</span>
+                    <a class="id" href="/eventsources/detail?eventSourceId=${es.id}" data-permalink="">${es.sourceId}</a>
                 </td>
                 <td>
                     <span>${es.protocol}</span>
