@@ -124,8 +124,10 @@ public class EventSourceController {
                 EventSourceActivityModel eventSourceActivityModel= new EventSourceActivityModel();
                 eventSourceActivityModel.setName(eaNames[i]);
                 eventSourceActivityModel.setValue(eaValues[i]);
-                eventSourceModel.setEventSourceTemplateId(Integer.parseInt(templateActivityIds[i]));
+                eventSourceActivityModel.setTemplateActivityId(Integer.parseInt(templateActivityIds[i]));
+                eventSourceActivityModels.add(eventSourceActivityModel);
             }
+            eventSourceModel.setEventSourceActivities(eventSourceActivityModels);
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.AddEventsource(eventSourceModel);
             model.put("success", true);
