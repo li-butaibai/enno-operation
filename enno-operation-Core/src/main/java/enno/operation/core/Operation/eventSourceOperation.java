@@ -2,15 +2,14 @@ package enno.operation.core.Operation;
 
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
+import enno.operation.core.model.Enum;
 import enno.operation.dal.*;
 import enno.operation.zkl.ZKClient;
 import enno.operation.zkmodel.EventSourceConnectModel;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.event.spi.EventSource;
 
-import javax.print.attribute.standard.DateTimeAtCreation;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -75,7 +74,7 @@ public class eventSourceOperation {
             Transaction tx = session.beginTransaction();
 
             //Query Event Source Template
-            int templateId = eventSource.getId();
+            int templateId = eventSource.getEventSourceTemplateId();
             Query q = session.createQuery("from EventsourceTemplateEntity t where t.id = :templateId");
             q.setParameter("templateId", templateId);
             EventsourceTemplateEntity templateEntity = (EventsourceTemplateEntity) q.uniqueResult();
@@ -87,14 +86,15 @@ public class eventSourceOperation {
 
             EventsourceEntity entity = new EventsourceEntity();
             entity.setComments(eventSource.getComments());
-            entity.setCreateTime(eventSource.getCreateTime());
+            entity.setCreateTime(new Timestamp((new Date()).getTime()));
             entity.setEventDecoder(eventSource.getEventDecoder());
             entity.setEventsourceTemplate(templateEntity);
             entity.setUpdateTime(new Timestamp((new Date()).getTime()));
             entity.setSourceId(eventSource.getSourceId());
-            entity.setDataStatus(1);
-            entity.setStatus(1);
+            entity.setDataStatus(Enum.validity.valid.ordinal());
+            entity.setStatus(Enum.State.Online.ordinal());
 
+            //List<EventsourceActivityEntity> activityEntities = new ArrayList<EventsourceActivityEntity>();
             for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
                 EventsourceActivityEntity activityEntity = new EventsourceActivityEntity();
                 activityEntity.setEventsource(entity);
@@ -104,7 +104,10 @@ public class eventSourceOperation {
                     }
                     activityEntity.setValue(activity.getValue());
                 }
+                session.save(activityEntity);
             }
+
+
             session.save(entity);
             tx.commit();
         } catch (Exception ex) {
@@ -124,13 +127,18 @@ public class eventSourceOperation {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
 
+            //Delete Map Data
             Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId");
             q.setParameter("EventsourceId", EventsourceId);
             List<EventsourceSubscriberMapEntity> MapEntities = q.list();
             for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
                 session.delete(MapEntity);
             }
-            q = session.createQuery("update EventsourceEntity e set e.dataStatus = 0, e.status = 0 where e.id = :EventsourceId").setParameter("EventsourceId", EventsourceId);
+
+            q = session.createQuery("update EventsourceEntity e set e.dataStatus = :dataStatus, e.status = :status where e.id = :EventsourceId");
+            q.setParameter("EventsourceId", EventsourceId);
+            q.setParameter("dataStatus",Enum.validity.invalid.ordinal());
+            q.setParameter("status", Enum.State.Offline.ordinal());
             q.executeUpdate();
             tx.commit();
         } catch (Exception ex) {
@@ -208,6 +216,7 @@ public class eventSourceOperation {
             es.setSourceId(eventSource.getSourceId());
             es.setComments(eventSource.getComments());
             es.setEventDecoder(eventSource.getEventDecoder());
+            es.setUpdateTime(new Timestamp((new Date()).getTime()));
             tx.commit();
         } catch (Exception ex) {
 
