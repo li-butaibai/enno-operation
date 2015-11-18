@@ -5,11 +5,13 @@ package enno.operation.core.model;
  */
 public class Enum {
 
+    //对应DataStatus
     public enum validity {
         invalid,
         valid
     }
 
+    //对应Status
     public enum State {
         Offline,
         Online
