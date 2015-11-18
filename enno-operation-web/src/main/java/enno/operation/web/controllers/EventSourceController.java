@@ -3,14 +3,12 @@ package enno.operation.web.controllers;
 import enno.operation.core.Operation.eventLogOperation;
 import enno.operation.core.Operation.eventSourceOperation;
 import enno.operation.core.Operation.eventSourceTemplateOperation;
-import enno.operation.core.model.EventLogModel;
-import enno.operation.core.model.EventSourceModel;
-import enno.operation.core.model.EventSourceTemplateModel;
-import enno.operation.core.model.PageDivisionQueryResultModel;
+import enno.operation.core.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,9 +66,10 @@ public class EventSourceController {
         }
     }
 
-    @RequestMapping(value="/newEventSourceForm",method = RequestMethod.GET)
+    @RequestMapping(value="/newform",method = RequestMethod.GET)
+    @ResponseBody
     public ModelAndView getESNewForm(){
-        ModelAndView modelAndView = new ModelAndView("/eventsources/detail");
+        ModelAndView modelAndView = new ModelAndView("/eventsources/neweventsource");
         try{
             eventSourceTemplateOperation estOperation = new eventSourceTemplateOperation();
             List<EventSourceTemplateModel> eventSourceModels = estOperation.getEventSourceTemplateList();
@@ -85,11 +84,54 @@ public class EventSourceController {
         }
     }
 
+    @RequestMapping(value="/getconnectinfo",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getConnectInfo(@RequestParam int templateId){
+        ModelAndView modelAndView = new ModelAndView("/eventsources/connectinfo");
+        try{
+            eventSourceTemplateOperation estOperation = new eventSourceTemplateOperation();
+            List<EventSourceTemplateModel> eventSourceModels = estOperation.getEventSourceTemplateList();
+            for(EventSourceTemplateModel item : eventSourceModels)
+            {
+                if(item.getId() == templateId)
+                {
+                    modelAndView.addObject("ESTemplate", item);
+                }
+            }
+            modelAndView.addObject("success", true);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            modelAndView.addObject("success", false);
+        }
+        finally {
+            return modelAndView;
+        }
+    }
+
     @RequestMapping(value="/add",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> newEventSource(@RequestBody EventSourceModel eventSourceModel){
+    public Map<String, Object> newEventSource(String sourceId, String eventDecoder,
+                                              String eventSourceTemplateId, String comments,
+                                              String protocol, String[] templateActivityId,
+                                              String[] eaName, String[] eaValue){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
+            EventSourceModel eventSourceModel = new EventSourceModel();
+            eventSourceModel.setSourceId(sourceId);
+            eventSourceModel.setEventDecoder(eventDecoder);
+            eventSourceModel.setEventSourceTemplateId(Integer.parseInt(eventSourceTemplateId));
+            eventSourceModel.setComments(comments);
+            List<EventSourceActivityModel> eventSourceActivityModels
+                    = new ArrayList<EventSourceActivityModel>();
+            for(int i=0; i<eaName.length; i++)
+            {
+                EventSourceActivityModel eventSourceActivityModel = new EventSourceActivityModel();
+                eventSourceActivityModel.setName(eaName[i]);
+                eventSourceActivityModel.setTemplateActivityId(Integer.parseInt(templateActivityId[i]));
+                eventSourceActivityModel.setValue(eaValue[i]);
+                eventSourceActivityModels.add(eventSourceActivityModel);
+            }
+            eventSourceModel.setEventSourceActivities(eventSourceActivityModels);
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.AddEventsource(eventSourceModel);
             model.put("success", true);
