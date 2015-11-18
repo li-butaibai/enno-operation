@@ -28,6 +28,7 @@ public class eventLogOperation {
             result.setRecordCount(entityQR.getRecordCount());
             result.setPageSize(pageSize);
             result.setQueryResult(ConvertEventlogList2ModelList(entityQR.getQueryResult()));
+            result.setPageCount();
             return result;
         } catch (Exception ex) {
             throw ex;

@@ -31,6 +31,7 @@ public class subscriberOperation {
             result.setRecordCount(entityList.getRecordCount());
             result.setCurrentPageIndex(pageIndex);
             result.setQueryResult(ConvertSubscriberEntityList2ModelList(entityList.getQueryResult()));
+            result.setPageCount();
             return result;
         } catch (Exception ex) {
             throw ex;

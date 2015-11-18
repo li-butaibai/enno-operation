@@ -1,5 +1,9 @@
 package enno.operation.web.controllers;
 
+import enno.operation.core.Operation.eventLogOperation;
+import enno.operation.core.Operation.subscriberOperation;
+import enno.operation.core.model.EventLogModel;
+import enno.operation.core.model.PageDivisionQueryResultModel;
 import enno.operation.core.model.SubscriberModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +26,10 @@ public class SubscriberController {
     {
         ModelAndView modelAndView = new ModelAndView("/subscribers/list");
         try{
-            //TODO: get subscriber list
+            subscriberOperation subOp = new subscriberOperation();
+            PageDivisionQueryResultModel<SubscriberModel> subscriberModelPageDivisionQueryResultModel
+                    = subOp.getPageDivisonSubscriberList(pageIndex, pageSize);
+            modelAndView.addObject("SubscriberPage", subscriberModelPageDivisionQueryResultModel);
             modelAndView.addObject("success",true);
         }
         catch (Exception ex){
@@ -37,7 +45,15 @@ public class SubscriberController {
     {
         Map<String, Object> model = new HashMap<String,Object>();
         try{
-            //TODO£º get subscriber detail
+            int subId = Integer.parseInt(subscirberId);
+            subscriberOperation subOp = new subscriberOperation();
+            SubscriberModel subModel = subOp.getSubscriberById(subId);
+
+            eventLogOperation elOperation = new eventLogOperation();
+            List<EventLogModel> eventLogModels = elOperation.getEventLogsBySubscriberId(subId);
+
+            model.put("Subscriber",subModel);
+            model.put("EventLogList", eventLogModels);
             model.put("success", true);
             return model;
         }
@@ -57,7 +73,8 @@ public class SubscriberController {
     public Map<String, Object> updateSubscriber(@RequestBody SubscriberModel subscriberModel){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: update event source
+            subscriberOperation subOp = new subscriberOperation();
+            subOp.UpdateSubscriber(subscriberModel);
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
@@ -73,7 +90,8 @@ public class SubscriberController {
     public Map<String, Object> deleteSubscriber(String subscriberId){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
-            //TODO: delete subscriber;
+            subscriberOperation subOp = new subscriberOperation();
+            subOp.DeleteSubscriber(Integer.parseInt(subscriberId));
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
