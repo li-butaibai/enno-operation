@@ -21,7 +21,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/subscribers")
 public class SubscriberController {
-    @RequestMapping(value={"","/","list"}, method = RequestMethod.GET)
+    @RequestMapping(value="/list", method = RequestMethod.GET)
     public ModelAndView list(int pageIndex, int pageSize)
     {
         ModelAndView modelAndView = new ModelAndView("/subscribers/list");

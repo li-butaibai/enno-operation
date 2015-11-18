@@ -19,8 +19,9 @@ import java.util.Map;
 @RequestMapping(value = "/eventsources")
 @Controller
 public class EventSourceController {
-    @RequestMapping(value = {"","/","/list"}, method = RequestMethod.GET)
-    public ModelAndView list(int pageIndex, int pageSize)
+    private static int pageSize = 10;
+    @RequestMapping(value ="/list", method = RequestMethod.GET)
+    public ModelAndView list(int pageIndex)
     {
         ModelAndView modelAndView = new ModelAndView("/eventsources/list");
         try {
@@ -68,7 +69,7 @@ public class EventSourceController {
 
     @RequestMapping(value="/newEventSourceForm",method = RequestMethod.GET)
     public ModelAndView getESNewForm(){
-        ModelAndView modelAndView = new ModelAndView("/eventsources/detail");
+        ModelAndView modelAndView = new ModelAndView("/eventsources/neweventsource");
         try{
             eventSourceTemplateOperation estOperation = new eventSourceTemplateOperation();
             List<EventSourceTemplateModel> eventSourceModels = estOperation.getEventSourceTemplateList();
@@ -186,9 +187,9 @@ public class EventSourceController {
         }
     }
 
-    @RequestMapping(value="/{eventSourceId}/addSubscriber/{subscriberId}",method = RequestMethod.POST)
+    @RequestMapping(value="/addSubscriber",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> addSubscriber2EventSource(String eventSourceId, String subscriberId){
+    public Map<String, Object> addSubscriber2EventSource(@RequestParam String eventSourceId, @RequestParam String subscriberId){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             eventSourceOperation esOperation = new eventSourceOperation();

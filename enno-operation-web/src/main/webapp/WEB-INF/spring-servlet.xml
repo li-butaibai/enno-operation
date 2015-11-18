@@ -10,7 +10,7 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
        <!-- Scans the classpath of this application for @Components to deploy as beans -->
-       <context:component-scan base-package="enno.operation.web" />
+       <context:component-scan base-package="enno.operation.web.controllers" />
        <!-- Configures the @Controller programming model -->
        <mvc:annotation-driven />
        <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
