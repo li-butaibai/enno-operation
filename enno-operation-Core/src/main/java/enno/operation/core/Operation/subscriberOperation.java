@@ -164,6 +164,7 @@ public class subscriberOperation {
         suber.setComments(suberEntity.getComments());
         suber.setCreateTime(suberEntity.getCreateTime());
         suber.setName(suberEntity.getName());
+        suber.setStatus(suberEntity.getStatus());
 
         return suber;
     }

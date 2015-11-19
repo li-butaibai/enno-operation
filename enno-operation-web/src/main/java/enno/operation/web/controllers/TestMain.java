@@ -20,7 +20,7 @@ public class TestMain {
             EventLogController logController = new EventLogController();
 
             //ModelAndView d = subController.list(1,10);
-            //ModelAndView d = eventSourceController.list(1, 10);
+            ModelAndView d = eventSourceController.list(0);
             //Map<String, Object> d = subController.detail("1");
             //ModelAndView d = logController.list(1,10);
             // Map<String, Object> d = logController.detail("1");
@@ -64,12 +64,12 @@ public class TestMain {
             //endregion
 
             //region Update Subscriber Test
-            SubscriberModel sub = new SubscriberModel();
+            /*SubscriberModel sub = new SubscriberModel();
             sub.setId(1);
             sub.setName("subName1");
             sub.setComments("sub1 comments Update");
             sub.setAddress("Address1");
-            Map<String, Object> d =  subController.updateSubscriber(sub);
+            Map<String, Object> d =  subController.updateSubscriber(sub);*/
             //endregion
 
             //region Delete Subscriber Test
