@@ -4,12 +4,16 @@
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/subscribers/list?pageIndex=1" data-permalink="">Event Sources</a>
+        <a class="level level-zone level-zone-2" href="/eventlogs/list?pageIndex=1" data-permalink="">Event Sources</a>
       </div>
     </div>
   </div>
   <div class="pane">
     <div class="toolbar">
+      <a class="btn" href="#" onclick="">
+        <span class="icon icon-run" ></span>
+        <span class="text">Add</span>
+      </a>
       <a class="btn" href="#">
         <span class="text">Update</span>
       </a>
@@ -21,16 +25,16 @@
           <input type="checkbox" name="checkAll"/>
         </th>
         <th>
-          Subscriber Name
+          EventSource
         </th>
         <th>
-          Status
+          Protcol
         </th>
         <th>
-          Event Source Count
+          Subsciber Count
         </th>
         <th>
-          Address
+          Event Decoder
         </th>
         <th>
           Comments
@@ -38,25 +42,25 @@
       </tr>
       </thead>
       <tbody>
-      <c:forEach items="${SubscriberPage.queryResult}" var="sb">
+      <c:forEach items="${EventlogPage.queryResult}" var="el">
         <tr>
           <td class="checkbox">
-            <input  type="checkbox" name="checkItem" id="${sb.id}"/>
+            <input  type="checkbox" name="checkItem" id="${el.id}"/>
           </td>
           <td >
-            <a href="/subscribers/detail?subscriberId=${sb.id}">${sb.name}</a>
+            <a href="/eventlogs/detail?eventSourceId=${el.id}">${el.title}</a>
           </td>
           <td>
-            <span>${sb.status}</span>
+            <a href="/eventsources/detail?eventSourceId=${el.eventSourceModel.id}">${el.eventSourceModel.sourceId}</a>
           </td>
           <td>
-            <span>${sb.eventsourceList.size()}</span>
+            <a href="/subscribers/detail?subscirberId=${el.subscriberModel.id}">${el.subscriberModel.name}</a>
           </td>
           <td>
-            <span>${sb.address}</span>
+            <span>${el.level}</span>
           </td>
           <td>
-            <span>${sb.comments}</span>
+            <span>${el.message}</span>
           </td>
         </tr>
       </c:forEach>
