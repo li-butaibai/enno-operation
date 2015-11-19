@@ -14,6 +14,15 @@ public class SubscriberModel {
     private List<EventSourceModel> eventsourceList;
     private Timestamp createTime;
     private Timestamp updateTime;
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public int getId() {
         return id;
@@ -22,6 +31,7 @@ public class SubscriberModel {
     public void setId(int id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
