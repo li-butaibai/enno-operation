@@ -134,6 +134,7 @@ public class EventSourceController {
         }catch (Exception ex){
             ex.printStackTrace();
             model.put("success", false);
+            model.put("eMessage",ex.getMessage());
         }
         finally {
             return model;

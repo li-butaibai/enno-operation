@@ -26,7 +26,7 @@
     <div class="topbar">
         <div>
             <div class="breadcrumbs">
-                <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=0" data-permalink="">Event Sources</a>
+                <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
                     <input  type="checkbox" name="checkItem" id="${es.id}"/>
                 </td>
                 <td >
-                    <span>${es.sourceId}</span>
+                    <a href="/eventsources/detail?eventSourceId=${es.id}">${es.sourceId}</a>
                 </td>
                 <td>
                     <span>${es.protocol}</span>

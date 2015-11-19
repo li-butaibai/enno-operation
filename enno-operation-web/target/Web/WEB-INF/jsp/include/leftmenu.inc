@@ -7,19 +7,19 @@
             </a>
         </li>
         <li class="cate no-items eventsources">
-            <a  class=""  href="#" data-permalink="">
+            <a  class=""  href="/eventsources/list?pageIndex=1" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Event Source</span>
             </a>
         </li>
         <li class="cate no-items subscribers">
-            <a class="" href="#" data-permalink="">
+            <a class="" href="/subscribers/list?pageIndex=1" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Subscriber</span>
             </a>
         </li>
         <li class="cate no-items eventlogs">
-            <a class="" href="#" data-permalink="">
+            <a class="" href="/eventlogs/list?pageIndex=1" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Event Log</span>
             </a>

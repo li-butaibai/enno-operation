@@ -11,7 +11,7 @@
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=0&pageSize=10" data-permalink="">Event Sources</a>
+        <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
         <a class="level" href="#" data-permalink="">${EventSource.sourceId}</a>
       </div></div>
   </div>
