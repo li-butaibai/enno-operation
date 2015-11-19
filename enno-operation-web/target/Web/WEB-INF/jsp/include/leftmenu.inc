@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="cate no-items subscribers">
-            <a class="" href="/subscribers/list?pageIndex=1" data-permalink="">
+            <a class="" href="/subscribers/list?pageIndex=1&pageSize=10" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Subscriber</span>
             </a>
