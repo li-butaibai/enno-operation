@@ -27,9 +27,9 @@ public class PageDivisionQueryResultModel<T> {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    /*public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
-    }
+    }*/
 
     public List<T> getQueryResult() {
         return queryResult;
@@ -49,7 +49,7 @@ public class PageDivisionQueryResultModel<T> {
 
     private int recordCount;
     private int currentPageIndex;
-    private int pageSize;
+    private int pageSize = 10;
     private List<T> queryResult;
     private int pageCount;
 }

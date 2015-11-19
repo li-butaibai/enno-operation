@@ -22,13 +22,13 @@ public class subscriberOperation {
     private eventSourceOperation esOp = null;
 
     //获取订阅者列表，分页，PageIndex：当前页码，PageSize：每页记录条数
-    public PageDivisionQueryResultModel<SubscriberModel> getPageDivisonSubscriberList(int pageIndex, int pageSize) throws Exception {
+    public PageDivisionQueryResultModel<SubscriberModel> getPageDivisonSubscriberList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<SubscriberModel> result = new PageDivisionQueryResultModel<SubscriberModel>();
 
         try {
             PageDivisionQueryResultModel<SubscriberEntity> entityList = new PageDivisionQueryResultModel<SubscriberEntity>();
-            entityList = getPageDivisonSubscriberEntityList(pageIndex, pageSize);
-            result.setPageSize(pageSize);
+            entityList = getPageDivisonSubscriberEntityList(pageIndex);
+            //result.setPageSize(pageSize);
             result.setRecordCount(entityList.getRecordCount());
             result.setCurrentPageIndex(pageIndex);
             result.setQueryResult(ConvertSubscriberEntityList2ModelList(entityList.getQueryResult()));
@@ -182,13 +182,13 @@ public class subscriberOperation {
     }
 
     //获取Subscriber列表，分页
-    private PageDivisionQueryResultModel<SubscriberEntity> getPageDivisonSubscriberEntityList(int pageIndex, int pageSize) throws Exception {
+    private PageDivisionQueryResultModel<SubscriberEntity> getPageDivisonSubscriberEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<SubscriberEntity> util = new pageDivisionQueryUtil();
 
         try {
             String queryHQL = "from SubscriberEntity se where se.status = 1 and se.dataStatus = 1 order by se.id asc";
             String countHQL = "select count(*) from SubscriberEntity se where se.status = 1 and se.dataStatus = 1";
-            return util.excutePageDivisionQuery(pageIndex, pageSize, queryHQL, countHQL);
+            return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
             throw ex;
         }

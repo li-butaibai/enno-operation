@@ -24,13 +24,13 @@ public class eventLogOperation {
     private subscriberOperation subOp = null;
     private static Logger logger = LogManager.getLogger(eventLogOperation.class.getName());
 
-    public PageDivisionQueryResultModel<EventLogModel> getPageDivisionEventLogList(int pageIndex, int pageSize) throws Exception {
+    public PageDivisionQueryResultModel<EventLogModel> getPageDivisionEventLogList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<EventLogModel> result = new PageDivisionQueryResultModel<EventLogModel>();
         try {
-            PageDivisionQueryResultModel<EventLogEntity> entityQR = getPageDivisionEventLogEntityList(pageIndex, pageSize);
+            PageDivisionQueryResultModel<EventLogEntity> entityQR = getPageDivisionEventLogEntityList(pageIndex);
             result.setCurrentPageIndex(pageIndex);
             result.setRecordCount(entityQR.getRecordCount());
-            result.setPageSize(pageSize);
+            //result.setPageSize(pageSize);
             result.setQueryResult(ConvertEventlogList2ModelList(entityQR.getQueryResult()));
             result.setPageCount();
             return result;
@@ -49,14 +49,31 @@ public class eventLogOperation {
         return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId, Count));
     }
 
+    public EventLogModel getEventLogById(int EventLogId) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventLogEntity log where log.id = :LogId");
+            q.setParameter("LogId", EventLogId);
+            EventLogEntity logEntity = (EventLogEntity) q.uniqueResult();
+            return ConvertEventlogEntity2Model(logEntity);
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
     //获取EventLog列表，分页
-    private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex, int pageSize) throws Exception {
+    private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<EventLogEntity> util = new pageDivisionQueryUtil();
 
         try {
             String queryHQL = "from EventLogEntity ee order by ee.createTime desc";
             String countHQL = "select count(*) from EventLogEntity ee";
-            return util.excutePageDivisionQuery(pageIndex, pageSize, queryHQL, countHQL);
+            return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
             throw ex;
         }

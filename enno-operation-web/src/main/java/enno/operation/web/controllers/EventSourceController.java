@@ -27,7 +27,7 @@ public class EventSourceController {
         try {
             eventSourceOperation esOperation = new eventSourceOperation();
             PageDivisionQueryResultModel<EventSourceModel> eventSourceModelPageDivisionQueryResultModel
-                    = esOperation.getEventSourceList(pageIndex, pageSize);
+                    = esOperation.getEventSourceList(pageIndex);
             modelAndView.addObject("EventSourcePage", eventSourceModelPageDivisionQueryResultModel);
             modelAndView.addObject("success", true);
         }

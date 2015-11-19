@@ -24,15 +24,15 @@ public class eventSourceOperation {
     //region 对外提供的Public方法
 
     //获取EventSource列表，分页，PageIndex：当前页码，PageSize：每页记录条数
-    public PageDivisionQueryResultModel<EventSourceModel> getEventSourceList(int pageIndex, int pageSize) throws Exception {
+    public PageDivisionQueryResultModel<EventSourceModel> getEventSourceList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<EventSourceModel> qr = new PageDivisionQueryResultModel();
         try {
-            PageDivisionQueryResultModel<EventsourceEntity> entityQR = getEventSourceEntityList(pageIndex, pageSize);
+            PageDivisionQueryResultModel<EventsourceEntity> entityQR = getEventSourceEntityList(pageIndex);
             List<EventSourceModel> esModelList = new ArrayList<EventSourceModel>();
             esModelList = ConvertEventsourceEntityList2ModelList(entityQR.getQueryResult());
             qr.setCurrentPageIndex(pageIndex);
             qr.setRecordCount(entityQR.getRecordCount());
-            qr.setPageSize(pageSize);
+            //qr.setPageSize();
             qr.setQueryResult(esModelList);
             qr.setPageCount();
             return qr;
@@ -297,13 +297,13 @@ public class eventSourceOperation {
     }
 
     //获取EventSourceEntity列表，分页
-    private PageDivisionQueryResultModel<EventsourceEntity> getEventSourceEntityList(int pageIndex, int pageSize) throws Exception {
+    private PageDivisionQueryResultModel<EventsourceEntity> getEventSourceEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<EventsourceEntity> util = new pageDivisionQueryUtil();
 
         try {
             String queryHQL = "from EventsourceEntity es where es.status = 1 and es.dataStatus = 1 order by es.sourceId asc";
             String countHQL = "select count(*) from EventsourceEntity es where es.status = 1 and es.dataStatus = 1";
-            return util.excutePageDivisionQuery(pageIndex, pageSize, queryHQL, countHQL);
+            return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
             throw ex;
         }
