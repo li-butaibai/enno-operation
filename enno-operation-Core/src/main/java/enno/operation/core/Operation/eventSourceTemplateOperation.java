@@ -1,5 +1,6 @@
 package enno.operation.core.Operation;
 
+import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
 import enno.operation.dal.EventsourceEntity;
@@ -29,6 +30,7 @@ public class eventSourceTemplateOperation {
             }
             return estModelList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceTemplateOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -43,6 +45,7 @@ public class eventSourceTemplateOperation {
             estEntityList = (List<EventsourceTemplateEntity>) q.list();
             return estEntityList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceTemplateOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {

@@ -1,5 +1,6 @@
 package enno.operation.core;
 
+import enno.operation.core.common.LogUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +11,11 @@ public class testMain {
     private static Logger logger = LogManager.getLogger(testMain.class.getName());
 
     public static void main(String[] args) {
-        logger.error("Test Log4j");
+        try {
+            Integer i = null;
+            i.toString();
+        } catch (Exception ex) {
+            LogUtil.SaveLog(testMain.class.getName(), ex);
+        }
     }
 }

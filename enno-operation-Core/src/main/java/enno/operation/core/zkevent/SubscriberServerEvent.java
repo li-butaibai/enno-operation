@@ -1,6 +1,7 @@
 package enno.operation.core.zkevent;
 
 import enno.operation.ZKListener.SubscriberClusterListener;
+import enno.operation.core.common.LogUtil;
 import enno.operation.dal.SubscriberEntity;
 import enno.operation.dal.hibernateUtil;
 import enno.operation.zkmodel.SubscriberData;
@@ -44,7 +45,8 @@ public class SubscriberServerEvent implements SubscriberClusterListener {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            LogUtil.SaveLog(SubscriberServerEvent.class.getName(), ex);
         } finally {
             if (session != null) {
                 session.close();

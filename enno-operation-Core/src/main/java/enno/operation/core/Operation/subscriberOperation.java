@@ -1,5 +1,6 @@
 package enno.operation.core.Operation;
 
+import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
 import enno.operation.core.model.Enum;
@@ -35,6 +36,7 @@ public class subscriberOperation {
             result.setPageCount();
             return result;
         } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -48,6 +50,7 @@ public class subscriberOperation {
             suber.setEventsourceList(esOp.GetEventsourcesBySubscriberId(SubscriberId));
             return suber;
         } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -68,6 +71,7 @@ public class subscriberOperation {
             }
             return suberList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -91,7 +95,8 @@ public class subscriberOperation {
 
             tx.commit();
         } catch (Exception ex) {
-
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
+            throw ex;
         } finally {
             if (null != session) {
                 session.close();
@@ -110,7 +115,8 @@ public class subscriberOperation {
             sub.setAddress(Subscriber.getAddress());
             tx.commit();
         } catch (Exception ex) {
-
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
+            throw ex;
         } finally {
             if (null != session) {
                 session.close();
@@ -127,6 +133,7 @@ public class subscriberOperation {
             SubscriberEntity subEntity = (SubscriberEntity) q.uniqueResult();
             return subEntity;
         } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {
@@ -146,6 +153,7 @@ public class subscriberOperation {
             suberEntityList = (List<SubscriberEntity>) q.list();
             return suberEntityList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {
@@ -190,6 +198,7 @@ public class subscriberOperation {
             String countHQL = "select count(*) from SubscriberEntity se where se.status = 1 and se.dataStatus = 1";
             return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         }
     }

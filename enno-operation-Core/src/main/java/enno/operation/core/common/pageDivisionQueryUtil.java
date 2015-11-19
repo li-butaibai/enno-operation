@@ -39,6 +39,7 @@ public class pageDivisionQueryUtil<T> {
             resultModel.setPageCount();
             return resultModel;
         } catch (Exception ex) {
+            LogUtil.SaveLog(pageDivisionQueryUtil.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {

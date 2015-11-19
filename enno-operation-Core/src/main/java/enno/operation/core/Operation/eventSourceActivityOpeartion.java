@@ -1,5 +1,6 @@
 package enno.operation.core.Operation;
 
+import enno.operation.core.common.LogUtil;
 import enno.operation.core.model.EventSourceActivityModel;
 import enno.operation.dal.hibernateUtil;
 import org.hibernate.Query;
@@ -39,6 +40,7 @@ public class eventSourceActivityOpeartion {
             }
             return activities;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceActivityOpeartion.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {

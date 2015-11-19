@@ -3,3 +3,24 @@
 2015-11-19 at 17:53:09 CST ERROR enno.operation.core.testMain 13 main - Test Log4j
 2015-11-19 at 17:53:28 CST ERROR enno.operation.core.testMain 13 main - Test Log4j
 2015-11-19 at 17:54:20 CST ERROR enno.operation.core.testMain 13 main - Test Log4j
+2015-11-19 at 19:16:35 CST ERROR enno.operation.core.testMain 16 main - java.lang.NullPointerException
+2015-11-19 at 19:17:27 CST ERROR enno.operation.core.testMain 16 main - java.lang.NullPointerException
+2015-11-19 at 19:17:27 CST ERROR enno.operation.core.testMain 17 main - null
+2015-11-19 at 19:17:27 CST ERROR enno.operation.core.testMain 18 main - [Ljava.lang.StackTraceElement;@556baf01
+2015-11-19 at 19:18:07 CST ERROR enno.operation.core.testMain 17 main - java.lang.NullPointerException
+2015-11-19 at 19:18:07 CST ERROR enno.operation.core.testMain 18 main - null
+2015-11-19 at 19:18:07 CST ERROR enno.operation.core.testMain 19 main - [Ljava.lang.StackTraceElement;@4e499fd0
+2015-11-19 at 19:19:51 CST ERROR enno.operation.core.testMain 17 main - java.lang.NullPointerException
+2015-11-19 at 19:19:51 CST ERROR enno.operation.core.testMain 18 main - null
+2015-11-19 at 19:19:51 CST ERROR enno.operation.core.testMain 19 main - null
+2015-11-19 at 19:19:51 CST ERROR enno.operation.core.testMain 20 main - [Ljava.lang.StackTraceElement;@25e0dee5
+2015-11-19 at 19:20:10 CST ERROR enno.operation.core.testMain 17 main - java.lang.NullPointerException
+2015-11-19 at 19:20:10 CST ERROR enno.operation.core.testMain 18 main - null
+2015-11-19 at 19:20:10 CST ERROR enno.operation.core.testMain 19 main - null
+2015-11-19 at 19:20:10 CST ERROR enno.operation.core.testMain 20 main - [Ljava.lang.StackTraceElement;@42f7f894
+2015-11-19 at 19:22:35 CST ERROR enno.operation.core.testMain 17 main - java.io.PrintStream@2cc15fda
+2015-11-19 at 19:24:11 CST ERROR enno.operation.core.testMain 17 main - java.io.PrintStream@4490bc23
+2015-11-19 at 19:37:57 CST ERROR enno.operation.core.testMain 17 main - java.lang.NullPointerException
+2015-11-19 at 19:37:57 CST ERROR enno.operation.core.testMain 19 main - enno.operation.core.testMain.main(testMain.java:14)
+2015-11-19 at 19:48:07 CST ERROR enno.operation.core.common.LogUtil 16 SaveLog - java.lang.NullPointerException
+2015-11-19 at 19:48:07 CST ERROR enno.operation.core.common.LogUtil 18 SaveLog - enno.operation.core.testMain.main(testMain.java:16)

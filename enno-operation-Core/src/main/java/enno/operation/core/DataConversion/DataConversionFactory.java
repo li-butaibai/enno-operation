@@ -1,5 +1,7 @@
 package enno.operation.core.DataConversion;
 
+import enno.operation.core.common.LogUtil;
+
 /**
  * Created by v-zoli on 2015/11/11.
  */
@@ -10,7 +12,8 @@ public class DataConversionFactory<T> {
             return createDataConversion(cls);
         } catch (Exception ex) {
             getClass().getGenericSuperclass();
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            LogUtil.SaveLog(DataConversionFactory.class.getName(), ex);
         }
         return null;
     }
@@ -20,7 +23,8 @@ public class DataConversionFactory<T> {
             IDataConversion<T> dataConversion = (IDataConversion<T>) cls.newInstance();
             return dataConversion;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            LogUtil.SaveLog(DataConversionFactory.class.getName(), ex);
         }
         return null;
     }

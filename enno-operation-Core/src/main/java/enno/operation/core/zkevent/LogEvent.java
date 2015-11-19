@@ -1,6 +1,7 @@
 package enno.operation.core.zkevent;
 
 import enno.operation.ZKListener.EventLogListener;
+import enno.operation.core.common.LogUtil;
 import enno.operation.dal.EventLogEntity;
 import enno.operation.dal.EventsourceEntity;
 import enno.operation.dal.SubscriberEntity;
@@ -35,11 +36,13 @@ public class LogEvent implements EventLogListener{
                     eventLogEntity.setTitle(eventLogData.getTitle());
                     session.save(eventLogEntity);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    LogUtil.SaveLog(LogEvent.class.getName(), e);
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            LogUtil.SaveLog(LogEvent.class.getName(), ex);
         } finally {
             if (session != null)
                 session.close();
