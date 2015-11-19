@@ -10,11 +10,11 @@
 
 <div id="windows-overlay" class="window-overlay">
     <div id="modal" class="modal"
-         style="width: 800px; height: auto; margin-left:-400px; margin-top: -200px; top:50%; left:50%; z-index: 1000; ">
+         style="width: 800px; height: auto; margin-left:-400px; margin-top: -168px; top:50%; left:50%; z-index: 1000; ">
         <div class="modal-header" style="cursor: move;"><h4>New Event Source<a href="#" class="close"><span
                 class="icon-close icon-Large"></span></a></h4></div>
         <div class="modal-content" id="">
-            <form class="form form-horizontal" method="post" action="/eventsources/add">
+            <form id="form" class="form form-horizontal" method="post" action="/eventsources/add">
                 <fieldset>
                     <legend>Create new event source</legend>
                     <div class="item">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div class="form-actions">
-                        <input class="btn btn-primary" type="submit" value="Submit"/>
+                        <input id="submit" class="btn btn-primary" type="button" value="Submit"/>
                         <input class="btn btn-cancel" type="button" value="Cancel"/>
                     </div>
                 </fieldset>
@@ -71,6 +71,34 @@
         $("#estemplate").change(function(){
             var selectedId = $(this).children('option:selected').val();
             getConnectInfo(selectedId)
+            var mt = $("#modal").outerHeight()/2;
+            if(mt+100 > window.outerHeight/2)
+            {
+                mt=$(body).innerHeight()/2-100;
+            }
+            $("#modal").css({"margin-top":mt*(-1)+"px"});
+        });
+        $('#submit').click(function(){
+            $.ajax({
+                url:"/eventsources/add",
+                type:"post",
+                async:false,
+                dataType:"json",
+                data:$("#form").serialize(),
+                success: function (data) {
+                    if(data.success)
+                    {
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        alert(data.emMessage);
+                    }
+                },
+                error: function(data) {
+                    alert(data);
+                }
+            });
         });
     });
     function getConnectInfo(esId)
@@ -78,7 +106,7 @@
         $.ajax({
             url:"/eventsources/getconnectinfo?templateId="+esId,
             type:"get",
-            async:true,
+            async:false,
             dataType:"text",
             success:function(data){
                 $('#connectInfoDiv').html(data);

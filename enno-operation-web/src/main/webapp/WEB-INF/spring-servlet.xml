@@ -13,10 +13,27 @@
        <context:component-scan base-package="enno.operation.web.controllers" />
        <!-- Configures the @Controller programming model -->
        <mvc:annotation-driven />
-       <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-              <property name="prefix" value="/WEB-INF/jsp/" />
-              <property name="suffix" value=".jsp" />
-
+              <property name="prefix" value="/WEB-INF/jsp/"/>
+              <property name="suffix" value=".jsp"/>
+       </bean>
+       <bean id="mappingJacksonHttpMessagesConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+              <property name="supportedMediaTypes">
+                     <list>
+                            <value>text/html;charset=UTF-8</value>
+                     </list>
+              </property>
+       </bean>
+       <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+              <property name="messageConverters">
+                     <list>
+                            <ref bean="mappingJacksonHttpMessagesConverter"/>
+                            <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>-->
+                            <!--<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>-->
+                            <!--<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>-->
+                            <!--<bean class="org.springframework.http.converter.FormHttpMessageConverter"/>-->
+                            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>-->
+                     </list>
+              </property>
        </bean>
 </beans>

@@ -12,7 +12,7 @@
   <div class="item">
     <div class="control-label">Protocol</div>
     <div class="controls">
-      <input type="text" name="protocol" value="${ESTemplate.protocol}">
+      <input type="text" disabled="disabled" name="protocol" value="${ESTemplate.protocol}"/>
   </div>
 </c:if>
 <c:forEach items="${ESTemplate.eventSourceTemplateActivityModels}" var="esta">
@@ -22,7 +22,6 @@
     <input type="hidden" name="templateActivityIds" value="${esta.id}" />
     <input type="hidden" name="eaNames" value="${esta.name}" />
     <input type="text" name="eaValues"/>
-    <%--<span class="help">自管私有网络需要您自行配置和管理其网络。</span>--%>
   </div>
 </div>
 </c:forEach>
