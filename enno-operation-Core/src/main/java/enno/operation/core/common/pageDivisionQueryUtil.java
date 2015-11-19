@@ -18,22 +18,22 @@ public class pageDivisionQueryUtil<T> {
         session = hibernateUtil.getSessionFactory().openSession();
     }
 
-    public PageDivisionQueryResultModel<T> excutePageDivisionQuery(int currentPageIndex, int pageSize, String queryHqlStatement, String countHqlStatement) throws Exception {
+    public PageDivisionQueryResultModel<T> excutePageDivisionQuery(int currentPageIndex, String queryHqlStatement, String countHqlStatement) throws Exception {
         PageDivisionQueryResultModel<T> resultModel = new PageDivisionQueryResultModel();
         List<T> result = null;
 
         try {
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery(queryHqlStatement);
-            q.setFirstResult((currentPageIndex - 1) * pageSize);
-            q.setMaxResults(pageSize);
+            q.setFirstResult((currentPageIndex - 1) * resultModel.getPageSize());
+            q.setMaxResults(resultModel.getPageSize());
             result = (List<T>) q.list();
 
             q = session.createQuery(countHqlStatement);
             long count = (Long) q.uniqueResult();
 
             resultModel.setCurrentPageIndex(currentPageIndex);
-            resultModel.setPageSize(pageSize);
+            //resultModel.setPageSize(pageSize);
             resultModel.setRecordCount((int) count);
             resultModel.setQueryResult(result);
             resultModel.setPageCount();

@@ -20,10 +20,10 @@ import java.util.Map;
 public class EventLogController {
     @RequestMapping(value = {"", "/", "/list"}, method = RequestMethod.GET)
     public ModelAndView list(int pageIndex, int pageSize) {
-        ModelAndView modelAndView = new ModelAndView("/eventsources/list");
+        ModelAndView modelAndView = new ModelAndView("/eventlogs/list");
         try {
             eventLogOperation logOp = new eventLogOperation();
-            PageDivisionQueryResultModel<EventLogModel> pageDivisionEventLogList = logOp.getPageDivisionEventLogList(pageIndex, pageSize);
+            PageDivisionQueryResultModel<EventLogModel> pageDivisionEventLogList = logOp.getPageDivisionEventLogList(pageIndex);
             modelAndView.addObject("EventlogPage", pageDivisionEventLogList);
             modelAndView.addObject("success", true);
         } catch (Exception ex) {
@@ -34,12 +34,12 @@ public class EventLogController {
     }
 
     @RequestMapping(value = "/detail/{eventLogId}", method = RequestMethod.GET)
-    public Map<String, Object> detail(String eventSourceId, int count) {
+    public Map<String, Object> detail(String eventLogId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             eventLogOperation logOp = new eventLogOperation();
-            List<EventLogModel> logList = logOp.getEventLogsByEventsourceId(Integer.parseInt(eventSourceId), count);
-            model.put("EventsourceLog", logList);
+            EventLogModel log = logOp.getEventLogById(Integer.parseInt(eventLogId));
+            model.put("EventLog", log);
             model.put("success", true);
             return model;
         } catch (Exception ex) {
