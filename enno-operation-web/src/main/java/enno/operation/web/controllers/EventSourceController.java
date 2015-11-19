@@ -41,7 +41,7 @@ public class EventSourceController {
     }
 
     @RequestMapping(value="/detail", method = RequestMethod.GET)
-    public Map<String, Object> detail(@RequestParam("eventSourceId") int eventSourceId)
+    public Map<String, Object> detail(@RequestParam("eventSourceId") int eventSourceId, int Count)
     {
         Map<String, Object> model = new HashMap<String,Object>();
         try{
@@ -49,7 +49,7 @@ public class EventSourceController {
             EventSourceModel esModel = esOperation.GetEventsourceById(eventSourceId);
 
             eventLogOperation elOperation = new eventLogOperation();
-            List<EventLogModel> eventLogModels = elOperation.getEventLogsByEventsourceId(eventSourceId);
+            List<EventLogModel> eventLogModels = elOperation.getEventLogsByEventsourceId(eventSourceId, Count);
 
             model.put("EventSource",esModel);
             model.put("EventLogList", eventLogModels);
