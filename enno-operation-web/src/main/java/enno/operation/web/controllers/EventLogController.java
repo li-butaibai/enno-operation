@@ -34,12 +34,12 @@ public class EventLogController {
     }
 
     @RequestMapping(value = "/detail/{eventLogId}", method = RequestMethod.GET)
-    public Map<String, Object> detail(String eventSourceId) {
+    public Map<String, Object> detail(String eventSourceId, int count) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             eventLogOperation logOp = new eventLogOperation();
-            List<EventLogModel> logList = logOp.getEventLogsByEventsourceId(Integer.parseInt(eventSourceId));
-            model.put("EventsourceLog",logList);
+            List<EventLogModel> logList = logOp.getEventLogsByEventsourceId(Integer.parseInt(eventSourceId), count);
+            model.put("EventsourceLog", logList);
             model.put("success", true);
             return model;
         } catch (Exception ex) {

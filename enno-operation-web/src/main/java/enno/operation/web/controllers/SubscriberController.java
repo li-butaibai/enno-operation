@@ -41,7 +41,7 @@ public class SubscriberController {
     }
 
     @RequestMapping(value="/detail/{subscirberId}", method = RequestMethod.GET)
-    public Map<String, Object> detail(String subscirberId)
+    public Map<String, Object> detail(String subscirberId, int Count)
     {
         Map<String, Object> model = new HashMap<String,Object>();
         try{
@@ -50,7 +50,7 @@ public class SubscriberController {
             SubscriberModel subModel = subOp.getSubscriberById(subId);
 
             eventLogOperation elOperation = new eventLogOperation();
-            List<EventLogModel> eventLogModels = elOperation.getEventLogsBySubscriberId(subId);
+            List<EventLogModel> eventLogModels = elOperation.getEventLogsBySubscriberId(subId, Count);
 
             model.put("Subscriber",subModel);
             model.put("EventLogList", eventLogModels);

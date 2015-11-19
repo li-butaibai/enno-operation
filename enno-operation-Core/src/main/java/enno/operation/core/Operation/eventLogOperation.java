@@ -36,13 +36,13 @@ public class eventLogOperation {
     }
 
     //获取指定EventSource的EventLog
-    public List<EventLogModel> getEventLogsByEventsourceId(int EventsourceId) throws Exception {
-        return ConvertEventlogList2ModelList(getEventLogListByEventsourceId(EventsourceId));
+    public List<EventLogModel> getEventLogsByEventsourceId(int EventsourceId, int Count) throws Exception {
+        return ConvertEventlogList2ModelList(getEventLogListByEventsourceId(EventsourceId, Count));
     }
 
     //获取指定Subscriber的EventLog
-    public List<EventLogModel> getEventLogsBySubscriberId(int SubscriberId) throws Exception {
-        return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId));
+    public List<EventLogModel> getEventLogsBySubscriberId(int SubscriberId, int Count) throws Exception {
+        return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId, Count));
     }
 
     //获取EventLog列表，分页
@@ -59,7 +59,7 @@ public class eventLogOperation {
     }
 
     //通过SubscriberId获取指定的Subscriber的日志
-    private List<EventLogEntity> getEventLogListBySubscriberId(int SubscriberId) throws Exception {
+    private List<EventLogEntity> getEventLogListBySubscriberId(int SubscriberId, int Count) throws Exception {
         List<EventLogEntity> elList = null;
 
         try {
@@ -67,6 +67,10 @@ public class eventLogOperation {
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity el where el.subscriber.id = :SubscriberId order by el.createTime desc");
             q.setParameter("SubscriberId", SubscriberId);
+            if (Count > 0) {
+                q.setFirstResult(0);
+                q.setMaxResults(Count);
+            }
             elList = (List<EventLogEntity>) q.list();
             return elList;
         } catch (Exception ex) {
@@ -77,7 +81,7 @@ public class eventLogOperation {
     }
 
     //通过EventsourceId获取指定的Eventsource的日志
-    private List<EventLogEntity> getEventLogListByEventsourceId(int EventsourceId) throws Exception {
+    private List<EventLogEntity> getEventLogListByEventsourceId(int EventsourceId, int Count) throws Exception {
         List<EventLogEntity> elList = null;
 
         try {
@@ -85,6 +89,10 @@ public class eventLogOperation {
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity el where el.eventsource.id = :EventsourceId order by el.createTime desc");
             q.setParameter("EventsourceId", EventsourceId);
+            if (Count > 0) {
+                q.setFirstResult(0);
+                q.setMaxResults(Count);
+            }
             elList = (List<EventLogEntity>) q.list();
             return elList;
         } catch (Exception ex) {
