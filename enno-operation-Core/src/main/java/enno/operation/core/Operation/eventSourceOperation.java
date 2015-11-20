@@ -1,5 +1,6 @@
 package enno.operation.core.Operation;
 
+import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
 import enno.operation.core.model.Enum;
@@ -37,6 +38,7 @@ public class eventSourceOperation {
             qr.setPageCount();
             return qr;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -61,6 +63,7 @@ public class eventSourceOperation {
             }
             return eventsources;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -111,6 +114,7 @@ public class eventSourceOperation {
             session.save(entity);
             tx.commit();
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {
@@ -137,12 +141,13 @@ public class eventSourceOperation {
 
             q = session.createQuery("update EventsourceEntity e set e.dataStatus = :dataStatus, e.status = :status where e.id = :EventsourceId");
             q.setParameter("EventsourceId", EventsourceId);
-            q.setParameter("dataStatus",Enum.validity.invalid.ordinal());
+            q.setParameter("dataStatus", Enum.validity.invalid.ordinal());
             q.setParameter("status", Enum.State.Offline.ordinal());
             q.executeUpdate();
             tx.commit();
         } catch (Exception ex) {
-
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
         } finally {
             if (null != session) {
                 session.close();
@@ -174,7 +179,8 @@ public class eventSourceOperation {
                 tx.commit();
             }
         } catch (Exception ex) {
-
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
         } finally {
             if (null != session) {
                 session.close();
@@ -199,7 +205,8 @@ public class eventSourceOperation {
             }
             tx.commit();
         } catch (Exception ex) {
-
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
         } finally {
             if (null != session) {
                 session.close();
@@ -219,7 +226,8 @@ public class eventSourceOperation {
             es.setUpdateTime(new Timestamp((new Date()).getTime()));
             tx.commit();
         } catch (Exception ex) {
-
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
         } finally {
             if (null != session) {
                 session.close();
@@ -241,6 +249,7 @@ public class eventSourceOperation {
             es = (EventsourceEntity) q.uniqueResult();
             return es;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {
@@ -288,6 +297,7 @@ public class eventSourceOperation {
             esEntityList = (List<EventsourceEntity>) q.list();
             return esEntityList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {
@@ -305,35 +315,41 @@ public class eventSourceOperation {
             String countHQL = "select count(*) from EventsourceEntity es where es.status = 1 and es.dataStatus = 1";
             return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
         }
     }
 
     private List<EventSourceConnectModel> GetEventSourceConnectModels(int subscriberId) throws Exception {
-        List<EventSourceConnectModel> ConnList = new ArrayList<EventSourceConnectModel>();
+        try {
+            List<EventSourceConnectModel> ConnList = new ArrayList<EventSourceConnectModel>();
 
-        session = hibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-        Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
-        q.setParameter("SubscriberId", subscriberId);
-        List<EventsourceSubscriberMapEntity> SuberMapEntities = q.list();
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
+            q.setParameter("SubscriberId", subscriberId);
+            List<EventsourceSubscriberMapEntity> SuberMapEntities = q.list();
 
-        for (EventsourceSubscriberMapEntity mapEntity : SuberMapEntities) {
-            EventSourceModel eventSource = ConvertEventsourceEntity2Model(mapEntity.getEventsource());
-            EventSourceConnectModel connInfo = new EventSourceConnectModel();
-            connInfo.setSourceId(eventSource.getSourceId());
-            connInfo.setProtocol(eventSource.getProtocol());
-            connInfo.setEventDecoder(eventSource.getEventDecoder());
-            //获取原有的Activity信息
-            Map<String, String> map = new HashMap<String, String>();
-            for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
-                map.put(activity.getName(), activity.getValue());
+            for (EventsourceSubscriberMapEntity mapEntity : SuberMapEntities) {
+                EventSourceModel eventSource = ConvertEventsourceEntity2Model(mapEntity.getEventsource());
+                EventSourceConnectModel connInfo = new EventSourceConnectModel();
+                connInfo.setSourceId(eventSource.getSourceId());
+                connInfo.setProtocol(eventSource.getProtocol());
+                connInfo.setEventDecoder(eventSource.getEventDecoder());
+                //获取原有的Activity信息
+                Map<String, String> map = new HashMap<String, String>();
+                for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
+                    map.put(activity.getName(), activity.getValue());
+                }
+                connInfo.setEventSourceActivities(map);
+                ConnList.add(connInfo);
             }
-            connInfo.setEventSourceActivities(map);
-            ConnList.add(connInfo);
-        }
 
-        return ConnList;
+            return ConnList;
+        } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
+        }
     }
     //endregion
 }

@@ -1,5 +1,6 @@
 package enno.operation.core.Operation;
 
+import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.EventLogModel;
 import enno.operation.core.model.PageDivisionQueryResultModel;
@@ -35,6 +36,7 @@ public class eventLogOperation {
             result.setPageCount();
             return result;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -58,6 +60,7 @@ public class eventLogOperation {
             EventLogEntity logEntity = (EventLogEntity) q.uniqueResult();
             return ConvertEventlogEntity2Model(logEntity);
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
         } finally {
             if (null != session) {
@@ -75,6 +78,7 @@ public class eventLogOperation {
             String countHQL = "select count(*) from EventLogEntity ee";
             return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
         }
     }
@@ -95,6 +99,7 @@ public class eventLogOperation {
             elList = (List<EventLogEntity>) q.list();
             return elList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
         } finally {
             session.close();
@@ -117,6 +122,7 @@ public class eventLogOperation {
             elList = (List<EventLogEntity>) q.list();
             return elList;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
         } finally {
             session.close();
@@ -136,6 +142,7 @@ public class eventLogOperation {
             log.setSubscriberModel(subOp.ConvertSubscriberEntity2Model(entity.getSubscriber()));
             return log;
         } catch (Exception ex) {
+            LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
         }
     }

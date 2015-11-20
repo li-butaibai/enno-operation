@@ -1,6 +1,7 @@
 package enno.operation.core.zkevent;
 
 import enno.operation.ZKListener.EventSourceListener;
+import enno.operation.core.common.LogUtil;
 import enno.operation.dal.EventsourceEntity;
 import enno.operation.dal.EventsourceSubscriberMapEntity;
 import enno.operation.dal.SubscriberEntity;
@@ -46,7 +47,8 @@ public class EventSourceEvent implements EventSourceListener {
             {
                 transaction.rollback();
             }
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            LogUtil.SaveLog(EventSourceEvent.class.getName(), ex);
         }
         finally {
             if (session != null)
