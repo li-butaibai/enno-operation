@@ -6,7 +6,6 @@
     });
     PageClick=function(pageclickednumber)
     {
-        alert(pageclickednumber);
         location.href="/eventsources/list?pageIndex="+pageclickednumber;
         //window.load("/eventsources/list?pageIndex="+pageclickednumber);
     };

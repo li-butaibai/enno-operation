@@ -1,6 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/top.inc"%>
 <script type="text/javascript">
+    $(document).ready(function(){
+        $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
+    });
+    PageClick=function(pageclickednumber)
+    {
+        location.href="/eventsources/list?pageIndex="+pageclickednumber;
+        //window.load("/eventsources/list?pageIndex="+pageclickednumber);
+    };
     function createEventSource(){
         $.ajax({
             url:"/eventsources/newEventSourceForm",
@@ -88,6 +96,7 @@
             </c:forEach>
             </tbody>
         </table>
+        <div id="pager"></div>
     </div>
 </div>
 <%@ include file="../include/bottom.inc"%>

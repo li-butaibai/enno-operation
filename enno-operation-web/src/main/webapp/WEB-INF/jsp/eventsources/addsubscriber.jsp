@@ -20,8 +20,8 @@
           <div class="item">
             <div class="control-label">Event Source Name</div>
             <div class="controls">
-              <input type="text" name="eventSourceId" value="" />
-              <input type="text" name="sourceId" disabled="disabled">
+              <input type="text" name="eventSourceId" value="${EventSource.id}" />
+              <input type="text" name="sourceId" disabled="disabled" value="${EventSource.sourceId}">
             </div>
           </div>
           <div class="item">
@@ -65,7 +65,7 @@
     });
     $('#submit').click(function(){
       $.ajax({
-        url:"/eventsources/add",
+        url:"/eventsources/addSubscriber",
         type:"post",
         async:false,
         dataType:"json",

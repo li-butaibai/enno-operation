@@ -203,7 +203,7 @@ public class EventSourceController {
             EventSourceModel esModel = esOperation.GetEventsourceById(eventSourceId);
             subscriberModels =subOp.getUnSubscribeListByEventSourceId(eventSourceId);
             model.addObject("SubscriberList", subscriberModels);
-            model.addObject("eventSourceId",eventSourceId);
+            model.addObject("EventSource",esModel);
             model.addObject("success", true);
         }catch (Exception ex){
             ex.printStackTrace();

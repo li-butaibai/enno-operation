@@ -1,12 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: EriclLee
-  Date: 15/11/17
-  Time: 22:17
-  To change this template use File | Settings | File Templates.
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/top.inc"%>
+<script type="text/javascript">
+    function addSubscriber2ES(){
+      alert(${EventSource.sourceId});
+    }
+</script>
 <div class="overview">
   <div class="topbar">
     <div>
@@ -16,6 +14,10 @@
       </div></div>
   </div>
   <div class="overview-main" style="width: 35%">
+    <a class="btn" href="javascript:void(0);" onclick="addSubscriber2ES()">
+      <span class="icon icon-run" ></span>
+      <span class="text">Add</span>
+    </a>
           <div class="description" style="width: 100%">
             <div class="detail-item">
               <div class="title"><h3>Event Soure</h3>
@@ -24,8 +26,9 @@
 
                   <div class="dropdown-text"><span class="icon-menu"></span></div>
                   <div class="dropdown-content dropdown-wide">
+
                     <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
-                    <a class="btn" href="#"><span class="icon icon-adduser"></span><span class="text">Add Subscriber</span></a>
+                    <a class="btn"><span class="icon icon-adduser"></span><span class="text">Add Subscriber</span></a>
                   </div>
                 </div>
               </div>
@@ -110,4 +113,5 @@
 
 </div>
 </div>
+
 <%@ include file="../include/bottom.inc"%>
