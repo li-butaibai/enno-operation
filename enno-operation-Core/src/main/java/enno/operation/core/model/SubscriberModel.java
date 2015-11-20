@@ -14,14 +14,14 @@ public class SubscriberModel {
     private List<EventSourceModel> eventsourceList;
     private Timestamp createTime;
     private Timestamp updateTime;
-    private Integer status;
+    private Enum.State state;
 
-    public Integer getStatus() {
-        return status;
+    public Enum.State getState() {
+        return state;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setState(Enum.State state) {
+        this.state = state;
     }
 
     public int getId() {

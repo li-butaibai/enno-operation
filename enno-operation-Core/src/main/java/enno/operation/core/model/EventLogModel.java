@@ -1,6 +1,7 @@
 package enno.operation.core.model;
 
 import java.awt.*;
+import java.sql.Timestamp;
 
 /**
  * Created by sabermai on 2015/11/11.
@@ -12,6 +13,7 @@ public class EventLogModel {
     private SubscriberModel subscriberModel;
     private String title;
     private String message;
+    private Timestamp createTime;
 
     public int getId() {
         return id;
@@ -59,5 +61,13 @@ public class EventLogModel {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 }

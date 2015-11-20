@@ -134,6 +134,7 @@ public class eventLogOperation {
         subOp = new subscriberOperation();
         EventLogModel log = new EventLogModel();
         try {
+            log.setCreateTime(entity.getCreateTime());
             log.setTitle(entity.getTitle());
             log.setId(entity.getId());
             log.setLevel(entity.getLevel());

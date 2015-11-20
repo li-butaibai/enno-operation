@@ -271,6 +271,8 @@ public class eventSourceOperation {
         esModel.setEventSourceTemplateId(esEntity.getEventsourceTemplate().getId());
         esModel.setId(esEntity.getId());
         esModel.setProtocol(esEntity.getEventsourceTemplate().getProtocol());
+        esModel.setEventSourceTemplateName(esEntity.getEventsourceTemplate().getName());
+        esModel.setState(Enum.State.values()[esEntity.getStatus()]);
         return esModel;
     }
 
@@ -292,7 +294,7 @@ public class eventSourceOperation {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("select es from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where es.status = 1 and es.dataStatus = 1 and sub.id = :SubscriberId order by es.sourceId");
+            Query q = session.createQuery("select es from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where es.dataStatus = 1 and sub.id = :SubscriberId order by es.sourceId");
             q.setParameter("SubscriberId", SubscriberId);
             esEntityList = (List<EventsourceEntity>) q.list();
             return esEntityList;
@@ -311,7 +313,7 @@ public class eventSourceOperation {
         pageDivisionQueryUtil<EventsourceEntity> util = new pageDivisionQueryUtil();
 
         try {
-            String queryHQL = "from EventsourceEntity es where es.status = 1 and es.dataStatus = 1 order by es.sourceId asc";
+            String queryHQL = "from EventsourceEntity es where es.dataStatus = 1 order by es.sourceId asc";
             String countHQL = "select count(*) from EventsourceEntity es where es.status = 1 and es.dataStatus = 1";
             return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {

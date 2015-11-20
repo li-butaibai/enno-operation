@@ -10,6 +10,7 @@ public class EventSourceModel {
     private int Id;
     private String sourceId;
     private int eventSourceTemplateId;
+    private String eventSourceTemplateName;
     private String protocol;
     private String eventDecoder;
     private List<EventSourceActivityModel> eventSourceActivities;
@@ -17,6 +18,23 @@ public class EventSourceModel {
     private Timestamp createTime;
     private Timestamp updateTime;
     private String comments;
+    private Enum.State state;
+
+    public Enum.State getState() {
+        return state;
+    }
+
+    public void setState(Enum.State state) {
+        this.state = state;
+    }
+
+    public String getEventSourceTemplateName() {
+        return eventSourceTemplateName;
+    }
+
+    public void setEventSourceTemplateName(String eventSourceTemplateName) {
+        this.eventSourceTemplateName = eventSourceTemplateName;
+    }
 
     public int getId() {
         return Id;
