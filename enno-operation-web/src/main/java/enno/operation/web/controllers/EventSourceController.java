@@ -220,7 +220,7 @@ public class EventSourceController {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             eventSourceOperation esOperation = new eventSourceOperation();
-            esOperation.AssignEventsource(Integer.parseInt(eventSourceId),Integer.parseInt(subscriberId));
+            esOperation.AssignEventsource(Integer.parseInt(eventSourceId), Integer.parseInt(subscriberId));
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();
@@ -231,13 +231,13 @@ public class EventSourceController {
         }
     }
 
-    @RequestMapping(value="/{eventSourceId}/removeSubscriber/{subscriberId}",method = RequestMethod.POST)
+    @RequestMapping(value="/removeSubscriber",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> RemoveSubscriber2EventSource(String eventSourceId, String subscriberId){
+    public Map<String, Object> RemoveSubscriber2EventSource(int eventSourceId, int subscriberId){
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             eventSourceOperation esOperation = new eventSourceOperation();
-            esOperation.RemoveEventsourceSubscription(Integer.parseInt(eventSourceId), Integer.parseInt(subscriberId));
+            esOperation.RemoveEventsourceSubscription(eventSourceId, subscriberId);
             model.put("success", true);
         }catch (Exception ex){
             ex.printStackTrace();

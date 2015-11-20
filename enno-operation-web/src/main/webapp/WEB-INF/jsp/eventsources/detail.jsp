@@ -2,7 +2,6 @@
 <%@ include file="../include/top.inc"%>
 <script type="text/javascript">
     function addSubscriber2ES(){
-      alert("ddd ");
       $.ajax({
         url:"/eventsources/getAddSubscriberForm?eventSourceId="+${EventSource.id},
         type:"get",
@@ -19,6 +18,29 @@
         error: function (data) {
           $("#waiting").hide();
           rtn = false;
+        }
+      });
+
+    }
+    function removeSubscriberFromES(subscriberId){
+      $.ajax({
+        url:"/eventsources/removeSubscriber",
+        type:"post",
+        async:false,
+        dataType:"json",
+        data:{eventSourceId:${EventSource.id}, subscriberId:subscriberId},
+        success: function (data) {
+          if(data.success)
+          {
+            window.location.reload(true);
+          }
+          else
+          {
+            alert(data.emMessage);
+          }
+        },
+        error: function(data) {
+          alert(data);
         }
       });
     }
@@ -59,7 +81,7 @@
                 <dd>
                   <c:forEach items="${EventSource.subscriberList}" var="ss">
                     ${ss.name}
-                    <a href="#">[DELETE]</a>
+                    <a href="javascript:void(0);" onclick="removeSubscriberFromES('${ss.id}')"><span>[DELETE]</span></a>
                     <br/>
                   </c:forEach>
                 </dd>

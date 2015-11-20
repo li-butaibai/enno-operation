@@ -88,8 +88,7 @@
                 success: function (data) {
                     if(data.success)
                     {
-                        $('#dialogDiv').dialog('close');
-                        window.location.reload();
+                        window.location.reload(true);
                     }
                     else
                     {

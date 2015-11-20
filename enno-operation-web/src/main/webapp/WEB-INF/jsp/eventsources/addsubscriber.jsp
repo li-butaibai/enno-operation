@@ -63,26 +63,11 @@
         success: function (data) {
           if(data.success)
           {
-            $(".close").click();
-//            $('#dialogDiv').html("");
-//            $('#dialogDiv').dialog('close');
-            location.href = location.href;
-            window.location.reload(true);history.go(0)
-            window.location.reload()
-
-            window.location.reload(true)
-            location=location
-            location.assign(location)
-            document.execCommand('Refresh')
-            window.navigate(location)
-            location.replace(location)
-            document.URL=location.href
-
-
+            window.location.reload(true);
+            //$(".close").click();
           }
           else
           {
-            alert("failed");
             alert(data.emMessage);
           }
         },
