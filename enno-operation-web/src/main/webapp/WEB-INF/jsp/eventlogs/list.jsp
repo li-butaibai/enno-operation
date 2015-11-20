@@ -28,16 +28,16 @@
           EventSource
         </th>
         <th>
-          Protcol
+          Subscriber
         </th>
         <th>
-          Subsciber Count
+          Title
         </th>
         <th>
-          Event Decoder
+          Level
         </th>
         <th>
-          Comments
+          Message
         </th>
       </tr>
       </thead>
@@ -47,14 +47,15 @@
           <td class="checkbox">
             <input  type="checkbox" name="checkItem" id="${el.id}"/>
           </td>
-          <td >
-            <a href="/eventlogs/detail?eventSourceId=${el.id}">${el.title}</a>
-          </td>
+
           <td>
             <a href="/eventsources/detail?eventSourceId=${el.eventSourceModel.id}">${el.eventSourceModel.sourceId}</a>
           </td>
           <td>
             <a href="/subscribers/detail?subscirberId=${el.subscriberModel.id}">${el.subscriberModel.name}</a>
+          </td>
+          <td >
+            <span>${el.title}</span>
           </td>
           <td>
             <span>${el.level}</span>
