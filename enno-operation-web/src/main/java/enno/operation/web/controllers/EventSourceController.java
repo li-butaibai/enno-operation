@@ -142,6 +142,25 @@ public class EventSourceController {
         }
     }
 
+    @RequestMapping(value="/getUpdateEventSourceForm",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getUpdateEventSourceForm(@RequestParam int eventSourceId)
+    {
+        ModelAndView modelAndView = new ModelAndView("updateeventsource");
+        try{
+            EventSourceModel eventSourceModel = new EventSourceModel();
+            //TODO:get event source model
+            modelAndView.addObject("EventSource", eventSourceModel);
+            modelAndView.addObject("success", true);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            modelAndView.addObject("success", false);
+        }
+        finally{
+        return modelAndView;
+    }
+    }
+
     @RequestMapping(value="/update",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> updateEventSource(@RequestBody EventSourceModel eventSourceModel){

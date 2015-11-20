@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping(value = "/subscribers")
 public class SubscriberController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView list(int pageIndex, int pageSize) {
+    public ModelAndView list(int pageIndex) {
         ModelAndView modelAndView = new ModelAndView("/subscribers/list");
         try {
             subscriberOperation subOp = new subscriberOperation();

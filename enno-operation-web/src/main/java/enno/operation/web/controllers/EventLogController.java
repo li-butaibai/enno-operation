@@ -19,7 +19,7 @@ import java.util.Map;
 @RequestMapping(value = "/eventlogs")
 public class EventLogController {
     @RequestMapping(value = {"", "/", "/list"}, method = RequestMethod.GET)
-    public ModelAndView list(int pageIndex, int pageSize) {
+    public ModelAndView list(int pageIndex) {
         ModelAndView modelAndView = new ModelAndView("/eventlogs/list");
         try {
             eventLogOperation logOp = new eventLogOperation();
