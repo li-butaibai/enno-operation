@@ -25,7 +25,7 @@
                   <div class="dropdown-text"><span class="icon-menu"></span></div>
                   <div class="dropdown-content dropdown-wide">
                     <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
-                    <a class="btn" class="icon icon-keypairs"></span><span class="text">Add Subscriber</span></a>
+                    <a class="btn" href="#"><span class="icon icon-adduser"></span><span class="text">Add Subscriber</span></a>
                   </div>
                 </div>
               </div>
@@ -37,8 +37,9 @@
                 <dt>Subscribers</dt>
                 <dd>
                   <c:forEach items="${EventSource.subscriberList}" var="ss">
-                    <a href="/subscribers/detail?subscriberId=${ss.id}&Count=0">${ss.name}</a><br/>
-                    <a href="/subscribers/detail?subscriberId=${ss.id}&Count=0">${ss.name}</a>
+                    ${ss.name}
+                    <a href="#">[DELETE]</a>
+                    <br/>
                   </c:forEach>
                 </dd>
                 <dt>Potocol</dt>
@@ -104,6 +105,9 @@
         </li>
       </ol>
     </div>
+
   </div>
+
+</div>
 </div>
 <%@ include file="../include/bottom.inc"%>
