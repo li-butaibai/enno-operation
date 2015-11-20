@@ -58,6 +58,24 @@ public class SubscriberController {
         }
     }
 
+    @RequestMapping(value = "/getUpdateSubscriberForm", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getUpdateSubscriberForm(@RequestParam int subscriberId) {
+        ModelAndView modelAndView = new ModelAndView("updatesubscriber");
+        try {
+            subscriberOperation subOp = new subscriberOperation();
+            SubscriberModel suberModel = new SubscriberModel();
+            suberModel = subOp.getSubscriberById(subscriberId);
+            modelAndView.addObject("Subscriber", suberModel);
+            modelAndView.addObject("success", true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            modelAndView.addObject("success", false);
+        } finally {
+            return modelAndView;
+        }
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> updateSubscriber(@RequestBody SubscriberModel subscriberModel) {
