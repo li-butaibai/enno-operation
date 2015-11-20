@@ -85,14 +85,13 @@ public class subscriberOperation {
             List<SubscriberEntity> suberEntityList = getSubscriberEntityListByEventSourceId(EventSourceId);
             AllSuberEntites.removeAll(suberEntityList);
 
-            if (suberEntityList != null) {
-                for (SubscriberEntity sub : AllSuberEntites) {
-                    SubscriberModel suber = new SubscriberModel();
-                    suber = ConvertSubscriberEntity2Model(sub);
-                    //suber.setEventsourceList(esOp.GetEventsourcesBySubscriberId(sub.getId()));
-                    suberList.add(suber);
-                }
+            for (SubscriberEntity sub : AllSuberEntites) {
+                SubscriberModel suber = new SubscriberModel();
+                suber = ConvertSubscriberEntity2Model(sub);
+                //suber.setEventsourceList(esOp.GetEventsourcesBySubscriberId(sub.getId()));
+                suberList.add(suber);
             }
+
             return suberList;
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
@@ -193,7 +192,7 @@ public class subscriberOperation {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from SubscriberEntity sub where sub.dataStatus = :dataStatus");
-            q.setParameter("dataStatus",Enum.validity.valid.ordinal());
+            q.setParameter("dataStatus", Enum.validity.valid.ordinal());
             suberEntityList = (List<SubscriberEntity>) q.list();
             return suberEntityList;
         } catch (Exception ex) {
