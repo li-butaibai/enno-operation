@@ -1,14 +1,17 @@
 package enno.operation.web.controllers;
 
 import enno.operation.core.Operation.eventLogOperation;
+import enno.operation.core.Operation.eventSourceOperation;
 import enno.operation.core.Operation.subscriberOperation;
 import enno.operation.core.model.EventLogModel;
+import enno.operation.core.model.EventSourceModel;
 import enno.operation.core.model.PageDivisionQueryResultModel;
 import enno.operation.core.model.SubscriberModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +121,27 @@ public class SubscriberController {
         } catch (Exception ex) {
             ex.printStackTrace();
             model.put("success", false);
+        } finally {
+            return model;
+        }
+    }
+
+    @RequestMapping(value = "/getAddEventSourceForm", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getAddEventSourceForm(@RequestParam int subscriberId) {
+        ModelAndView model = new ModelAndView("/subscribers/addeventsource");
+        try {
+            List<EventSourceModel> esModels = new ArrayList<EventSourceModel>();
+            eventSourceOperation esOperation = new eventSourceOperation();
+            subscriberOperation subOp = new subscriberOperation();
+            SubscriberModel subModel = subOp.getSubscriberById(subscriberId);
+            esModels = esOperation.getUnSubscribedEventsourceListBySubscriberId(subscriberId);
+            model.addObject("EventSourceList", esModels);
+            model.addObject("Subscriber", subModel);
+            model.addObject("success", true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            model.addObject("success", false);
         } finally {
             return model;
         }

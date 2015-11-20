@@ -234,6 +234,28 @@ public class eventSourceOperation {
             }
         }
     }
+
+    //获取未被指定Subcriber订阅的Eventsource列表
+    public List<EventSourceModel> getUnSubscribedEventsourceListBySubscriberId(int SubscriberId) throws Exception {
+        List<EventSourceModel> esList = new ArrayList<EventSourceModel>();
+
+        try {
+            List<EventsourceEntity> AllEventSourceEntites = getAllEventSourceEntities();
+            List<EventsourceEntity> esEntityList = getEventsourceEntityListBySubscriberId(SubscriberId);
+            AllEventSourceEntites.removeAll(esEntityList);
+
+            for (EventsourceEntity es : AllEventSourceEntites) {
+                EventSourceModel esModel = new EventSourceModel();
+                esModel = ConvertEventsourceEntity2Model(es);
+                esList.add(esModel);
+            }
+
+            return esList;
+        } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
+        }
+    }
     //endregion
 
     //region private方法
@@ -351,6 +373,26 @@ public class eventSourceOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
+        }
+    }
+
+    private List<EventsourceEntity> getAllEventSourceEntities() throws Exception {
+        List<EventsourceEntity> esEntityList = new ArrayList<EventsourceEntity>();
+
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventsourceEntity es where es.dataStatus = :dataStatus");
+            q.setParameter("dataStatus", Enum.validity.valid.ordinal());
+            esEntityList = (List<EventsourceEntity>) q.list();
+            return esEntityList;
+        } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
         }
     }
     //endregion
