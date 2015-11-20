@@ -41,7 +41,7 @@ public class EventSourceController {
     }
 
     @RequestMapping(value="/detail", method = RequestMethod.GET)
-    public Map<String, Object> detail(@RequestParam("eventSourceId") int eventSourceId, int Count)
+    public Map<String, Object> detail(@RequestParam("eventSourceId") int eventSourceId,  int Count)
     {
         Map<String, Object> model = new HashMap<String,Object>();
         try{
@@ -134,7 +134,7 @@ public class EventSourceController {
         }catch (Exception ex){
             ex.printStackTrace();
             model.put("success", false);
-            model.put("eMessage",ex.getMessage());
+            model.put("eMessage", ex.getMessage());
         }
         finally {
             return model;
@@ -184,6 +184,27 @@ public class EventSourceController {
         }catch (Exception ex){
             ex.printStackTrace();
             model.put("success", false);
+        }
+        finally {
+            return model;
+        }
+    }
+
+    @RequestMapping(value="/getAddSubscriberForm",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getAddSubscriberForm(@RequestParam int eventSourceId){
+        ModelAndView model = new ModelAndView("/eventsources/addsubscriber");
+        try{
+            //TODO:get active subscribers, but not in the current event source subscriber list
+            List<SubscriberModel> subscriberModels = new ArrayList<SubscriberModel>();
+            eventSourceOperation esOperation = new eventSourceOperation();
+            EventSourceModel esModel = esOperation.GetEventsourceById(eventSourceId);
+            model.addObject("SubscriberList", subscriberModels);
+            model.addObject("eventSourceId",eventSourceId);
+            model.addObject("success", true);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            model.addObject("success", false);
         }
         finally {
             return model;

@@ -6,10 +6,7 @@ import enno.operation.core.model.EventLogModel;
 import enno.operation.core.model.PageDivisionQueryResultModel;
 import enno.operation.core.model.SubscriberModel;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -38,16 +35,15 @@ public class SubscriberController {
         }
     }
 
-    @RequestMapping(value = "/detail/{subscirberId}", method = RequestMethod.GET)
-    public Map<String, Object> detail(String subscirberId, int Count) {
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public Map<String, Object> detail(@RequestParam int subscriberId, int Count) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
-            int subId = Integer.parseInt(subscirberId);
             subscriberOperation subOp = new subscriberOperation();
-            SubscriberModel subModel = subOp.getSubscriberById(subId);
+            SubscriberModel subModel = subOp.getSubscriberById(subscriberId);
 
             eventLogOperation elOperation = new eventLogOperation();
-            List<EventLogModel> eventLogModels = elOperation.getEventLogsBySubscriberId(subId, Count);
+            List<EventLogModel> eventLogModels = elOperation.getEventLogsBySubscriberId(subscriberId, Count);
 
             model.put("Subscriber", subModel);
             model.put("EventLogList", eventLogModels);

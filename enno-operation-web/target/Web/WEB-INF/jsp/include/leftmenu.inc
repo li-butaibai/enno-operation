@@ -19,7 +19,7 @@
             </a>
         </li>
         <li class="cate no-items eventlogs">
-            <a class="" href="/eventlogs/list?pageIndex=1" data-permalink="">
+            <a class="" href="/eventlogs/list?pageIndex=1&pageSize=10" data-permalink="">
                 <span class="fa fa-overview"></span>
                 <span class="text">Event Log</span>
             </a>

@@ -70,7 +70,7 @@
                     <input  type="checkbox" name="checkItem" id="${es.id}"/>
                 </td>
                 <td >
-                    <a href="/eventsources/detail?eventSourceId=${es.id}">${es.sourceId}</a>
+                    <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
                 </td>
                 <td>
                     <span>${es.protocol}</span>
