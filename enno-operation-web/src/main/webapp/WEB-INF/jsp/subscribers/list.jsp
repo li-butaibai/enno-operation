@@ -4,7 +4,7 @@
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/subscribers/list?pageIndex=1" data-permalink="">Event Sources</a>
+        <a class="level level-zone level-zone-2" href="/subscribers/list?pageIndex=1&pageSize=10" data-permalink="">Subscribers</a>
       </div>
     </div>
   </div>
