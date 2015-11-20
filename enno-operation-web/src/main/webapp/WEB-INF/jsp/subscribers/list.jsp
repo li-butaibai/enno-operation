@@ -47,7 +47,7 @@
             <a href="/subscribers/detail?subscriberId=${sb.id}">${sb.name}</a>
           </td>
           <td>
-            <span>${sb.status}</span>
+            <span>${sb.state}</span>
           </td>
           <td>
             <span>${sb.eventsourceList.size()}</span>
