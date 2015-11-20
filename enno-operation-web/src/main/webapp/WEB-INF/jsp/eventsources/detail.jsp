@@ -2,7 +2,25 @@
 <%@ include file="../include/top.inc"%>
 <script type="text/javascript">
     function addSubscriber2ES(){
-      alert(${EventSource.sourceId});
+      alert("ddd ");
+      $.ajax({
+        url:"/eventsources/getAddSubscriberForm?eventSourceId="+${EventSource.id},
+        type:"get",
+        async:true,
+        dataType:"text",
+        beforeSend: function (XMLHttpRequest) {
+          $("#waiting").show();
+        },
+        success: function (data) {
+          $("#waiting").hide();
+          $('#dialogDiv').html(data);
+          $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+        },
+        error: function (data) {
+          $("#waiting").hide();
+          rtn = false;
+        }
+      });
     }
 </script>
 <div class="overview">
@@ -14,10 +32,7 @@
       </div></div>
   </div>
   <div class="overview-main" style="width: 35%">
-    <a class="btn" href="javascript:void(0);" onclick="addSubscriber2ES()">
-      <span class="icon icon-run" ></span>
-      <span class="text">Add</span>
-    </a>
+
           <div class="description" style="width: 100%">
             <div class="detail-item">
               <div class="title"><h3>Event Soure</h3>
@@ -26,9 +41,12 @@
 
                   <div class="dropdown-text"><span class="icon-menu"></span></div>
                   <div class="dropdown-content dropdown-wide">
-
+                    <a class="btn" href="javascript:void(0);" onclick="addSubscriber2ES()">
+                      <span class="icon icon-run" ></span>
+                      <span class="text">Add</span>
+                    </a>
                     <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
-                    <a class="btn"><span class="icon icon-adduser"></span><span class="text">Add Subscriber</span></a>
+                    <a class="btn"><span class="icon icon-adduser"></span><span class="text">Delete</span></a>
                   </div>
                 </div>
               </div>

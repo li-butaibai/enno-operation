@@ -20,7 +20,7 @@
           <div class="item">
             <div class="control-label">Event Source Name</div>
             <div class="controls">
-              <input type="text" name="eventSourceId" value="${EventSource.id}" />
+              <input type="hidden" name="eventSourceId" value="${EventSource.id}" />
               <input type="text" name="sourceId" disabled="disabled" value="${EventSource.sourceId}">
             </div>
           </div>
@@ -53,16 +53,6 @@
       $('#dialogDiv').html("");
       $('#dialogDiv').dialog('close');
     });
-    $("#estemplate").change(function(){
-      var selectedId = $(this).children('option:selected').val();
-      getConnectInfo(selectedId)
-      var mt = $("#modal").outerHeight()/2;
-      if(mt+100 > window.outerHeight/2)
-      {
-        mt=$(body).innerHeight()/2-100;
-      }
-      $("#modal").css({"margin-top":mt*(-1)+"px"});
-    });
     $('#submit').click(function(){
       $.ajax({
         url:"/eventsources/addSubscriber",
@@ -73,11 +63,26 @@
         success: function (data) {
           if(data.success)
           {
-            $('#dialogDiv').dialog('close');
-            window.location.reload();
+            $(".close").click();
+//            $('#dialogDiv').html("");
+//            $('#dialogDiv').dialog('close');
+            location.href = location.href;
+            window.location.reload(true);history.go(0)
+            window.location.reload()
+
+            window.location.reload(true)
+            location=location
+            location.assign(location)
+            document.execCommand('Refresh')
+            window.navigate(location)
+            location.replace(location)
+            document.URL=location.href
+
+
           }
           else
           {
+            alert("failed");
             alert(data.emMessage);
           }
         },
@@ -87,16 +92,4 @@
       });
     });
   });
-  function getConnectInfo(esId)
-  {
-    $.ajax({
-      url:"/eventsources/getconnectinfo?templateId="+esId,
-      type:"get",
-      async:false,
-      dataType:"text",
-      success:function(data){
-        $('#connectInfoDiv').html(data);
-      },
-    });
-  }
 </script>
