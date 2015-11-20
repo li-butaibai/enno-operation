@@ -76,6 +76,29 @@ public class subscriberOperation {
         }
     }
 
+    //获取未订阅指定Eventsource的Subscriber列表
+    public List<SubscriberModel> getUnSubscribeListByEventSourceId(int EventSourceId) throws Exception {
+        List<SubscriberModel> suberList = new ArrayList<SubscriberModel>();
+
+        try {
+            List<SubscriberEntity> AllSuberEntites = getAllSubscriberEntities();
+            List<SubscriberEntity> suberEntityList = getSubscriberEntityListByEventSourceId(EventSourceId);
+            AllSuberEntites.removeAll(suberEntityList);
+
+            for (SubscriberEntity sub : AllSuberEntites) {
+                SubscriberModel suber = new SubscriberModel();
+                suber = ConvertSubscriberEntity2Model(sub);
+                //suber.setEventsourceList(esOp.GetEventsourcesBySubscriberId(sub.getId()));
+                suberList.add(suber);
+            }
+
+            return suberList;
+        } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
+            throw ex;
+        }
+    }
+
     public void DeleteSubscriber(int SubscriberId) throws Exception {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
@@ -150,6 +173,26 @@ public class subscriberOperation {
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("select sub from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where sub.dataStatus = 1 and es.id = :EventsourceId");
             q.setParameter("EventsourceId", EventSourceId);
+            suberEntityList = (List<SubscriberEntity>) q.list();
+            return suberEntityList;
+        } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    private List<SubscriberEntity> getAllSubscriberEntities() throws Exception {
+        List<SubscriberEntity> suberEntityList = new ArrayList<SubscriberEntity>();
+
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from SubscriberEntity sub where sub.dataStatus = :dataStatus");
+            q.setParameter("dataStatus", Enum.validity.valid.ordinal());
             suberEntityList = (List<SubscriberEntity>) q.list();
             return suberEntityList;
         } catch (Exception ex) {

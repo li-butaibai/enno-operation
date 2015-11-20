@@ -3,6 +3,7 @@ package enno.operation.web.controllers;
 import enno.operation.core.Operation.eventLogOperation;
 import enno.operation.core.Operation.eventSourceOperation;
 import enno.operation.core.Operation.eventSourceTemplateOperation;
+import enno.operation.core.Operation.subscriberOperation;
 import enno.operation.core.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -198,7 +199,9 @@ public class EventSourceController {
             //TODO:get active subscribers, but not in the current event source subscriber list
             List<SubscriberModel> subscriberModels = new ArrayList<SubscriberModel>();
             eventSourceOperation esOperation = new eventSourceOperation();
+            subscriberOperation subOp = new subscriberOperation();
             EventSourceModel esModel = esOperation.GetEventsourceById(eventSourceId);
+            subscriberModels =subOp.getUnSubscribeListByEventSourceId(eventSourceId);
             model.addObject("SubscriberList", subscriberModels);
             model.addObject("eventSourceId",eventSourceId);
             model.addObject("success", true);
