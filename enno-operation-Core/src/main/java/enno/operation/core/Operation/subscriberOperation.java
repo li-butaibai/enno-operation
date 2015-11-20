@@ -148,7 +148,7 @@ public class subscriberOperation {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("select sub from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where sub.status = 1 and sub.dataStatus = 1 and es.id = :EventsourceId");
+            Query q = session.createQuery("select sub from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where sub.dataStatus = 1 and es.id = :EventsourceId");
             q.setParameter("EventsourceId", EventSourceId);
             suberEntityList = (List<SubscriberEntity>) q.list();
             return suberEntityList;
@@ -172,7 +172,7 @@ public class subscriberOperation {
         suber.setComments(suberEntity.getComments());
         suber.setCreateTime(suberEntity.getCreateTime());
         suber.setName(suberEntity.getName());
-        suber.setStatus(suberEntity.getStatus());
+        suber.setState(Enum.State.values()[suberEntity.getStatus()]);
 
         return suber;
     }
@@ -194,7 +194,7 @@ public class subscriberOperation {
         pageDivisionQueryUtil<SubscriberEntity> util = new pageDivisionQueryUtil();
 
         try {
-            String queryHQL = "from SubscriberEntity se where se.status = 1 and se.dataStatus = 1 order by se.id asc";
+            String queryHQL = "from SubscriberEntity se where se.dataStatus = 1 order by se.id asc";
             String countHQL = "select count(*) from SubscriberEntity se where se.status = 1 and se.dataStatus = 1";
             return util.excutePageDivisionQuery(pageIndex, queryHQL, countHQL);
         } catch (Exception ex) {
