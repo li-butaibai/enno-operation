@@ -69,6 +69,50 @@
       });
 
     }
+
+    function offlineEventSource(eventSourceId){
+      $.ajax({
+        url:"/eventsources/offline?eventSourceId="+eventSourceId,
+        type:"post",
+        async:false,
+        dataType:"json",
+        success: function (data) {
+          if(data.success)
+          {
+            window.location.reload(true);
+          }
+          else
+          {
+            alert(data.emMessage);
+          }
+        },
+        error: function(data) {
+          alert(data);
+        }
+      });
+    }
+
+    function deleteEventSource(eventSourceId){
+      $.ajax({
+        url:"/eventsources/delete?eventSourceId="+eventSourceId,
+        type:"post",
+        async:false,
+        dataType:"json",
+        success: function (data) {
+          if(data.success)
+          {
+            window.location.reload(true);
+          }
+          else
+          {
+            alert(data.emMessage);
+          }
+        },
+        error: function(data) {
+          alert(data);
+        }
+      });
+    }
 </script>
 <div class="overview">
   <div class="topbar">

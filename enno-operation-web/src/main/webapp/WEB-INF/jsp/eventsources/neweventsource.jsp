@@ -64,6 +64,7 @@
 </div>
 <script type="text/javascript">
     $().ready(function(){
+        alert("DD");
         $('.close').click(function(){
             $('#dialogDiv').html("");
             $('#dialogDiv').dialog('close');

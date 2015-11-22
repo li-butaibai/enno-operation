@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/top.inc"%>
+<%@ page isELIgnored="false" %>
+<%--<%@ include file="../include/top.inc"%>--%>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
@@ -44,15 +45,15 @@
                 <span class="icon icon-run" ></span>
                 <span class="text">Add</span>
             </a>
-            <a class="btn" href="#">
-                <span class="text">Update</span>
-            </a>
+            <%--<a class="btn" href="#">--%>
+                <%--<span class="text">Update</span>--%>
+            <%--</a>--%>
         </div>
         <table class="table table-bordered table-hover">
             <thead>
             <tr>
                 <th class="checkbox">
-                    <input type="checkbox" name="checkAll"/>
+
                 </th>
                 <th>
                    EventSource
@@ -75,7 +76,7 @@
             <c:forEach items="${EventSourcePage.queryResult}" var="es">
             <tr>
                 <td class="checkbox">
-                    <input  type="checkbox" name="checkItem" id="${es.id}"/>
+                    <input  type="radio" name="checkItem" id="${es.id}"/>
                 </td>
                 <td >
                     <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
@@ -99,4 +100,4 @@
         <div id="pager"></div>
     </div>
 </div>
-<%@ include file="../include/bottom.inc"%>
+<%--<%@ include file="../include/bottom.inc"%>--%>

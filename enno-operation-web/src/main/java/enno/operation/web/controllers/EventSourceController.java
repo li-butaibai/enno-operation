@@ -191,9 +191,9 @@ public class EventSourceController {
     //endregion
 
     //region offline or delete event source
-    @RequestMapping(value = "/delete/{eventSourceId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseBody
-    public Map<String, Object> deleteEventSource(String eventSourceId) {
+    public Map<String, Object> deleteEventSource(@RequestParam String eventSourceId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             eventSourceOperation esOperation = new eventSourceOperation();
@@ -209,7 +209,7 @@ public class EventSourceController {
 
     @RequestMapping(value = "/offline", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> offlineEventSource() {
+    public Map<String, Object> offlineEventSource(@RequestParam String eventSourceId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             model.put("success", true);

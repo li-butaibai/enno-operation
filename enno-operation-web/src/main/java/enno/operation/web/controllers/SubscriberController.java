@@ -99,9 +99,9 @@ public class SubscriberController {
         }
     }
 
-    @RequestMapping(value = "/delete/{subscriberId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> deleteSubscriber(String subscriberId) {
+    public Map<String, Object> deleteSubscriber(@RequestParam String subscriberId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             subscriberOperation subOp = new subscriberOperation();
@@ -117,7 +117,7 @@ public class SubscriberController {
 
     @RequestMapping(value = "/offline", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> offlineSubscriber() {
+    public Map<String, Object> offlineSubscriber(@RequestParam String subscriberId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             //TODO: offline subscriber

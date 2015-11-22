@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by v-zoli on 2015/11/13.
  */
 @Controller
-@RequestMapping(value = {"/home"})
+@RequestMapping(value = {"","/","/home"})
 public class HomeController {
     @RequestMapping(value={"","/","index"}, method = RequestMethod.GET)
     public String index(){

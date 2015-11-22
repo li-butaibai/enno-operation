@@ -10,7 +10,7 @@
 <script type="text/javascript">
   function addES2Subscriber(subscriberId){
     $.ajax({
-      url:"/subscribers/getAddEventSourceForm?subscriberId="+subscirberId,
+      url:"/subscribers/getAddEventSourceForm?subscriberId="+subscriberId,
       type:"get",
       async:true,
       dataType:"text",
@@ -32,7 +32,7 @@
 
   function removeESfromSubscriber(eventSourceId,subscriberId){
     $.ajax({
-      url:"/subscribers/removeEventSource",
+      url:"/eventsources/removeSubscriber",
       type:"post",
       async:false,
       dataType:"json",
@@ -75,6 +75,50 @@
     });
 
   }
+
+  function offlineSubscriber(subscriberId){
+    $.ajax({
+      url:"/subscribers/offline?subscriberId="+subscriberId,
+      type:"post",
+      async:false,
+      dataType:"json",
+      success: function (data) {
+        if(data.success)
+        {
+          window.location.reload(true);
+        }
+        else
+        {
+          alert(data.emMessage);
+        }
+      },
+      error: function(data) {
+        alert(data);
+      }
+    });
+  }
+
+  function deleteSubscriber(subscriberId){
+    $.ajax({
+      url:"/subscribers/delete?subscriberId="+subscriberId,
+      type:"post",
+      async:false,
+      dataType:"json",
+      success: function (data) {
+        if(data.success)
+        {
+          window.location.reload(true);
+        }
+        else
+        {
+          alert(data.emMessage);
+        }
+      },
+      error: function(data) {
+        alert(data);
+      }
+    });
+  }
 </script>
 <div class="overview">
   <div class="topbar">
@@ -95,8 +139,8 @@
             <div class="dropdown-content dropdown-wide">
               <a class="btn" href="javascript:void(0);" onclick="addES2Subscriber('${Subscriber.id}')"><span class="icon icon-resize"></span><span class="text">Add EventSource</span></a>
               <a class="btn" href="javascript:void(0);" onclick="editSubscriber('${Subscriber.id}')"><span class="icon icon-resize"></span><span class="text">Edit</span></a>
-              <a class="btn" class="icon icon-keypairs"></span><span class="text">Offline</span></a>
-              <a class="btn" class="icon icon-keypairs"></span><span class="text">Delete</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="offlineSubscriber('${Subscriber.id}')"><span class="icon icon-keypairs"></span><span class="text">Offline</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="deleteSubscriber('${Subscriber.id}')"><span class="icon icon-keypairs"></span><span class="text">Delete</span></a>
             </div>
           </div>
         </div>
@@ -108,8 +152,9 @@
           <dt>Event Sources</dt>
           <dd>
             <c:forEach items="${Subscriber.eventsourceList}" var="es">
-              <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
-              <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${ss.sourceId}</a>
+              ${es.sourceId}
+              <a href="javascript:void(0);" onclick="removeESfromSubscriber('${es.id}','${Subscriber.id}')"><span>[DELETE]</span></a>
+              <br/>
             </c:forEach>
           </dd>
           <dt>Address</dt>
