@@ -1532,6 +1532,15 @@ input.code {
     vertical-align: middle
 }
 
+.form-horizontal .control-text {
+    text-align: left;
+    float: left;
+    width: 130px;
+    font-size: 14px;
+    line-height: 35px;
+    vertical-align: middle
+}
+
 .form-horizontal .controls {
     min-height: 35px;
     margin-left: 150px;
@@ -5587,6 +5596,9 @@ div.activity.detail-item .btn-more {
     padding-left: 20px;
     text-align: left
 }
+
+
+
 
 .query-bar form.query .form-actions {
     padding-left: 100px
@@ -15475,6 +15487,16 @@ span.user-verify-new-dot {
     font-size: 14px;
     line-height: 40px;
     text-align: right
+}
+
+.page-home .wrapper.login-no-token-wrapper .form .control-text {
+    float: left;
+    min-width: 80px;
+    max-width: 180px;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 40px;
+    text-align: left
 }
 
 .page-home .wrapper.login-no-token-wrapper .form .controls {

@@ -7,6 +7,75 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/top.inc"%>
+<script type="text/javascript">
+  function addES2Subscriber(subscriberId){
+    $.ajax({
+      url:"/subscribers/getAddEventSourceForm?subscriberId="+subscirberId,
+      type:"get",
+      async:true,
+      dataType:"text",
+      beforeSend: function (XMLHttpRequest) {
+        $("#waiting").show();
+      },
+      success: function (data) {
+        $("#waiting").hide();
+        $('#dialogDiv').html(data);
+        $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+      },
+      error: function (data) {
+        $("#waiting").hide();
+        rtn = false;
+      }
+    });
+
+  }
+
+  function removeESfromSubscriber(eventSourceId,subscriberId){
+    $.ajax({
+      url:"/subscribers/removeEventSource",
+      type:"post",
+      async:false,
+      dataType:"json",
+      data:{eventSourceId:eventSourceId, subscriberId:subscriberId},
+      success: function (data) {
+        if(data.success)
+        {
+          window.location.reload(true);
+        }
+        else
+        {
+          alert(data.emMessage);
+        }
+      },
+      error: function(data) {
+        alert(data);
+      }
+    });
+  }
+
+  function editSubscriber(subscriberId){
+    $.ajax({
+      url:"/subscribers/getUpdateSubscriberForm?subscriberId="+subscriberId,
+      type:"get",
+      async:true,
+      dataType:"text",
+      beforeSend: function (XMLHttpRequest) {
+        $("#waiting").show();
+      },
+      success: function (data) {
+        $("#waiting").hide();
+        $('#dialogDiv').html(data);
+        $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+      },
+      error: function (data) {
+        alert(data);
+        $("#waiting").hide();
+        rtn = false;
+      }
+    });
+
+  }
+</script>
 <div class="overview">
   <div class="topbar">
     <div>
@@ -24,16 +93,18 @@
 
             <div class="dropdown-text"><span class="icon-menu"></span></div>
             <div class="dropdown-content dropdown-wide">
-              <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="addES2Subscriber('${Subscriber.id}')"><span class="icon icon-resize"></span><span class="text">Add EventSource</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="editSubscriber('${Subscriber.id}')"><span class="icon icon-resize"></span><span class="text">Edit</span></a>
+              <a class="btn" class="icon icon-keypairs"></span><span class="text">Offline</span></a>
               <a class="btn" class="icon icon-keypairs"></span><span class="text">Delete</span></a>
             </div>
           </div>
         </div>
         <dl class="dl-horizontal">
-          <dt>Subsriber Name</dt>
-          <dd>${Subcsriber.name}</dd>
+          <dt>Subscriber Name</dt>
+          <dd>${Subscriber.name}</dd>
           <dt>Status</dt>
-          <dd>${Subcsriber.status}</dd>
+          <dd>${Subscriber.state}</dd>
           <dt>Event Sources</dt>
           <dd>
             <c:forEach items="${Subscriber.eventsourceList}" var="es">

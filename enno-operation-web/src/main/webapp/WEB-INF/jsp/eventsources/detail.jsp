@@ -22,6 +22,7 @@
       });
 
     }
+
     function removeSubscriberFromES(subscriberId){
       $.ajax({
         url:"/eventsources/removeSubscriber",
@@ -44,6 +45,30 @@
         }
       });
     }
+
+    function editES(eventSourceId){
+      $.ajax({
+        url:"/eventsources/getUpdateEventSourceForm?eventSourceId="+eventSourceId,
+        type:"get",
+        async:true,
+        dataType:"text",
+        beforeSend: function (XMLHttpRequest) {
+          $("#waiting").show();
+        },
+        success: function (data) {
+          alert(data);
+          $("#waiting").hide();
+          $('#dialogDiv').html(data);
+          $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+        },
+        error: function (data) {
+          alert(data);
+          $("#waiting").hide();
+          rtn = false;
+        }
+      });
+
+    }
 </script>
 <div class="overview">
   <div class="topbar">
@@ -65,7 +90,11 @@
                   <div class="dropdown-content dropdown-wide">
                     <a class="btn" href="javascript:void(0);" onclick="addSubscriber2ES()">
                       <span class="icon icon-run" ></span>
-                      <span class="text">Add</span>
+                      <span class="text">Add Subscriber</span>
+                    </a>
+                    <a class="btn" href="javascript:void(0);" onclick="editES('${EventSource.id}')">
+                      <span class="icon icon-run" ></span>
+                      <span class="text">Edit</span>
                     </a>
                     <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
                     <a class="btn"><span class="icon icon-adduser"></span><span class="text">Delete</span></a>
