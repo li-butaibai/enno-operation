@@ -22,6 +22,7 @@ import java.util.Map;
 public class EventSourceController {
     private static int pageSize = 10;
 
+    //region event source list and detail
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list(int pageIndex) {
         ModelAndView modelAndView = new ModelAndView("/eventsources/list");
@@ -60,7 +61,9 @@ public class EventSourceController {
             return model;
         }
     }
+    //endregion
 
+    //region new event source
     @RequestMapping(value = "/newEventSourceForm", method = RequestMethod.GET)
     public ModelAndView getESNewForm() {
         ModelAndView modelAndView = new ModelAndView("/eventsources/neweventsource");
@@ -130,11 +133,13 @@ public class EventSourceController {
             return model;
         }
     }
+    //endregion
 
+    //region update event source
     @RequestMapping(value = "/getUpdateEventSourceForm", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView getUpdateEventSourceForm(@RequestParam int eventSourceId) {
-        ModelAndView modelAndView = new ModelAndView("updateeventsource");
+        ModelAndView modelAndView = new ModelAndView("/eventsources/updateeventsource");
         try {
             eventSourceOperation esOperation = new eventSourceOperation();
             EventSourceModel eventSourceModel = new EventSourceModel();
@@ -151,9 +156,28 @@ public class EventSourceController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateEventSource(@RequestBody EventSourceModel eventSourceModel) {
+    public Map<String, Object> updateEventSource(String id, String sourceId, String eventDecoder,
+                                                 String comments, String eventSourceTemplateId,
+                                                 String protocol, String[] templateActivityIds,
+                                                 String[] eaNames, String[] eaValues) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
+            EventSourceModel eventSourceModel = new EventSourceModel();
+            eventSourceModel.setId(Integer.parseInt(id));
+            eventSourceModel.setSourceId(sourceId);
+            eventSourceModel.setEventDecoder(eventDecoder);
+            eventSourceModel.setComments(comments);
+            eventSourceModel.setProtocol(protocol);
+            eventSourceModel.setEventSourceTemplateId(Integer.parseInt(eventSourceTemplateId));
+            List<EventSourceActivityModel> eventSourceActivityModels = new ArrayList<EventSourceActivityModel>();
+            for (int i = 0; i < eaNames.length; i++) {
+                EventSourceActivityModel eventSourceActivityModel = new EventSourceActivityModel();
+                eventSourceActivityModel.setTemplateActivityId(Integer.parseInt(templateActivityIds[i]));
+                eventSourceActivityModel.setName(eaNames[i]);
+                eventSourceActivityModel.setValue(eaValues[i]);
+                eventSourceActivityModels.add(eventSourceActivityModel);
+            }
+            eventSourceModel.setEventSourceActivities(eventSourceActivityModels);
             eventSourceOperation esOperation = new eventSourceOperation();
             esOperation.UpdateEventsource(eventSourceModel);
             model.put("success", true);
@@ -164,10 +188,12 @@ public class EventSourceController {
             return model;
         }
     }
+    //endregion
 
-    @RequestMapping(value = "/delete/{eventSourceId}", method = RequestMethod.DELETE)
+    //region offline or delete event source
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseBody
-    public Map<String, Object> deleteEventSource(String eventSourceId) {
+    public Map<String, Object> deleteEventSource(@RequestParam String eventSourceId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             eventSourceOperation esOperation = new eventSourceOperation();
@@ -183,7 +209,7 @@ public class EventSourceController {
 
     @RequestMapping(value = "/offline", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> offlineEventSource() {
+    public Map<String, Object> offlineEventSource(@RequestParam String eventSourceId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             model.put("success", true);
@@ -194,7 +220,9 @@ public class EventSourceController {
             return model;
         }
     }
+    //endregion
 
+    //region add or remove subscriber for event source
     @RequestMapping(value = "/getAddSubscriberForm", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView getAddSubscriberForm(@RequestParam int eventSourceId) {
@@ -248,5 +276,5 @@ public class EventSourceController {
             return model;
         }
     }
-
+    //endregion
 }

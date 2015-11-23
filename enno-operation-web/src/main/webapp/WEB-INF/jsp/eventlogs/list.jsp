@@ -4,7 +4,7 @@
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/eventlogs/list?pageIndex=1" data-permalink="">Event Sources</a>
+        <a class="level level-zone level-zone-2" href="#eventlogs/list?pageIndex=1" data-permalink="">Event Sources</a>
       </div>
     </div>
   </div>
@@ -22,7 +22,6 @@
       <thead>
       <tr>
         <th class="checkbox">
-          <input type="checkbox" name="checkAll"/>
         </th>
         <th>
           EventSource
@@ -45,14 +44,14 @@
       <c:forEach items="${EventlogPage.queryResult}" var="el">
         <tr>
           <td class="checkbox">
-            <input  type="checkbox" name="checkItem" id="${el.id}"/>
+            <input  type="radio" name="checkItem" id="${el.id}"/>
           </td>
 
           <td>
-            <a href="/eventsources/detail?eventSourceId=${el.eventSourceModel.id}">${el.eventSourceModel.sourceId}</a>
+            <a href="#eventsources/detail?eventSourceId=${el.eventSourceModel.id}&Count=0">${el.eventSourceModel.sourceId}</a>
           </td>
           <td>
-            <a href="/subscribers/detail?subscirberId=${el.subscriberModel.id}">${el.subscriberModel.name}</a>
+            <a href="#subscribers/detail?subscirberId=${el.subscriberModel.id}&Count=0">${el.subscriberModel.name}</a>
           </td>
           <td >
             <span>${el.title}</span>

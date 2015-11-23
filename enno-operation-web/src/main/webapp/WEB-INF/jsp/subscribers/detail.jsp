@@ -7,11 +7,14 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/top.inc"%>
+<script type="text/javascript">
+
+</script>
 <div class="overview">
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/subscribers/list?pageIndex=1&pageSize=10" data-permalink="">Subscribers</a>
+        <a class="level level-zone level-zone-2" href="#subscribers/list?pageIndex=1&pageSize=10" data-permalink="">Subscribers</a>
         <a class="level" href="#" data-permalink="">${Subscriber.name}</a>
       </div></div>
   </div>
@@ -24,21 +27,24 @@
 
             <div class="dropdown-text"><span class="icon-menu"></span></div>
             <div class="dropdown-content dropdown-wide">
-              <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
-              <a class="btn" class="icon icon-keypairs"></span><span class="text">Delete</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="getAddES2SubscriberForm('${Subscriber.id}')"><span class="icon icon-resize"></span><span class="text">Add EventSource</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="getEditSubscriberForm('${Subscriber.id}')"><span class="icon icon-resize"></span><span class="text">Edit</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="offlineSubscriber('${Subscriber.id}')"><span class="icon icon-keypairs"></span><span class="text">Offline</span></a>
+              <a class="btn" href="javascript:void(0);" onclick="deleteSubscriber('${Subscriber.id}')"><span class="icon icon-keypairs"></span><span class="text">Delete</span></a>
             </div>
           </div>
         </div>
         <dl class="dl-horizontal">
-          <dt>Subsriber Name</dt>
-          <dd>${Subcsriber.name}</dd>
+          <dt>Subscriber Name</dt>
+          <dd>${Subscriber.name}</dd>
           <dt>Status</dt>
-          <dd>${Subcsriber.status}</dd>
+          <dd>${Subscriber.state}</dd>
           <dt>Event Sources</dt>
           <dd>
             <c:forEach items="${Subscriber.eventsourceList}" var="es">
-              <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
-              <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${ss.sourceId}</a>
+              ${es.sourceId}
+              <a href="javascript:void(0);" onclick="removeSubscriberFromES('${es.id}','${Subscriber.id}')"><span>[DELETE]</span></a>
+              <br/>
             </c:forEach>
           </dd>
           <dt>Address</dt>

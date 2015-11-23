@@ -64,7 +64,7 @@ public class SubscriberController {
     @RequestMapping(value = "/getUpdateSubscriberForm", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView getUpdateSubscriberForm(@RequestParam int subscriberId) {
-        ModelAndView modelAndView = new ModelAndView("updatesubscriber");
+        ModelAndView modelAndView = new ModelAndView("/subscribers/updatesubscriber");
         try {
             subscriberOperation subOp = new subscriberOperation();
             SubscriberModel suberModel = new SubscriberModel();
@@ -81,9 +81,13 @@ public class SubscriberController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateSubscriber(@RequestBody SubscriberModel subscriberModel) {
+    public Map<String, Object> updateSubscriber(String id, String address, String comments) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
+            SubscriberModel subscriberModel = new SubscriberModel();
+            subscriberModel.setId(Integer.parseInt(id));
+            subscriberModel.setAddress(address);
+            subscriberModel.setComments(comments);
             subscriberOperation subOp = new subscriberOperation();
             subOp.UpdateSubscriber(subscriberModel);
             model.put("success", true);
@@ -95,9 +99,9 @@ public class SubscriberController {
         }
     }
 
-    @RequestMapping(value = "/delete/{subscriberId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> deleteSubscriber(String subscriberId) {
+    public Map<String, Object> deleteSubscriber(@RequestParam String subscriberId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             subscriberOperation subOp = new subscriberOperation();
@@ -113,7 +117,7 @@ public class SubscriberController {
 
     @RequestMapping(value = "/offline", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> offlineSubscriber() {
+    public Map<String, Object> offlineSubscriber(@RequestParam String subscriberId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             //TODO: offline subscriber
