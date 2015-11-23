@@ -4,7 +4,7 @@
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/subscribers/list?pageIndex=1&pageSize=10" data-permalink="">Subscribers</a>
+        <a class="level level-zone level-zone-2" href="#subscribers/list?pageIndex=1&pageSize=10" data-permalink="">Subscribers</a>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
             <input  type="radio" name="checkItem" id="${sb.id}"/>
           </td>
           <td >
-            <a href="/subscribers/detail?subscriberId=${sb.id}&Count=0">${sb.name}</a>
+            <a href="#subscribers/detail?subscriberId=${sb.id}&Count=0">${sb.name}</a>
           </td>
           <td>
             <span>${sb.state}</span>

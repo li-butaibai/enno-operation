@@ -1,124 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../include/top.inc"%>
-<script type="text/javascript">
-    function addSubscriber2ES(){
-      $.ajax({
-        url:"/eventsources/getAddSubscriberForm?eventSourceId="+${EventSource.id},
-        type:"get",
-        async:true,
-        dataType:"text",
-        beforeSend: function (XMLHttpRequest) {
-          $("#waiting").show();
-        },
-        success: function (data) {
-          $("#waiting").hide();
-          $('#dialogDiv').html(data);
-          $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
-        },
-        error: function (data) {
-          $("#waiting").hide();
-          rtn = false;
-        }
-      });
-
-    }
-
-    function removeSubscriberFromES(subscriberId){
-      $.ajax({
-        url:"/eventsources/removeSubscriber",
-        type:"post",
-        async:false,
-        dataType:"json",
-        data:{eventSourceId:${EventSource.id}, subscriberId:subscriberId},
-        success: function (data) {
-          if(data.success)
-          {
-            window.location.reload(true);
-          }
-          else
-          {
-            alert(data.emMessage);
-          }
-        },
-        error: function(data) {
-          alert(data);
-        }
-      });
-    }
-
-    function editES(eventSourceId){
-      $.ajax({
-        url:"/eventsources/getUpdateEventSourceForm?eventSourceId="+eventSourceId,
-        type:"get",
-        async:true,
-        dataType:"text",
-        beforeSend: function (XMLHttpRequest) {
-          $("#waiting").show();
-        },
-        success: function (data) {
-          alert(data);
-          $("#waiting").hide();
-          $('#dialogDiv').html(data);
-          $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
-        },
-        error: function (data) {
-          alert(data);
-          $("#waiting").hide();
-          rtn = false;
-        }
-      });
-
-    }
-
-    function offlineEventSource(eventSourceId){
-      $.ajax({
-        url:"/eventsources/offline?eventSourceId="+eventSourceId,
-        type:"post",
-        async:false,
-        dataType:"json",
-        success: function (data) {
-          if(data.success)
-          {
-            window.location.reload(true);
-          }
-          else
-          {
-            alert(data.emMessage);
-          }
-        },
-        error: function(data) {
-          alert(data);
-        }
-      });
-    }
-
-    function deleteEventSource(eventSourceId){
-      $.ajax({
-        url:"/eventsources/delete?eventSourceId="+eventSourceId,
-        type:"post",
-        async:false,
-        dataType:"json",
-        success: function (data) {
-          if(data.success)
-          {
-            window.location.reload(true);
-          }
-          else
-          {
-            alert(data.emMessage);
-          }
-        },
-        error: function(data) {
-          alert(data);
-        }
-      });
-    }
-</script>
 <div class="overview">
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
+        <a class="level level-zone level-zone-2" href="#eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
         <a class="level" href="#" data-permalink="">${EventSource.sourceId}</a>
       </div></div>
   </div>
@@ -132,16 +18,16 @@
 
                   <div class="dropdown-text"><span class="icon-menu"></span></div>
                   <div class="dropdown-content dropdown-wide">
-                    <a class="btn" href="javascript:void(0);" onclick="addSubscriber2ES()">
+                    <a class="btn" href="javascript:void(0);" onclick="getAddSubscriber2ESForm('${EventSource.id}')">
                       <span class="icon icon-run" ></span>
                       <span class="text">Add Subscriber</span>
                     </a>
-                    <a class="btn" href="javascript:void(0);" onclick="editES('${EventSource.id}')">
+                    <a class="btn" href="javascript:void(0);" onclick="getEditESForm('${EventSource.id}')">
                       <span class="icon icon-run" ></span>
                       <span class="text">Edit</span>
                     </a>
-                    <a class="btn" href="#"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
-                    <a class="btn"><span class="icon icon-adduser"></span><span class="text">Delete</span></a>
+                    <a class="btn" href="javascript:void(0);" onclick="offlineEventSource('${EventSource.id}')"><span class="icon icon-resize"></span><span class="text">Offline</span></a>
+                    <a class="btn" onclick="deleteEventSource('${EventSource.id}')"><span class="icon icon-adduser"></span><span class="text">Delete</span></a>
                   </div>
                 </div>
               </div>
@@ -154,7 +40,7 @@
                 <dd>
                   <c:forEach items="${EventSource.subscriberList}" var="ss">
                     ${ss.name}
-                    <a href="javascript:void(0);" onclick="removeSubscriberFromES('${ss.id}')"><span>[DELETE]</span></a>
+                    <a href="javascript:void(0);" onclick="removeSubscriberFromES('${EventSource.id}','${ss.id}')"><span>[DELETE]</span></a>
                     <br/>
                   </c:forEach>
                 </dd>
@@ -185,6 +71,9 @@
         <%--<a href="#" >All</a>--%>
       </h4>
       <ol class="activities-items">
+        <c:if test="${EventLogList.size==0}">
+          no event log!
+        </c:if>
         <c:forEach items="${EventLogList}" var="el">
           <li>
             <c:if test="${el.level==0}">
@@ -208,17 +97,6 @@
             </div>
           </li>
         </c:forEach>
-        <li>
-          <span class="job-status successful"></span>
-          <div class="job-details">
-            <a class="job-action" href="#">Create Subscriber</a>
-            <span class="consumed"></span>
-            <span class="job-time">2015-11-28 10:28:43</span>
-            <ul class="resources">
-              <li>Enno01 create subscriber to AMQ01!</li>
-            </ul>
-          </div>
-        </li>
       </ol>
     </div>
 

@@ -40,7 +40,7 @@
             </div>
           </div>
           <div class="form-actions">
-            <input id="submit" class="btn btn-primary" type="button" value="Submit"/>
+            <input id="submit" class="btn btn-primary" type="button" value="Submit" onclick="submitForm('form','/eventsources/addSubscriber')"/>
             <input class="btn btn-cancel" type="button" value="Cancel"/>
           </div>
         </fieldset>
@@ -54,29 +54,6 @@
     $('.close').click(function(){
       $('#dialogDiv').html("");
       $('#dialogDiv').dialog('close');
-    });
-    $('#submit').click(function(){
-      $.ajax({
-        url:"/eventsources/addSubscriber",
-        type:"post",
-        async:false,
-        dataType:"json",
-        data:$("#form").serialize(),
-        success: function (data) {
-          if(data.success)
-          {
-            window.location.reload(true);
-            //$(".close").click();
-          }
-          else
-          {
-            alert(data.emMessage);
-          }
-        },
-        error: function(data) {
-          alert(data);
-        }
-      });
     });
   });
 </script>

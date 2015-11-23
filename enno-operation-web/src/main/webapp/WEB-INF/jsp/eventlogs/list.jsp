@@ -4,7 +4,7 @@
   <div class="topbar">
     <div>
       <div class="breadcrumbs">
-        <a class="level level-zone level-zone-2" href="/eventlogs/list?pageIndex=1" data-permalink="">Event Sources</a>
+        <a class="level level-zone level-zone-2" href="#eventlogs/list?pageIndex=1" data-permalink="">Event Sources</a>
       </div>
     </div>
   </div>
@@ -48,10 +48,10 @@
           </td>
 
           <td>
-            <a href="/eventsources/detail?eventSourceId=${el.eventSourceModel.id}&Count=0">${el.eventSourceModel.sourceId}</a>
+            <a href="#eventsources/detail?eventSourceId=${el.eventSourceModel.id}&Count=0">${el.eventSourceModel.sourceId}</a>
           </td>
           <td>
-            <a href="/subscribers/detail?subscirberId=${el.subscriberModel.id}&Count=0">${el.subscriberModel.name}</a>
+            <a href="#subscribers/detail?subscirberId=${el.subscriberModel.id}&Count=0">${el.subscriberModel.name}</a>
           </td>
           <td >
             <span>${el.title}</span>

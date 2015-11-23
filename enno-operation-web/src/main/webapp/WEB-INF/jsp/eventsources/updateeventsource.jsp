@@ -50,7 +50,7 @@
             </div>
           </div>
           <div class="form-actions">
-            <input id="submit" class="btn btn-primary" type="button" value="Submit"/>
+            <input id="submit" class="btn btn-primary" type="button" value="Submit" onlick="submitForm('form','/eventsources/update')"/>
             <input class="btn btn-cancel" type="button" value="Cancel"/>
           </div>
         </fieldset>
@@ -64,28 +64,6 @@
     $('.close').click(function(){
       $('#dialogDiv').html("");
       $('#dialogDiv').dialog('close');
-    });
-    $('#submit').click(function(){
-      $.ajax({
-        url:"/eventsources/update",
-        type:"post",
-        async:false,
-        dataType:"json",
-        data:$("#form").serialize(),
-        success: function (data) {
-          if(data.success)
-          {
-            window.location.reload(true);
-          }
-          else
-          {
-            alert(data.emMessage);
-          }
-        },
-        error: function(data) {
-          alert(data);
-        }
-      });
     });
   });
 </script>

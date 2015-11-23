@@ -8,40 +8,19 @@
     PageClick=function(pageclickednumber)
     {
         location.href="/eventsources/list?pageIndex="+pageclickednumber;
-        //window.load("/eventsources/list?pageIndex="+pageclickednumber);
-    };
-    function createEventSource(){
-        $.ajax({
-            url:"/eventsources/newEventSourceForm",
-            type:"get",
-            async:true,
-            dataType:"text",
-            beforeSend: function (XMLHttpRequest) {
-                $("#waiting").show();
-            },
-            success: function (data) {
-                $("#waiting").hide();
-                $('#dialogDiv').html(data);
-                $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
-            },
-            error: function (data) {
-                $("#waiting").hide();
-                rtn = false;
-            }
-        });
     }
 </script>
 <div class="wrapper page">
     <div class="topbar">
         <div>
             <div class="breadcrumbs">
-                <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
+                <a class="level level-zone level-zone-2" href="#eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
             </div>
         </div>
     </div>
     <div class="pane">
         <div class="toolbar">
-            <a class="btn" href="#" onclick="createEventSource()">
+            <a class="btn" href="#" onclick="getCreateEventSourceForm()">
                 <span class="icon icon-run" ></span>
                 <span class="text">Add</span>
             </a>
@@ -79,7 +58,7 @@
                     <input  type="radio" name="checkItem" id="${es.id}"/>
                 </td>
                 <td >
-                    <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
+                    <a href="#eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
                 </td>
                 <td>
                     <span>${es.protocol}</span>
