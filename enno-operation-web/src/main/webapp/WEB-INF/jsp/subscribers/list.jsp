@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/top.inc"%>
+<%@ page isELIgnored="false" %>
 <div class="wrapper page">
   <div class="topbar">
     <div>
@@ -62,6 +62,16 @@
       </c:forEach>
       </tbody>
     </table>
+    <div id="pager"></div>
   </div>
 </div>
-<%@ include file="../include/bottom.inc"%>
+<script type="text/javascript">
+  PageClick=function(pageclickednumber)
+  {
+    location.href="#subscribers/list?pageIndex="+pageclickednumber;
+  }
+//  $(document).ready(function(){
+    $("#pager").pager({pagenumber:${SubscriberPage.currentPageIndex}, pagecount:${SubscriberPage.pageCount}, buttonClickCallback:PageClick});
+//  });
+
+</script>

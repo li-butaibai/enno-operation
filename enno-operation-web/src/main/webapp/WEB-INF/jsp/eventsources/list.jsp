@@ -1,15 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 <%--<%@ include file="../include/top.inc"%>--%>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
-    });
-    PageClick=function(pageclickednumber)
-    {
-        location.href="/eventsources/list?pageIndex="+pageclickednumber;
-    }
-</script>
+
 <div class="wrapper page">
     <div class="topbar">
         <div>
@@ -20,7 +12,7 @@
     </div>
     <div class="pane">
         <div class="toolbar">
-            <a class="btn" href="#" onclick="getCreateEventSourceForm()">
+            <a class="btn" href="javascript:void(0);" onclick="getCreateEventSourceForm()">
                 <span class="icon icon-run" ></span>
                 <span class="text">Add</span>
             </a>
@@ -79,4 +71,14 @@
         <div id="pager"></div>
     </div>
 </div>
+<script type="text/javascript">
+    PageClick=function(pageclickednumber)
+    {
+        location.href="#eventsources/list?pageIndex="+pageclickednumber;
+    }
+    //    $(document).ready(function(){
+    $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
+    //    });
+
+</script>
 <%--<%@ include file="../include/bottom.inc"%>--%>

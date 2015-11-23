@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/top.inc"%>
+<%@ page isELIgnored="false" %>
 <div class="overview">
   <div class="topbar">
     <div>
@@ -71,9 +71,9 @@
         <%--<a href="#" >All</a>--%>
       </h4>
       <ol class="activities-items">
-        <c:if test="${EventLogList.size==0}">
-          no event log!
-        </c:if>
+        <%--<c:if test="${EventLogList.size==0}">--%>
+          <%--no event log!--%>
+        <%--</c:if>--%>
         <c:forEach items="${EventLogList}" var="el">
           <li>
             <c:if test="${el.level==0}">
@@ -99,10 +99,6 @@
         </c:forEach>
       </ol>
     </div>
-
   </div>
-
 </div>
 </div>
-
-<%@ include file="../include/bottom.inc"%>

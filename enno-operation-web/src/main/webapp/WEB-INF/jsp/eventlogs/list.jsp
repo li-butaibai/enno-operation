@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/top.inc"%>
+<%@ page isELIgnored="false" %>
 <div class="wrapper page">
   <div class="topbar">
     <div>
@@ -51,7 +51,7 @@
             <a href="#eventsources/detail?eventSourceId=${el.eventSourceModel.id}&Count=0">${el.eventSourceModel.sourceId}</a>
           </td>
           <td>
-            <a href="#subscribers/detail?subscirberId=${el.subscriberModel.id}&Count=0">${el.subscriberModel.name}</a>
+            <a href="#subscribers/detail?subscriberId=${el.subscriberModel.id}&Count=0">${el.subscriberModel.name}</a>
           </td>
           <td >
             <span>${el.title}</span>
@@ -66,6 +66,13 @@
       </c:forEach>
       </tbody>
     </table>
+    <div id="pager"></div>
   </div>
 </div>
-<%@ include file="../include/bottom.inc"%>
+<script type="text/javascript">
+  PageClick=function(pageclickednumber)
+  {
+    location.href="#eventlogs/list?pageIndex="+pageclickednumber;
+  }
+  $("#pager").pager({pagenumber:${EventlogPage.currentPageIndex}, pagecount:${EventlogPage.pageCount}, buttonClickCallback:PageClick});
+</script>

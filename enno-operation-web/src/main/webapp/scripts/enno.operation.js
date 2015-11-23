@@ -2,13 +2,20 @@
  * Created by EriclLee on 15/11/23.
  */
 $().ready(function(){
-    alert("dd");
-    //if ("onhashchange" in window) {
-    //    alert("The browser supports the hashchange event!");
-    //}
-    //else{alert('dd');}
-    //window.onhashchange = onHashChanged;
+    window.onhashchange = onHashChanged;
+    onHashChanged();
 });
+
+function highlightMenuTab(menuId){
+    $(".level-1 > li > a").click(function () {
+        $(".selected").removeClass("selected");
+        $(this).parent().addClass("selected");
+    });
+    if (menuId != undefined) {
+        $(".selected").removeClass("selected");
+        $("#" + menuId).addClass("selected");
+    }
+}
 
 function onHashChanged(){
     var hash = location.hash;
@@ -17,21 +24,30 @@ function onHashChanged(){
     {
         url = hash.replace('#','/');
     }
-    alert(url);
+    var tabName = url.split("/")[1];
+    highlightMenuTab(tabName)
     $.ajax({
         url:url,
         type:"get",
         async:true,
         dataType:"text",
         beforeSend: function (XMLHttpRequest) {
+            $("#waiting").show();
         },
         success: function (data) {
+            $("#waiting").hide();
             $('#content').html(data);
         },
         error: function (data) {
+            $("#waiting").hide();
             rtn = false;
         }
     });
+}
+
+function closeDialog(){
+    $('#dialogDiv').html("");
+    $('#dialogDiv').dialog('close');
 }
 
 function submitForm(formId, url){
@@ -44,7 +60,8 @@ function submitForm(formId, url){
         success: function (data) {
             if(data.success)
             {
-                window.location.reload(true);
+                onHashChanged();
+                //window.location.reload(true);
             }
             else
             {
@@ -78,6 +95,29 @@ function getCreateEventSourceForm(){
     });
 }
 
+function estemplateChange(oid){
+    var selectedId = $("#"+oid).children('option:selected').val();
+    getConnectInfoForm(selectedId)
+    var mt = $("#modal").outerHeight()/2;
+    if(mt+100 > window.outerHeight/2)
+    {
+        mt=$(body).innerHeight()/2-100;
+    }
+    $("#modal").css({"margin-top":mt*(-1)+"px"});
+}
+
+function getConnectInfoForm(eventSourceTemplateId) {
+    $.ajax({
+        url:"/eventsources/getconnectinfo?templateId="+eventSourceTemplateId,
+        type:"get",
+        async:false,
+        dataType:"text",
+        success:function(data){
+            $('#connectInfoDiv').html(data);
+        }
+    });
+}
+
 function getAddSubscriber2ESForm(eventSourceId){
     $.ajax({
         url:"/eventsources/getAddSubscriberForm?eventSourceId="+eventSourceId,
@@ -98,18 +138,6 @@ function getAddSubscriber2ESForm(eventSourceId){
         }
     });
 
-}
-
-function getConnectInfoForm(eventSourceTemplateId) {
-    $.ajax({
-        url:"/eventsources/getconnectinfo?templateId="+eventSourceTemplateId,
-        type:"get",
-        async:false,
-        dataType:"text",
-        success:function(data){
-            $('#connectInfoDiv').html(data);
-        },
-    });
 }
 
 function removeSubscriberFromES(eventSourceId,subscriberId){
@@ -168,7 +196,8 @@ function offlineEventSource(eventSourceId){
         success: function (data) {
             if(data.success)
             {
-                window.location.reload(true);
+                onHashChanged();
+                //window.location.reload(true);
             }
             else
             {
@@ -190,7 +219,8 @@ function deleteEventSource(eventSourceId){
         success: function (data) {
             if(data.success)
             {
-                window.location.reload(true);
+                onHashChanged();
+                //window.location.reload(true);
             }
             else
             {
@@ -257,7 +287,8 @@ function offlineSubscriber(subscriberId){
         success: function (data) {
             if(data.success)
             {
-                window.location.reload(true);
+                onHashChanged();
+                //window.location.reload(true);
             }
             else
             {
@@ -279,7 +310,8 @@ function deleteSubscriber(subscriberId){
         success: function (data) {
             if(data.success)
             {
-                window.location.reload(true);
+                onHashChanged();
+                //window.location.reload(true);
             }
             else
             {

@@ -10,7 +10,7 @@
 <div id="windows-overlay" class="window-overlay">
     <div id="modal" class="modal"
          style="width: 800px; height: auto; margin-left:-400px; margin-top: -168px; top:50%; left:50%; z-index: 1000; ">
-        <div class="modal-header" style="cursor: move;"><h4>New Event Source<a href="#" class="close"><span
+        <div class="modal-header" style="cursor: move;"><h4>New Event Source<a href="javascript:void(0);" onclick="closeDialog()" class="close"><span
                 class="icon-close icon-Large"></span></a></h4></div>
         <div class="modal-content">
             <form id="form" class="form form-horizontal" method="post" action="/eventsources/add">
@@ -33,7 +33,7 @@
                         <div class="control-label">Template</div>
                         <div class="controls">
                             <div class="select-con">
-                                <select id="estemplate" name="eventSourceTemplateId" class="dropdown-select">
+                                <select id="estemplate" name="eventSourceTemplateId" class="dropdown-select" onchange="estemplateChange('estemplate')">
                                     <option value="-1" selected="selected">----Please Selecte Template----</option>
                                     <c:forEach items="${ESTemplateList}" var="est">
                                         <option value="${est.id}">${est.name}</option>
@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-actions">
                         <input id="submit" class="btn btn-primary" type="button" value="Submit" onclick="submitForm('form','/eventsources/add')"/>
-                        <input class="btn btn-cancel" type="button" value="Cancel"/>
+                        <input class="btn btn-cancel" type="button" value="Cancel" onclick="closeDialog()"/>
                     </div>
                 </fieldset>
             </form>
@@ -61,22 +61,3 @@
         <div class="modal-footer"></div>
     </div>
 </div>
-<script type="text/javascript">
-    $().ready(function(){
-        $('.close').click(function(){
-            $('#dialogDiv').html("");
-            $('#dialogDiv').dialog('close');
-        });
-        $("#estemplate").change(function(){
-            var selectedId = $(this).children('option:selected').val();
-            getConnectInfo(selectedId)
-            var mt = $("#modal").outerHeight()/2;
-            if(mt+100 > window.outerHeight/2)
-            {
-                mt=$(body).innerHeight()/2-100;
-            }
-            $("#modal").css({"margin-top":mt*(-1)+"px"});
-        });
-    });
-
-</script>

@@ -6,10 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/top.inc"%>
-<script type="text/javascript">
-
-</script>
+<%@ page isELIgnored="false" %>
 <div class="overview">
   <div class="topbar">
     <div>
@@ -104,4 +101,3 @@
     </div>
   </div>
 </div>
-<%@ include file="../include/bottom.inc"%>
