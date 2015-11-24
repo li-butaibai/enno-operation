@@ -23,7 +23,7 @@ public class eventSourceActivityOpeartion {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("select ta.name,ta.comments,ta.displayName,ta.id,ae.value from EventsourceActivityEntity ae join ae.eventsourceTemplateActivity ta where ae.eventsource.id = :EventsourceId and ta.eventsourceTemplate.id = :EventsourceTemplateId");
+            Query q = session.createQuery("select ta.name,ta.comments,ta.displayName,ta.id,ae.value,ae.id from EventsourceActivityEntity ae join ae.eventsourceTemplateActivity ta where ae.eventsource.id = :EventsourceId and ta.eventsourceTemplate.id = :EventsourceTemplateId");
             q.setParameter("EventsourceId", EventsourceId);
             q.setParameter("EventsourceTemplateId", EventsourceTemplateId);
             List list = q.list();
@@ -36,6 +36,7 @@ public class eventSourceActivityOpeartion {
                 activity.setDisplayName(results[2] != null ? results[2].toString() : null);
                 activity.setTemplateActivityId((Integer) results[3]);
                 activity.setValue(results[4] != null ? results[4].toString() : null);
+                activity.setId((Integer) results[5]);
                 activities.add(activity);
             }
             return activities;
