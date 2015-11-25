@@ -20,7 +20,7 @@
           <div class="item">
             <div class="control-label">Event Source Name</div>
             <div class="controls">
-              <div class="control-label">
+              <div class="control-text">
                 <input type="hidden" name="eventSourceId" value="${EventSource.id}" />
                 ${EventSource.sourceId}
               </div>
