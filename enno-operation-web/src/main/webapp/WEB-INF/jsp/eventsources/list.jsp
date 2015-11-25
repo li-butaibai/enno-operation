@@ -30,10 +30,13 @@
                    EventSource
                 </th>
                 <th>
+                    Status
+                </th>
+                <th>
                     Protcol
                 </th>
                 <th>
-                    Subsciber Count
+                    Subscriber Count
                 </th>
                 <th>
                     Event Decoder
@@ -47,10 +50,13 @@
             <c:forEach items="${EventSourcePage.queryResult}" var="es">
             <tr>
                 <td class="checkbox">
-                    <input  type="radio" name="checkItem" id="${es.id}"/>
+                    <input  type="radio" name="checkItem" id="${es.id}" alt="${es.state},${es.subscriberList.size()}"/>
                 </td>
                 <td >
                     <a href="#eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
+                </td>
+                <td>
+                    <span>${es.state}</span>
                 </td>
                 <td>
                     <span>${es.protocol}</span>
@@ -79,6 +85,8 @@
     //    $(document).ready(function(){
     $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
     //    });
+    $("radio").onchange(function(){
 
+    });
 </script>
 <%--<%@ include file="../include/bottom.inc"%>--%>
