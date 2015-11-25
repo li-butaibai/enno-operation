@@ -190,7 +190,7 @@ public class eventSourceOperation {
             EventLogEntity logEntity = new EventLogEntity();
             logEntity.setCreateTime(new Timestamp((new Date()).getTime()));
             logEntity.setEventsource(es);
-            //logEntity.setLevel();
+            logEntity.setLevel(Enum.Level.Info.ordinal());
             logEntity.setSubscriber(suber);
             logEntity.setMessage(es.getSourceId() + "add subscription to " + suber.getName());
             logEntity.setTitle("Add Subscription");
@@ -229,7 +229,7 @@ public class eventSourceOperation {
             EventLogEntity logEntity = new EventLogEntity();
             logEntity.setCreateTime(new Timestamp((new Date()).getTime()));
             logEntity.setEventsource(es);
-            //logEntity.setLevel();
+            logEntity.setLevel(Enum.Level.Info.ordinal());
             logEntity.setSubscriber(suber);
             logEntity.setMessage(es.getSourceId() + "cancels subscription to " + suber.getName());
             logEntity.setTitle("Cancel Subscription");
