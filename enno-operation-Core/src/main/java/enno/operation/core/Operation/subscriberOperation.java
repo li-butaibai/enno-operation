@@ -101,22 +101,25 @@ public class subscriberOperation {
 
     public void DeleteSubscriber(int SubscriberId) throws Exception {
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
-            q.setParameter("SubscriberId", SubscriberId);
-            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
-            for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
-                session.delete(MapEntity);
+            SubscriberEntity suber = getSubscriberEntityById(SubscriberId);
+            if (suber.getStatus() == Enum.State.Offline.ordinal()) {
+                session = hibernateUtil.getSessionFactory().openSession();
+                Transaction tx = session.beginTransaction();
+                Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
+                q.setParameter("SubscriberId", SubscriberId);
+                List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+                for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
+                    session.delete(MapEntity);
+                }
+
+                q = session.createQuery("update SubscriberEntity e set e.dataStatus = :dataStatus, e.status = :status where e.id = :SubscriberId");
+                q.setParameter("dataStatus", Enum.State.Offline.ordinal());
+                q.setParameter("status", Enum.validity.invalid.ordinal());
+                q.setParameter("SubscriberId", SubscriberId);
+                q.executeUpdate();
+
+                tx.commit();
             }
-
-            q = session.createQuery("update SubscriberEntity e set e.dataStatus = :dataStatus, e.status = :status where e.id = :SubscriberId");
-            q.setParameter("dataStatus", Enum.State.Offline.ordinal());
-            q.setParameter("status", Enum.validity.invalid.ordinal());
-            q.setParameter("SubscriberId", SubscriberId);
-            q.executeUpdate();
-
-            tx.commit();
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
@@ -147,7 +150,7 @@ public class subscriberOperation {
         }
     }
 
-    private SubscriberEntity getSubscriberEntityById(int SubscriberId) throws Exception {
+    public SubscriberEntity getSubscriberEntityById(int SubscriberId) throws Exception {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
