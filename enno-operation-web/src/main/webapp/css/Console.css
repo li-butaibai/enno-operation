@@ -17455,7 +17455,8 @@ pre.task-script code {
     position: relative;
     margin-left: 200px;
     border-top: 1px solid #ddd;
-    padding-top: 48px
+    padding-top: 48px;
+    height:100%;
 }
 
 .content .wrapper {

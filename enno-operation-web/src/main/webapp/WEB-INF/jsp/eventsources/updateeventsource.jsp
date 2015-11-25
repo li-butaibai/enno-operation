@@ -50,7 +50,7 @@
             </div>
           </div>
           <div class="form-actions">
-            <input id="submit" class="btn btn-primary" type="button" value="Submit" onlick="submitForm('form','/eventsources/update')"/>
+            <input id="submit" class="btn btn-primary" type="button" value="Submit" onclick="submitForm('form','/eventsources/update')"/>
             <input class="btn btn-cancel" type="button" value="Cancel" onclick="closeDialog()"/>
           </div>
         </fieldset>

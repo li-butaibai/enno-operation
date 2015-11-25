@@ -35,7 +35,9 @@
                 <dt>SourceId</dt>
                 <dd>${EventSource.sourceId}</dd>
                 <dt>Event Type</dt>
-                <dd></dd>
+                <dd>${EventSource.eventSourceTemplateName}</dd>
+                <dt>Status</dt>
+                <dd>${EventSource.state}</dd>
                 <dt>Subscribers</dt>
                 <dd>
                   <c:forEach items="${EventSource.subscriberList}" var="ss">
