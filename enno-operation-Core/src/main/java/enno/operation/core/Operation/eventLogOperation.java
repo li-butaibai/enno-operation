@@ -24,6 +24,7 @@ public class eventLogOperation {
     private subscriberOperation subOp = null;
     private static Logger logger = LogManager.getLogger(eventLogOperation.class.getName());
 
+    //region 对外提供的Public方法
     public PageDivisionQueryResultModel<EventLogModel> getPageDivisionEventLogList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<EventLogModel> result = new PageDivisionQueryResultModel<EventLogModel>();
         try {
@@ -67,7 +68,10 @@ public class eventLogOperation {
             }
         }
     }
+    //endregion
 
+
+    //region Private方法
     //获取EventLog列表，分页
     private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<EventLogEntity> util = new pageDivisionQueryUtil();
@@ -156,4 +160,5 @@ public class eventLogOperation {
         }
         return result;
     }
+    //endregion
 }
