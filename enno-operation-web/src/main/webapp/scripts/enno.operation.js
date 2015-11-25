@@ -19,7 +19,7 @@ function highlightMenuTab(menuId){
 
 function onHashChanged(){
     var hash = location.hash;
-    var url = "/eventsources/list?pageIndex=0";
+    var url = "/eventsources/list?pageIndex=1";
     if(hash != "")
     {
         url = hash.replace('#','/');
@@ -83,6 +83,12 @@ function submitForm(formId, actionUrl){
             alert(data);
         }
     });
+}
+
+function toolbarFunc(func)
+{
+    var oid =$('[name=\'checkItem\']:checked').attr('id');
+    func(oid);
 }
 
 function getCreateEventSourceForm(){
