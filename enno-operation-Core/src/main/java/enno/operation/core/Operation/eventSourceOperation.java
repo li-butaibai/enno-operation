@@ -249,23 +249,45 @@ public class eventSourceOperation {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            Query q = session.createQuery("from EventsourceEntity e where e.id = :EventsourceId").setParameter("EventsourceId", eventSource.getId());
-            EventsourceEntity es = (EventsourceEntity) q.uniqueResult();
+            //Query q = session.createQuery("from EventsourceEntity e where e.id = :EventsourceId").setParameter("EventsourceId", eventSource.getId());
+            EventsourceEntity es = getEventSourceById(eventSource.getId());
             es.setSourceId(eventSource.getSourceId());
             es.setComments(eventSource.getComments());
             es.setEventDecoder(eventSource.getEventDecoder());
             es.setUpdateTime(new Timestamp((new Date()).getTime()));
 
-            q = session.createQuery("from EventsourceActivityEntity ae where ae.eventsource.id = :EventsourceId").setParameter("EventsourceId", eventSource.getId());
+            Query q = session.createQuery("from EventsourceActivityEntity ae where ae.eventsource.id = :EventsourceId").setParameter("EventsourceId", eventSource.getId());
             List<EventsourceActivityEntity> activityEntities = q.list();
             for (EventSourceActivityModel activityModel : eventSource.getEventSourceActivities()) {
-                for (EventsourceActivityEntity activityEntity:activityEntities){
-                    if(activityEntity.getId() == activityModel.getId()){
+                for (EventsourceActivityEntity activityEntity : activityEntities) {
+                    if (activityEntity.getId() == activityModel.getId()) {
                         activityEntity.setValue(activityModel.getValue());
                     }
                 }
             }
             tx.commit();
+        } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
+    public void OfflineEventsource(int eventsourceId) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId");
+            q.setParameter("EventsourceId", eventsourceId);
+            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+            if (MapEntities == null || MapEntities.size() == 0) {
+                EventsourceEntity es = getEventSourceById(eventsourceId);
+                es.setStatus(Enum.State.Offline.ordinal());
+                tx.commit();
+            }
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;

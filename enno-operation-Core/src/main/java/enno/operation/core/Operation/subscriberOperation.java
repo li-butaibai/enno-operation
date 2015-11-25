@@ -22,6 +22,7 @@ public class subscriberOperation {
     private Session session = null;
     private eventSourceOperation esOp = null;
 
+    //region 对外提供的Public方法
     //获取订阅者列表，分页，PageIndex：当前页码，PageSize：每页记录条数
     public PageDivisionQueryResultModel<SubscriberModel> getPageDivisonSubscriberList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<SubscriberModel> result = new PageDivisionQueryResultModel<SubscriberModel>();
@@ -168,6 +169,30 @@ public class subscriberOperation {
         }
     }
 
+    public void OfflineSubscriber(int subscriberId) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
+            q.setParameter("SubscriberId", subscriberId);
+            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
+            if (MapEntities == null || MapEntities.size() == 0) {
+                SubscriberEntity suber = getSubscriberEntityById(subscriberId);
+                suber.setStatus(Enum.State.Offline.ordinal());
+                tx.commit();
+            }
+        } catch (Exception ex) {
+            LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+    //endregion
+
+    //region 私有方法
     private List<SubscriberEntity> getSubscriberEntityListByEventSourceId(int EventSourceId) throws Exception {
         List<SubscriberEntity> suberEntityList = new ArrayList<SubscriberEntity>();
 
@@ -248,4 +273,5 @@ public class subscriberOperation {
             throw ex;
         }
     }
+    //endregion
 }
