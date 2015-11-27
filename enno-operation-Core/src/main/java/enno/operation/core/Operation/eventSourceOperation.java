@@ -298,6 +298,30 @@ public class eventSourceOperation {
         }
     }
 
+    public boolean IsEventsourceNameExist(String Name) throws Exception {
+        try {
+            session = hibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            Query q = session.createQuery("from EventsourceEntity es where es.dataStatus = :dataStatus and es.sourceId = :name");
+            q.setParameter("dataStatus", Enum.validity.valid);
+            q.setParameter("name", Name);
+            List<EventsourceEntity> Entities = q.list();
+            if (Entities == null || Entities.size() == 0) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        } catch (Exception ex) {
+            LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
+            throw ex;
+        } finally {
+            if (null != session) {
+                session.close();
+            }
+        }
+    }
+
     //获取未被指定Subcriber订阅的Eventsource列表
     public List<EventSourceModel> getUnSubscribedEventsourceListBySubscriberId(int SubscriberId) throws Exception {
         List<EventSourceModel> esList = new ArrayList<EventSourceModel>();
