@@ -1,67 +1,48 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/top.inc"%>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
-    });
-    PageClick=function(pageclickednumber)
-    {
-        location.href="/eventsources/list?pageIndex="+pageclickednumber;
-        //window.load("/eventsources/list?pageIndex="+pageclickednumber);
-    };
-    function createEventSource(){
-        $.ajax({
-            url:"/eventsources/newEventSourceForm",
-            type:"get",
-            async:true,
-            dataType:"text",
-            beforeSend: function (XMLHttpRequest) {
-                $("#waiting").show();
-            },
-            success: function (data) {
-                $("#waiting").hide();
-                $('#dialogDiv').html(data);
-                $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
-            },
-            error: function (data) {
-                $("#waiting").hide();
-                rtn = false;
-            }
-        });
-    }
-</script>
+<%@ page isELIgnored="false" %>
+<%--<%@ include file="../include/top.inc"%>--%>
+
 <div class="wrapper page">
     <div class="topbar">
         <div>
             <div class="breadcrumbs">
-                <a class="level level-zone level-zone-2" href="/eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
+                <a class="level level-zone level-zone-2" href="#eventsources/list?pageIndex=1" data-permalink="">Event Sources</a>
             </div>
         </div>
     </div>
     <div class="pane">
         <div class="toolbar">
-            <a class="btn" href="#" onclick="createEventSource()">
+            <a class="btn" href="javascript:void(0);" onclick="getCreateEventSourceForm()">
                 <span class="icon icon-run" ></span>
                 <span class="text">Add</span>
             </a>
-            <a class="btn" href="#">
+            <a class="btn stbn Online-NoSubscriber offline-NoSubscriber" href="javascript:void(0);" style="display: none;" onclick="toolbarFunc(getEditESForm)">
                 <span class="text">Update</span>
+            </a>
+            <a class="btn sbtn Online-NoSubscriber" href="javascript:void(0);" style="display: none;" onclick="toolbarFunc(offlineEventSource)">
+                <span class="text">Offline</span>
+            </a>
+            <a class="btn sbtn Offline-NoSubscriber" href="javascript:void(0);" style="display: none;" onclick="toolbarFunc(deleteEventSource)">
+                <span class="text">Delete</span>
             </a>
         </div>
         <table class="table table-bordered table-hover">
             <thead>
             <tr>
                 <th class="checkbox">
-                    <input type="checkbox" name="checkAll"/>
+
                 </th>
                 <th>
                    EventSource
                 </th>
                 <th>
+                    Status
+                </th>
+                <th>
                     Protcol
                 </th>
                 <th>
-                    Subsciber Count
+                    Subscriber Count
                 </th>
                 <th>
                     Event Decoder
@@ -75,10 +56,13 @@
             <c:forEach items="${EventSourcePage.queryResult}" var="es">
             <tr>
                 <td class="checkbox">
-                    <input  type="checkbox" name="checkItem" id="${es.id}"/>
+                    <input  type="radio" name="checkItem" id="${es.id}" lang="${es.state}-${es.subscriberList.size()==0?'NoSubscriber':'Subscriber'}"/>
                 </td>
                 <td >
-                    <a href="/eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
+                    <a href="#eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
+                </td>
+                <td>
+                    <span>${es.state}</span>
                 </td>
                 <td>
                     <span>${es.protocol}</span>
@@ -99,4 +83,18 @@
         <div id="pager"></div>
     </div>
 </div>
-<%@ include file="../include/bottom.inc"%>
+<script type="text/javascript">
+    PageClick=function(pageclickednumber)
+    {
+        location.href="#eventsources/list?pageIndex="+pageclickednumber;
+    }
+    //    $(document).ready(function(){
+    $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
+    //    });
+    $("[name='checkItem']:radio").on('click',function(){
+        $('.sbtn').hide();
+        $('.' + $(this).attr('lang')).show();
+    });
+
+</script>
+<%--<%@ include file="../include/bottom.inc"%>--%>

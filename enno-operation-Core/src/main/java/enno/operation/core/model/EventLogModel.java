@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class EventLogModel {
     private int id;
     private EventSourceModel eventSourceModel;
-    private int level;
+    private Enum.Level level;
     private SubscriberModel subscriberModel;
     private String title;
     private String message;
@@ -31,11 +31,11 @@ public class EventLogModel {
         this.eventSourceModel = eventSourceModel;
     }
 
-    public int getLevel() {
+    public Enum.Level getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Enum.Level level) {
         this.level = level;
     }
 

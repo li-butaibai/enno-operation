@@ -16,9 +16,15 @@
                 <span class="icon icon-run" ></span>
                 <span class="text">Add</span>
             </a>
-            <%--<a class="btn" href="#">--%>
-                <%--<span class="text">Update</span>--%>
-            <%--</a>--%>
+            <a class="btn stbn Online-NoSubscriber offline-NoSubscriber" href="javascript:void(0);" style="display: none;" onclick="toolbarFunc(getEditESForm)">
+                <span class="text">Update</span>
+            </a>
+            <a class="btn sbtn Online-NoSubscriber" href="javascript:void(0);" style="display: none;" onclick="toolbarFunc(offlineEventSource)">
+                <span class="text">Offline</span>
+            </a>
+            <a class="btn sbtn Offline-NoSubscriber" href="javascript:void(0);" style="display: none;" onclick="toolbarFunc(deleteEventSource)">
+                <span class="text">Delete</span>
+            </a>
         </div>
         <table class="table table-bordered table-hover">
             <thead>
@@ -30,10 +36,13 @@
                    EventSource
                 </th>
                 <th>
+                    Status
+                </th>
+                <th>
                     Protcol
                 </th>
                 <th>
-                    Subsciber Count
+                    Subscriber Count
                 </th>
                 <th>
                     Event Decoder
@@ -47,10 +56,13 @@
             <c:forEach items="${EventSourcePage.queryResult}" var="es">
             <tr>
                 <td class="checkbox">
-                    <input  type="radio" name="checkItem" id="${es.id}"/>
+                    <input  type="radio" name="checkItem" id="${es.id}" lang="${es.state}-${es.subscriberList.size()==0?'NoSubscriber':'Subscriber'}"/>
                 </td>
                 <td >
                     <a href="#eventsources/detail?eventSourceId=${es.id}&Count=0">${es.sourceId}</a>
+                </td>
+                <td>
+                    <span>${es.state}</span>
                 </td>
                 <td>
                     <span>${es.protocol}</span>
@@ -79,6 +91,10 @@
     //    $(document).ready(function(){
     $("#pager").pager({pagenumber:${EventSourcePage.currentPageIndex}, pagecount:${EventSourcePage.pageCount}, buttonClickCallback:PageClick});
     //    });
+    $("[name='checkItem']:radio").on('click',function(){
+        $('.sbtn').hide();
+        $('.' + $(this).attr('lang')).show();
+    });
 
 </script>
 <%--<%@ include file="../include/bottom.inc"%>--%>

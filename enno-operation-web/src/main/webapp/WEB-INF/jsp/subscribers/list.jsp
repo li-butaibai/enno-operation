@@ -10,9 +10,17 @@
   </div>
   <div class="pane">
     <div class="toolbar">
-      <%--<a class="btn" href="#">--%>
-        <%--<span class="text">Update</span>--%>
-      <%--</a>--%>
+      <a class="btn Online-NoSubscriber Offline-NoSubscriber Online-Subscriber" href="javascript:void(0);" style="display: none"
+         onclick="toolbarFunc(getEditSubscriberForm)">
+        <span class="text">Update</span>
+      </a>
+      <a class="btn Online-NoSubscriber Offline-NoSubscriber Online-Subscriber" href="javascript:void(0);" style="display: none"
+              onclick="toolbarFunc(offlineSubscriber)">
+        <span class="text">Offline</span>
+      </a>
+      <a class="btn Offline-NoSubscriber" href="javascript:void(0);" style="display: none" onclick="toolbarFunc(deleteSubscriber)">
+        <span class="text">Delete</span>
+      </a>
     </div>
     <table class="table table-bordered table-hover">
       <thead>
@@ -41,7 +49,7 @@
       <c:forEach items="${SubscriberPage.queryResult}" var="sb">
         <tr>
           <td class="checkbox">
-            <input  type="radio" name="checkItem" id="${sb.id}"/>
+            <input  type="radio" name="checkItem" id="${sb.id}" lang="${sb.state}-${sb.eventsourceList.size()==0?'NoSubscriber':"Subscriber"}"/>
           </td>
           <td >
             <a href="#subscribers/detail?subscriberId=${sb.id}&Count=0">${sb.name}</a>
@@ -70,8 +78,11 @@
   {
     location.href="#subscribers/list?pageIndex="+pageclickednumber;
   }
-//  $(document).ready(function(){
-    $("#pager").pager({pagenumber:${SubscriberPage.currentPageIndex}, pagecount:${SubscriberPage.pageCount}, buttonClickCallback:PageClick});
-//  });
 
+  $("#pager").pager({pagenumber:${SubscriberPage.currentPageIndex}, pagecount:${SubscriberPage.pageCount}, buttonClickCallback:PageClick});
+
+  $("[name='checkItem']:radio").on('click',function(){
+    $('.sbtn').hide();
+    $('.' + $(this).attr('lang')).show();
+  });
 </script>

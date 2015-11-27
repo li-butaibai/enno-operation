@@ -2,13 +2,12 @@ package enno.operation.core.Operation;
 
 import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
-import enno.operation.core.model.EventLogModel;
-import enno.operation.core.model.PageDivisionQueryResultModel;
+import enno.operation.core.model.*;
+import enno.operation.core.model.Enum;
 import enno.operation.dal.EventLogEntity;
 import enno.operation.dal.hibernateUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -25,6 +24,7 @@ public class eventLogOperation {
     private subscriberOperation subOp = null;
     private static Logger logger = LogManager.getLogger(eventLogOperation.class.getName());
 
+    //region 对外提供的Public方法
     public PageDivisionQueryResultModel<EventLogModel> getPageDivisionEventLogList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<EventLogModel> result = new PageDivisionQueryResultModel<EventLogModel>();
         try {
@@ -68,7 +68,10 @@ public class eventLogOperation {
             }
         }
     }
+    //endregion
 
+
+    //region Private方法
     //获取EventLog列表，分页
     private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<EventLogEntity> util = new pageDivisionQueryUtil();
@@ -137,7 +140,7 @@ public class eventLogOperation {
             log.setCreateTime(entity.getCreateTime());
             log.setTitle(entity.getTitle());
             log.setId(entity.getId());
-            log.setLevel(entity.getLevel());
+            log.setLevel(Enum.Level.values()[entity.getLevel()]);
             log.setMessage(entity.getMessage());
             log.setEventSourceModel(esOp.ConvertEventsourceEntity2Model(entity.getEventsource()));
             log.setSubscriberModel(subOp.ConvertSubscriberEntity2Model(entity.getSubscriber()));
@@ -157,4 +160,5 @@ public class eventLogOperation {
         }
         return result;
     }
+    //endregion
 }

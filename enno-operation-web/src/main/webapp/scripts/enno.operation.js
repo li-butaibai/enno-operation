@@ -19,7 +19,7 @@ function highlightMenuTab(menuId){
 
 function onHashChanged(){
     var hash = location.hash;
-    var url = "/eventsources/list?pageIndex=0";
+    var url = "/eventsources/list?pageIndex=1";
     if(hash != "")
     {
         url = hash.replace('#','/');
@@ -32,14 +32,18 @@ function onHashChanged(){
         async:true,
         dataType:"text",
         beforeSend: function (XMLHttpRequest) {
-            $("#waiting").show();
+            var img = "<img src=\"/img/waiting.gif\" style=\"top:50%; left:50%; margin-left:-83px; margin-top: -10px; position: absolute\" />";
+            $('#content').html(img);
+            //$("#waiting").show();
         },
         success: function (data) {
-            $("#waiting").hide();
-            $('#content').html(data);
+            if(location.hash == hash) {
+                //$("#waiting").hide();
+                $('#content').html(data);
+            }
         },
         error: function (data) {
-            $("#waiting").hide();
+            $('#content').html("Load Failed!");
             rtn = false;
         }
     });
@@ -47,31 +51,44 @@ function onHashChanged(){
 
 function closeDialog(){
     $('#dialogDiv').html("");
-    $('#dialogDiv').dialog('close');
+    //$('#dialogDiv').dialog('close');
 }
 
-function submitForm(formId, url){
+function submitForm(formId, actionUrl){
     $.ajax({
-        url:url,
+        url:actionUrl,
         type:"post",
-        async:false,
+        async:true,
         dataType:"json",
         data:$("#"+formId).serialize(),
+        beforeSend: function (XMLHttpRequest) {
+            $("#waiting").show();
+        },
         success: function (data) {
             if(data.success)
             {
+                $("#waiting").hide();
+                closeDialog();
                 onHashChanged();
                 //window.location.reload(true);
             }
             else
             {
+                $("#waiting").hide();
                 alert(data.emMessage);
             }
         },
         error: function(data) {
+            $("#waiting").hide();
             alert(data);
         }
     });
+}
+
+function toolbarFunc(func)
+{
+    var oid =$('[name=\'checkItem\']:checked').attr('id');
+    func(oid);
 }
 
 function getCreateEventSourceForm(){
@@ -130,7 +147,7 @@ function getAddSubscriber2ESForm(eventSourceId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             $("#waiting").hide();
@@ -173,10 +190,9 @@ function getEditESForm(eventSourceId){
             $("#waiting").show();
         },
         success: function (data) {
-            alert(data);
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             alert(data);
@@ -245,7 +261,7 @@ function getAddES2SubscriberForm(subscriberId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             $("#waiting").hide();
@@ -267,7 +283,7 @@ function getEditSubscriberForm(subscriberId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             alert(data);

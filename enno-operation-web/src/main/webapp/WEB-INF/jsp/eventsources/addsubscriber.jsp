@@ -20,7 +20,7 @@
           <div class="item">
             <div class="control-label">Event Source Name</div>
             <div class="controls">
-              <div class="control-label">
+              <div class="control-text">
                 <input type="hidden" name="eventSourceId" value="${EventSource.id}" />
                 ${EventSource.sourceId}
               </div>
@@ -40,7 +40,7 @@
             </div>
           </div>
           <div class="form-actions">
-            <input id="submit" class="btn btn-primary" type="button" value="Submit" onlick="submitForm('form','/eventsources/addSubscriber')"/>
+            <input id="submit" class="btn btn-primary" type="button" value="Submit" onclick="submitForm('form','/eventsources/addSubscriber')"/>
             <input id="cancel" class="btn btn-cancel" type="button" value="Cancel" onclick="closeDialog()"/>
           </div>
         </fieldset>

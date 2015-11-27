@@ -120,7 +120,8 @@ public class SubscriberController {
     public Map<String, Object> offlineSubscriber(@RequestParam String subscriberId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
-            //TODO: offline subscriber
+            subscriberOperation subOp = new subscriberOperation();
+            subOp.OfflineSubscriber(Integer.parseInt(subscriberId));
             model.put("success", true);
         } catch (Exception ex) {
             ex.printStackTrace();

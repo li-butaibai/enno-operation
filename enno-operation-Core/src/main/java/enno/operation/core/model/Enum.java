@@ -16,4 +16,10 @@ public class Enum {
         Offline,
         Online
     }
+
+    public enum Level{
+        Error,
+        Alert,
+        Info
+    }
 }
