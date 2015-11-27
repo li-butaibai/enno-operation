@@ -212,6 +212,8 @@ public class EventSourceController {
     public Map<String, Object> offlineEventSource(@RequestParam String eventSourceId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
+            eventSourceOperation esOperation = new eventSourceOperation();
+            esOperation.OfflineEventsource(Integer.parseInt(eventSourceId));
             model.put("success", true);
         } catch (Exception ex) {
             ex.printStackTrace();
