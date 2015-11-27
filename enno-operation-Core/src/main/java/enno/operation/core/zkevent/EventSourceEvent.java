@@ -8,6 +8,7 @@ import enno.operation.dal.SubscriberEntity;
 import enno.operation.dal.hibernateUtil;
 import enno.operation.zkmodel.EventSourceData;
 import enno.operation.zkmodel.SubscriberData;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -23,18 +24,25 @@ public class EventSourceEvent implements EventSourceListener {
         try {
             session = hibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            EventsourceEntity eventsourceEntity
-                    = (EventsourceEntity)session.createQuery("from EventsourceEntity ese " +
-                    "where ese.dataStatus=0 and ese.sourceId = " + eventSourceData.getEventSourceId()).uniqueResult();
+            String eseHSQL ="from EventsourceEntity ese where ese.dataStatus=1 and ese.sourceId = :sourceId";
+            Query eseQuery = session.createQuery(eseHSQL);
+            eseQuery.setParameter("sourceId", eventSourceData.getEventSourceId());
+            EventsourceEntity eventsourceEntity = (EventsourceEntity)eseQuery.uniqueResult();
+//            EventsourceEntity eventsourceEntity
+//                    = (EventsourceEntity)session.createQuery("from EventsourceEntity ese " +
+//                    "where ese.dataStatus=1 and ese.sourceId = " + eventSourceData.getEventSourceId()).uniqueResult();
+            String essmeHQL = "select esme from EventsourceSubscriberMapEntity esme right join esme.eventsource where esme.eventsource.sourceId = :sourceId";
+            Query essmeQuery = session.createQuery(essmeHQL);
+            essmeQuery.setParameter("sourceId", eventSourceData.getEventSourceId());
+
             List<EventsourceSubscriberMapEntity> eventsourceSubscriberMapEntities
-                    = session.createQuery("from EventsourceSubscriberMapEntity esme right join esme.eventsource " +
-                    "where esme.eventsource.sourceId = " + eventSourceData.getEventSourceId()).list();
+                    = essmeQuery.list();
             for (EventsourceSubscriberMapEntity eventsourceSubscriberMapEntity : eventsourceSubscriberMapEntities) {
                 session.delete(eventsourceSubscriberMapEntity);
             }
             for (SubscriberData subscriberData : eventSourceData.getSubscribers()) {
                 SubscriberEntity subscriberEntity = (SubscriberEntity)session.createQuery("from SubscriberEntity se " +
-                        "where se.dataStatus=0 and se.name = " + subscriberData.getSubscriberId()).uniqueResult();
+                        "where se.dataStatus=1 and se.name = " + subscriberData.getSubscriberId()).uniqueResult();
                 EventsourceSubscriberMapEntity eventsourceSubscriberMapEntity = new EventsourceSubscriberMapEntity();
                 eventsourceSubscriberMapEntity.setEventsource(eventsourceEntity);
                 eventsourceSubscriberMapEntity.setSubscriber(subscriberEntity);

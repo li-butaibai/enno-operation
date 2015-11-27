@@ -7,6 +7,7 @@ import enno.operation.dal.hibernateUtil;
 import enno.operation.zkmodel.SubscriberData;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -16,10 +17,12 @@ import java.util.List;
 public class SubscriberServerEvent implements SubscriberClusterListener {
     public void process(List<SubscriberData> subscriberDataList) {
         Session session = null;
+        Transaction transaction = null;
         try {
             session = hibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
             List<SubscriberEntity> subscriberEntityList =
-                    session.createQuery("from SubscriberEntity fetch all properties where dataStatus=0").list();
+                    session.createQuery("from SubscriberEntity fetch all properties where dataStatus=1").list();
             for (SubscriberEntity subscriberEntity : subscriberEntityList) {
                 boolean exist = false;
                 for (SubscriberData subscriberData : subscriberDataList) {
@@ -28,10 +31,11 @@ public class SubscriberServerEvent implements SubscriberClusterListener {
                         break;
                     }
                 }
-                subscriberEntity.setDataStatus(exist ? 0 : 1);
+                subscriberEntity.setDataStatus(exist ? 1 : 0);
+                session.save(subscriberEntity);
             }
             for (SubscriberData subscriberData : subscriberDataList) {
-                String sHql = "from SubscriberEntity fetch all properties where name=:subscriberName and dataStatus=0";
+                String sHql = "from SubscriberEntity fetch all properties where name=:subscriberName and dataStatus=1";
                 Query sQuery = session.createQuery(sHql);
                 sQuery.setString("subscriberName", subscriberData.getSubscriberId());
                 Object subscriberObject = sQuery.uniqueResult();
@@ -39,12 +43,17 @@ public class SubscriberServerEvent implements SubscriberClusterListener {
                     SubscriberEntity subscriberEntity = new SubscriberEntity();
                     subscriberEntity.setName(subscriberData.getSubscriberId());
                     subscriberEntity.setComments(subscriberData.getSubscriberData());
-                    subscriberEntity.setDataStatus(0);
-                    subscriberEntity.setStatus(0);
+                    subscriberEntity.setDataStatus(1);
+                    subscriberEntity.setStatus(1);
                     session.save(subscriberEntity);
                 }
             }
+            transaction.commit();
         } catch (Exception ex) {
+            if(transaction!=null)
+            {
+                transaction.rollback();
+            }
             //ex.printStackTrace();
             LogUtil.SaveLog(SubscriberServerEvent.class.getName(), ex);
         } finally {
