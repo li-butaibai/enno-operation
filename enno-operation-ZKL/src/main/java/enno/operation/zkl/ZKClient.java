@@ -4,10 +4,7 @@ import enno.operation.ZKListener.EventLogListener;
 import enno.operation.ZKListener.EventSourceListener;
 import enno.operation.ZKListener.SubscriberClusterListener;
 import enno.operation.zkException.InitializeSchemaFailedException;
-import enno.operation.zkmodel.EventLogData;
-import enno.operation.zkmodel.EventSourceConnectModel;
-import enno.operation.zkmodel.EventSourceData;
-import enno.operation.zkmodel.SubscriberData;
+import enno.operation.zkmodel.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.zookeeper.*;
@@ -20,26 +17,21 @@ import java.util.Map;
  * Created by v-zoli on 2015/10/22.
  */
 public class ZKClient {
-    private static class ZKClientHolder{
-        private static final ZKClient INSTANCE=new ZKClient();
-    }
-    private ZKClient() {}
-    public  static final ZKClient getIntance(){
-        return ZKClientHolder.INSTANCE;
-    }
+    public ZKClient() {}
     private ZooKeeper zooKeeper = null;
     private SubscriberClusterListener subscriberClusterEvent = null;
     private EventLogListener eventLogEvent = null;
     private EventSourceListener eventSourceEvent = null;
-    private String connectString = "";
-    private int sessionTimeout = 1000;
-    private String subscriberRootName = "/SubscriberClusterRoot";
-    private String eventSourceRootName = "/EventSourceRoot";
-    private String eventLogRootName = "/EventLogRoot";
+    private ZKSource zkSource;
+//    private String connectString = "";
+//    private int sessionTimeout = 1000;
+//    private String subscriberRootName = "/SubscriberClusterRoot";
+//    private String eventSourceRootName = "/EventSourceRoot";
+//    private String eventLogRootName = "/EventLogRoot";
 
     public void connect() {
         try {
-            zooKeeper = new ZooKeeper(connectString, sessionTimeout, null);
+            zooKeeper = new ZooKeeper(zkSource.getConnectString(), zkSource.getSessionTimeout(), null);
     } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -63,7 +55,7 @@ public class ZKClient {
             for (String node : nodes) {
                 SubscriberData subscriberData = new SubscriberData();
                 subscriberData.setSubscriberId(node);
-                String nodeData = new String(zooKeeper.getData(subscriberRootName + "/" + node, false, null));
+                String nodeData = new String(zooKeeper.getData(zkSource.getSubscriberRootName() + "/" + node, false, null));
                 subscriberData.setSubscriberData(nodeData);
                 subscriberDataList.add(subscriberData);
             }
@@ -86,7 +78,7 @@ public class ZKClient {
             for (String node : nodes) {
                 SubscriberData subscriberData = new SubscriberData();
                 subscriberData.setSubscriberId(node);
-                String nodeData = new String(zooKeeper.getData(subscriberRootName + "/" + node, false, null));
+                String nodeData = new String(zooKeeper.getData(zkSource.getSubscriberRootName() + "/" + node, false, null));
                 subscriberData.setSubscriberData(nodeData);
                 subscriberDataList.add(subscriberData);
             }
@@ -106,7 +98,7 @@ public class ZKClient {
         try {
             List<EventLogData> eventLogDataList = new ArrayList<EventLogData>();
             for (String node : nodes) {
-                String nodeData = new String(zooKeeper.getData(eventLogRootName + "/" + node, false, null));
+                String nodeData = new String(zooKeeper.getData(zkSource.getEventLogRootName() + "/" + node, false, null));
                 JSONObject jsonObject = JSONObject.fromObject(nodeData);
                 EventLogData eventLogData =(EventLogData)JSONObject.toBean(jsonObject, EventLogData.class);
                 eventLogDataList.add(eventLogData);
@@ -126,12 +118,12 @@ public class ZKClient {
         try {
             //initialize the enno cluster root node
             boolean newSubscriberRoot = false;
-            if (zooKeeper.exists(subscriberRootName, false) == null) {
-                zooKeeper.create(subscriberRootName, subscriberRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            if (zooKeeper.exists(zkSource.getSubscriberRootName(), false) == null) {
+                zooKeeper.create(zkSource.getSubscriberRootName(), zkSource.getSubscriberRootName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
                 newSubscriberRoot = true;
             }
             // watch the enno cluster root child node
-            List<String> clusterChildrenNodes = zooKeeper.getChildren(subscriberRootName, new Watcher() {
+            List<String> clusterChildrenNodes = zooKeeper.getChildren(zkSource.getSubscriberRootName(), new Watcher() {
                 //@Override
                 public void process(WatchedEvent event) {
                     try {
@@ -147,12 +139,12 @@ public class ZKClient {
             }
 
             //initialize the event source root node
-            if (zooKeeper.exists(eventSourceRootName, false) == null) {
-                zooKeeper.create(eventSourceRootName, eventSourceRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            if (zooKeeper.exists(zkSource.getEventLogRootName(), false) == null) {
+                zooKeeper.create(zkSource.getEventLogRootName(), zkSource.getEventLogRootName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
             //initialize the sub event source node
             for (final Map.Entry<String, String> eventSource : eventSourceList.entrySet()) {
-                String path = eventSourceRootName + "/" + eventSource.getKey();
+                String path = zkSource.getEventLogRootName() + "/" + eventSource.getKey();
                 //create the sub event source node
                 boolean newEventSource = false;
                 if (zooKeeper.exists(path, false) == null) {
@@ -175,10 +167,10 @@ public class ZKClient {
             }
 
             //initialize the event log root node
-            if (zooKeeper.exists(eventLogRootName, false) == null) {
-                zooKeeper.create(eventLogRootName, eventLogRootName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            if (zooKeeper.exists(zkSource.getEventLogRootName(), false) == null) {
+                zooKeeper.create(zkSource.getEventLogRootName(), zkSource.getEventLogRootName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
-            zooKeeper.getChildren(eventLogRootName, new Watcher() {
+            zooKeeper.getChildren(zkSource.getEventLogRootName(), new Watcher() {
                 //@Override
                 public void process(WatchedEvent event) {
                     try {
@@ -200,7 +192,7 @@ public class ZKClient {
     public void addEventSource(String eventSourceName, final String eventSourceData)
     {
         try {
-            String path = eventSourceRootName + "/" + eventSourceName;
+            String path = zkSource.getEventSourceRootName() + "/" + eventSourceName;
             if (zooKeeper.exists(path, false) == null) {
                 zooKeeper.create(path, eventSourceData.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
                 //watch the event source children node change event
@@ -227,7 +219,7 @@ public class ZKClient {
     public void removeEventSource(String eventSourceName)
     {
         try {
-            String path = eventSourceRootName + "/" + eventSourceName;
+            String path = zkSource.getEventSourceRootName() + "/" + eventSourceName;
             if (zooKeeper.exists(path, false) != null) {
                 zooKeeper.delete(path, -1);
             }
@@ -242,7 +234,7 @@ public class ZKClient {
     {
         try{
             String data = JSONArray.fromObject(connectModelList).toString();
-            String path = String.format("%s/%s", subscriberRootName, subscriberId);
+            String path = String.format("%s/%s", zkSource.getSubscriberRootName(), subscriberId);
             if(zooKeeper.exists(path, false) != null) {
                 zooKeeper.setData(path, data.toString().getBytes(), -1);
             }
@@ -254,7 +246,7 @@ public class ZKClient {
     public Map<String,String> getEventSourceList() {
         Map<String,String> eventSourceList = new HashMap<String, String>();
         try {
-            List<String> children = zooKeeper.getChildren(eventSourceRootName, false);
+            List<String> children = zooKeeper.getChildren(zkSource.getEventSourceRootName(), false);
             for(String child : children)
             {
                 String childData = new String(zooKeeper.getData(child,false,null));
@@ -272,7 +264,7 @@ public class ZKClient {
     public Map<String, String> getSubscriberList() {
         Map<String,String> subscriberList = new HashMap<String, String>();
         try {
-            List<String> children = zooKeeper.getChildren(subscriberRootName, false);
+            List<String> children = zooKeeper.getChildren(zkSource.getSubscriberRootName(), false);
             for(String child : children)
             {
                 String childData = new String(zooKeeper.getData(child,false,null));
@@ -303,43 +295,11 @@ public class ZKClient {
         eventSourceEvent = zkListener;
     }
 
-    public String getConnectString() {
-        return connectString;
+    public ZKSource getZkSource() {
+        return zkSource;
     }
 
-    public void setConnectString(String _connectStr) {
-        connectString = _connectStr;
-    }
-
-    public int getSessionTimeout() {
-        return sessionTimeout;
-    }
-
-    public void setSessionTimeout(int _sessionTimeout) {
-        sessionTimeout = _sessionTimeout;
-    }
-
-    public String getSubscriberRootName() {
-        return subscriberRootName;
-    }
-
-    public void setSubscriberRootName(String _subscriberRootName) {
-        this.subscriberRootName = _subscriberRootName;
-    }
-
-    public String getEventSourceRootName() {
-        return eventSourceRootName;
-    }
-
-    public void setEventSourceRootName(String _eventSourceRootName) {
-        eventSourceRootName = _eventSourceRootName;
-    }
-
-    public String getEventLogRootName() {
-        return eventLogRootName;
-    }
-
-    public void setEventLogRootName(String eventLogRootName) {
-        this.eventLogRootName = eventLogRootName;
+    public void setZkSource(ZKSource zkSource) {
+        this.zkSource = zkSource;
     }
 }

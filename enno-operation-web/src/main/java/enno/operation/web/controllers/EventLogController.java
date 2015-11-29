@@ -33,7 +33,7 @@ public class EventLogController {
         }
     }
 
-    @RequestMapping(value = "/detail/{eventLogId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public Map<String, Object> detail(String eventLogId) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {

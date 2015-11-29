@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <!-- Hibernate4 -->
+       <!-- 加载资源文件  其中包含变量信息，必须在Spring配置文件的最前面加载，即第一个加载-->
+       <!--<context:property-placeholder location="classpath:persistence-mysql.properties" />-->
+
+    <bean id="sessionFactory"
+             class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+              <property name="dataSource" ref="dataSource" />
+              <property name="packagesToScan">
+                     <list>
+                            <!-- 可以加多个包 -->
+                            <value>enno.operation.dal</value>
+                     </list>
+              </property>
+              <property name="hibernateProperties">
+                     <props>
+                         <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                         <prop key="hibernate.c3p0.max_size">20</prop>
+                         <prop key="hibernate.c3p0.min_size">1</prop>
+                         <prop key="hibernate.c3p0.timeout">5000</prop>
+                         <prop key="hibernate.c3p0.idle_test_period">60</prop>
+                         <prop key="hibernate.c3p0.max_statements">100</prop>
+                         <prop key="hibernate.c3p0.acquire_increment">2</prop>
+                         <prop key="hibernate.hbm2ddl.auto">update</prop>
+                         <prop key="hibernate.show_sql">true</prop>
+                         <prop key="current_session_context_class">thread</prop>
+                     </props>
+              </property>
+       </bean>
+    <bean id="zkClient" class="enno.operation.zkl.ZKClient">
+        <property name="eventLogEvent" ref="eventLogEvent"/>
+        <property name="eventSourceEvent" ref="eventSourceEvent"/>
+        <property name="subscriberClusterEvent" ref="subscriberEvent"/>
+        <property name="zkSource" ref="zkSource1"/>
+    </bean>
+    <bean id="eventLogEvent" class="enno.operation.core.zkevent.LogEvent"/>
+    <bean id="eventSourceEvent" class="enno.operation.core.zkevent.EventSourceEvent"/>
+    <bean id="subscriberEvent" class="enno.operation.core.zkevent.SubscriberServerEvent"/>
+    <!-- 数据库映射 -->
+   <!--  class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" -->
+   <!--  class="org.springframework.jdbc.datasource.DriverManagerDataSource" -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://el-dev.chinacloudapp.cn:3306/enno_operationserverdb" />
+        <property name="username" value="dbadmin" />
+        <property name="password" value="abcd1234!" />
+    </bean>
+    <bean id="zkSource1" class="enno.operation.zkmodel.ZKSource">
+        <property name="connectString" value="127.0.0.1:2181"/>
+        <property name="sessionTimeout" value="100000"/>
+        <property name="subscriberRootName" value="/SubscriberClusterRoot"/>
+        <property name="eventLogRootName" value="/EventSourceRoot"/>
+        <property name="eventSourceRootName" value="/ConnectLogRoot"/>
+    </bean>
+</beans>

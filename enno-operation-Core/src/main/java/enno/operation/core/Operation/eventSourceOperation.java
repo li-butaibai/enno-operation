@@ -6,10 +6,14 @@ import enno.operation.core.model.*;
 import enno.operation.core.model.Enum;
 import enno.operation.dal.*;
 import enno.operation.zkl.ZKClient;
+import enno.operation.zkl.zkUtil;
 import enno.operation.zkmodel.EventSourceConnectModel;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -22,9 +26,9 @@ public class eventSourceOperation {
     eventSourceActivityOpeartion activityOp = null;
     subscriberOperation subOp = null;
 
-    //region ¶ÔÍâÌá¹©µÄPublic·½·¨
+    //region ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½Publicï¿½ï¿½ï¿½ï¿½
 
-    //»ñÈ¡EventSourceÁÐ±í£¬·ÖÒ³£¬PageIndex£ºµ±Ç°Ò³Âë£¬PageSize£ºÃ¿Ò³¼ÇÂ¼ÌõÊý
+    //ï¿½ï¿½È¡EventSourceï¿½Ð±?ï¿½ï¿½Ò³ï¿½ï¿½PageIndexï¿½ï¿½ï¿½ï¿½Ç°Ò³ï¿½ë£¬PageSizeï¿½ï¿½Ã¿Ò³ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
     public PageDivisionQueryResultModel<EventSourceModel> getEventSourceList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<EventSourceModel> qr = new PageDivisionQueryResultModel();
         try {
@@ -43,7 +47,7 @@ public class eventSourceOperation {
         }
     }
 
-    //EventSourceÏêÇé
+    //EventSourceï¿½ï¿½ï¿½ï¿½
     public EventSourceModel GetEventsourceById(int EventsourceId) throws Exception {
         subOp = new subscriberOperation();
         EventsourceEntity entity = getEventSourceById(EventsourceId);
@@ -70,7 +74,7 @@ public class eventSourceOperation {
 
     public void AddEventsource(EventSourceModel eventSource) throws Exception {
         try {
-            ZKClient zkCilent = ZKClient.getIntance();
+            ZKClient zkCilent = zkUtil.getZkClient();
             zkCilent.addEventSource(eventSource.getSourceId(), "");
 
             session = hibernateUtil.getSessionFactory().openSession();
@@ -127,7 +131,7 @@ public class eventSourceOperation {
         try {
             EventsourceEntity es = getEventSourceById(EventsourceId);
             if (es.getStatus() == Enum.State.Offline.ordinal()) {
-                ZKClient zkClient = ZKClient.getIntance();
+                ZKClient zkClient = zkUtil.getZkClient();
                 zkClient.removeEventSource(getEventSourceById(EventsourceId).getSourceId());
 
                 session = hibernateUtil.getSessionFactory().openSession();
@@ -161,7 +165,7 @@ public class eventSourceOperation {
     public void AssignEventsource(int eventsourceId, int subscriberId) throws Exception {
         try {
             subOp = new subscriberOperation();
-            ZKClient zkClient = ZKClient.getIntance();
+            ZKClient zkClient = zkUtil.getZkClient();
             zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
 
             session = hibernateUtil.getSessionFactory().openSession();
@@ -208,7 +212,7 @@ public class eventSourceOperation {
 
     public void RemoveEventsourceSubscription(int eventsourceId, int subscriberId) throws Exception {
         try {
-            ZKClient zkClient = ZKClient.getIntance();
+            ZKClient zkClient = zkUtil.getZkClient();
             zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
 
             session = hibernateUtil.getSessionFactory().openSession();
@@ -322,7 +326,7 @@ public class eventSourceOperation {
         }
     }
 
-    //»ñÈ¡Î´±»Ö¸¶¨Subcriber¶©ÔÄµÄEventsourceÁÐ±í
+    //ï¿½ï¿½È¡Î´ï¿½ï¿½Ö¸ï¿½ï¿½Subcriberï¿½ï¿½ï¿½Äµï¿½Eventsourceï¿½Ð±ï¿½
     public List<EventSourceModel> getUnSubscribedEventsourceListBySubscriberId(int SubscriberId) throws Exception {
         List<EventSourceModel> esList = new ArrayList<EventSourceModel>();
 
@@ -345,8 +349,8 @@ public class eventSourceOperation {
     }
     //endregion
 
-    //region private·½·¨
-    //Í¨¹ýId»ñÈ¡Ö¸¶¨µÄEventSource
+    //region privateï¿½ï¿½ï¿½ï¿½
+    //Í¨ï¿½ï¿½Idï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½EventSource
     private EventsourceEntity getEventSourceById(int EventsourceId) throws Exception {
         EventsourceEntity es = new EventsourceEntity();
 
@@ -418,7 +422,7 @@ public class eventSourceOperation {
         }
     }
 
-    //»ñÈ¡EventSourceEntityÁÐ±í£¬·ÖÒ³
+    //ï¿½ï¿½È¡EventSourceEntityï¿½Ð±?ï¿½ï¿½Ò³
     private PageDivisionQueryResultModel<EventsourceEntity> getEventSourceEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<EventsourceEntity> util = new pageDivisionQueryUtil();
 
@@ -448,7 +452,7 @@ public class eventSourceOperation {
                 connInfo.setSourceId(eventSource.getSourceId());
                 connInfo.setProtocol(eventSource.getProtocol());
                 connInfo.setEventDecoder(eventSource.getEventDecoder());
-                //»ñÈ¡Ô­ÓÐµÄActivityÐÅÏ¢
+                //ï¿½ï¿½È¡Ô­ï¿½Ðµï¿½Activityï¿½ï¿½Ï¢
                 Map<String, String> map = new HashMap<String, String>();
                 for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
                     map.put(activity.getName(), activity.getValue());

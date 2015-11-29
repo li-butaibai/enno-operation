@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ public class eventLogOperation {
     private subscriberOperation subOp = null;
     private static Logger logger = LogManager.getLogger(eventLogOperation.class.getName());
 
-    //region ¶ÔÍâÌá¹©µÄPublic·½·¨
+    //region ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½Publicï¿½ï¿½ï¿½ï¿½
     public PageDivisionQueryResultModel<EventLogModel> getPageDivisionEventLogList(int pageIndex) throws Exception {
         PageDivisionQueryResultModel<EventLogModel> result = new PageDivisionQueryResultModel<EventLogModel>();
         try {
@@ -41,19 +43,22 @@ public class eventLogOperation {
         }
     }
 
-    //»ñÈ¡Ö¸¶¨EventSourceµÄEventLog
+    //ï¿½ï¿½È¡Ö¸ï¿½ï¿½EventSourceï¿½ï¿½EventLog
     public List<EventLogModel> getEventLogsByEventsourceId(int EventsourceId, int Count) throws Exception {
         return ConvertEventlogList2ModelList(getEventLogListByEventsourceId(EventsourceId, Count));
     }
 
-    //»ñÈ¡Ö¸¶¨SubscriberµÄEventLog
+    //ï¿½ï¿½È¡Ö¸ï¿½ï¿½Subscriberï¿½ï¿½EventLog
     public List<EventLogModel> getEventLogsBySubscriberId(int SubscriberId, int Count) throws Exception {
         return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId, Count));
     }
 
     public EventLogModel getEventLogById(int EventLogId) throws Exception {
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
+            ApplicationContext context = new FileSystemXmlApplicationContext("/config/enno-operation/operation-server.xml");
+
+
+            //session = hibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity log where log.id = :LogId");
             q.setParameter("LogId", EventLogId);
@@ -71,8 +76,8 @@ public class eventLogOperation {
     //endregion
 
 
-    //region Private·½·¨
-    //»ñÈ¡EventLogÁÐ±í£¬·ÖÒ³
+    //region Privateï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½È¡EventLogï¿½Ð±?ï¿½ï¿½Ò³
     private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex) throws Exception {
         pageDivisionQueryUtil<EventLogEntity> util = new pageDivisionQueryUtil();
 
@@ -86,7 +91,7 @@ public class eventLogOperation {
         }
     }
 
-    //Í¨¹ýSubscriberId»ñÈ¡Ö¸¶¨µÄSubscriberµÄÈÕÖ¾
+    //Í¨ï¿½ï¿½SubscriberIdï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½Subscriberï¿½ï¿½ï¿½ï¿½Ö¾
     private List<EventLogEntity> getEventLogListBySubscriberId(int SubscriberId, int Count) throws Exception {
         List<EventLogEntity> elList = null;
 
@@ -109,7 +114,7 @@ public class eventLogOperation {
         }
     }
 
-    //Í¨¹ýEventsourceId»ñÈ¡Ö¸¶¨µÄEventsourceµÄÈÕÖ¾
+    //Í¨ï¿½ï¿½EventsourceIdï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½Eventsourceï¿½ï¿½ï¿½ï¿½Ö¾
     private List<EventLogEntity> getEventLogListByEventsourceId(int EventsourceId, int Count) throws Exception {
         List<EventLogEntity> elList = null;
 

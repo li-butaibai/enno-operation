@@ -7,11 +7,14 @@ import enno.operation.core.zkevent.SubscriberServerEvent;
 import enno.operation.dal.EventsourceEntity;
 import enno.operation.dal.hibernateUtil;
 import enno.operation.zkl.ZKClient;
+import enno.operation.zkl.zkUtil;
 import enno.operation.zkmodel.EventSourceData;
 import org.apache.zookeeper.ZooKeeper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +27,8 @@ import java.util.Map;
 public class ZK_Loader {
     private static ZKClient zkClient;
     private static Session session;
-    private static EventSourceEvent eventSourceEvent = new EventSourceEvent();
-    private static LogEvent logEvent = new LogEvent();
-    private static SubscriberServerEvent subscriberServerEvent = new SubscriberServerEvent();
     public static void start() throws Exception{
-        initializeZKClient();
+        zkClient = zkUtil.getZkClient();
         zkClient.connect();
         Map<String,String> eventSourceDatas = getAllEventSource();
         zkClient.initializeSchemaAndBeginTranscation(eventSourceDatas);
@@ -52,19 +52,5 @@ public class ZK_Loader {
             session.close();
         }
         return dataList;
-    }
-
-    private static void initializeZKClient()
-    {
-        zkClient = ZKClient.getIntance();
-        zkClient.setConnectString("127.0.0.1:2181");
-        zkClient.setSessionTimeout(100000);
-        zkClient.setSubscriberRootName("/SubscriberClusterRoot");
-        zkClient.setEventLogRootName("/EventSourceRoot");
-        zkClient.setEventLogRootName("/ConnectLogRoot");
-        zkClient.setEventLogEvent(logEvent);
-        zkClient.setEventSourceEvent(eventSourceEvent);
-        zkClient.setSubscriberClusterEvent(subscriberServerEvent);
-
     }
 }
