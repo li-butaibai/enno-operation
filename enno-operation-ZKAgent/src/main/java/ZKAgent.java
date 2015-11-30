@@ -5,8 +5,7 @@ import enno.operation.zkmodel.ZKSource;
 import net.sf.json.JSONArray;
 import org.apache.zookeeper.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sabermai on 2015/11/30.
@@ -21,6 +20,7 @@ public class ZKAgent {
     private String ennoNodePath = null;
     private ZooKeeper zooKeeper = null;
     private ZKSource zkSource;
+    public static List<EventSourceConnectModel> subscriberData = new ArrayList<EventSourceConnectModel>();
 
     public void connect() {
         try {
@@ -66,28 +66,38 @@ public class ZKAgent {
                         JSONArray jsonArray = JSONArray.fromObject(nodeData);
                         List<EventSourceConnectModel> connectModelList = (List<EventSourceConnectModel>) JSONArray.toCollection(jsonArray, EventSourceConnectModel.class);
 
+                        //compare new data to old data
+                        List<EventSourceConnectModel> addData = new ArrayList<EventSourceConnectModel>();
+                        List<EventSourceConnectModel> removeData = new ArrayList<EventSourceConnectModel>();
+                        Collections.copy(addData, connectModelList);
+                        Collections.copy(removeData, subscriberData);
+                        addData.removeAll(subscriberData);
+                        removeData.removeAll(connectModelList);
                         //call enno server to add or remove subscription, return the process result
-                        Map<String, List<String>> map = iProcessData.processSubscriberData(subscriberId, connectModelList);
+                        Map<String, List<EventSourceConnectModel>> map = iProcessData.processSubscriptions(subscriberId, addData, removeData);
 
                         //add and remove enno node under eventsource node
-                        if (map != null && map.size() > 0) {
-                            List<String> addEventsources = map.get("add");
-                            List<String> removeEventsources = map.get("remove");
-                            for (String esName : addEventsources) {
-                                if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + esName + "/" + subscriberId, false) == null) {
-                                    zooKeeper.create(zkSource.getEventSourceRootName() + "/" + esName + "/" + subscriberId, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-                                }
-                                byte[] logContent = (subscriberId + "successfully subscribed the event source named " + esName).getBytes();
-                                zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+                        List<EventSourceConnectModel> addEventsources = map.get("add");
+                        List<EventSourceConnectModel> removeEventsources = map.get("remove");
+
+                        subscriberData.addAll(addData);
+                        subscriberData.removeAll(removeData);
+
+                        for (EventSourceConnectModel es : addEventsources) {
+                            if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, false) == null) {
+                                zooKeeper.create(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
                             }
-                            for (String esName : removeEventsources) {
-                                if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + esName + "/" + subscriberId, false) != null) {
-                                    zooKeeper.delete(zkSource.getEventSourceRootName() + "/" + esName + "/" + subscriberId, -1);
-                                }
-                                byte[] logContent = (subscriberId + "successfully unsubscribed the event source named " + esName).getBytes();
-                                zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
-                            }
+                            byte[] logContent = (subscriberId + "successfully subscribed the event source named " + es.getSourceId()).getBytes();
+                            zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
                         }
+                        for (EventSourceConnectModel es : removeEventsources) {
+                            if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, false) != null) {
+                                zooKeeper.delete(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, -1);
+                            }
+                            byte[] logContent = (subscriberId + "successfully unsubscribed the event source named " + es.getSourceId()).getBytes();
+                            zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

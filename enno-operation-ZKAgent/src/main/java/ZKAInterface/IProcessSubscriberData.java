@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by sabermai on 2015/11/30.
  */
 public interface IProcessSubscriberData {
-    Map<String, List<String>> processSubscriberData(String subscriberId, List<EventSourceConnectModel> connectModelList);
+    Map<String, List<EventSourceConnectModel>> processSubscriptions(String subscriberId, List<EventSourceConnectModel> addList, List<EventSourceConnectModel> removeList);
 
-    List<EventSourceConnectModel> getOldSubscriberData(String subscriberId);
+    List<EventSourceConnectModel> getCurrentSubscriberData(String subscriberId);
 }
