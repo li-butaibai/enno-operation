@@ -38,9 +38,16 @@
         <property name="subscriberClusterEvent" ref="subscriberEvent"/>
         <property name="zkSource" ref="zkSource1"/>
     </bean>
+
+    <bean id="zkAgent" class="enno.operation.zkl.ZKAgent" scope="prototype">
+        <property name="subscriptionEvent" ref="subscriptionEvent"/>
+        <property name="zkSource" ref="zkSource1"/>
+    </bean>
+
     <bean id="eventLogEvent" class="enno.operation.core.zkevent.LogEvent"/>
     <bean id="eventSourceEvent" class="enno.operation.core.zkevent.EventSourceEvent"/>
     <bean id="subscriberEvent" class="enno.operation.core.zkevent.SubscriberServerEvent"/>
+    <bean id="subscriptionEvent" class="enno.operation.core.zkevent.SubscriptionEvent"/>
     <!-- 数据库映射 -->
    <!--  class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" -->
    <!--  class="org.springframework.jdbc.datasource.DriverManagerDataSource" -->
