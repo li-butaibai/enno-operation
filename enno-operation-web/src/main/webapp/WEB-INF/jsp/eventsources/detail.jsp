@@ -78,13 +78,13 @@
         <%--</c:if>--%>
         <c:forEach items="${EventLogList}" var="el">
           <li>
-            <c:if test="${el.level==0}">
+            <c:if test="${el.level=='Error'}">
               <span class="job-status failed"></span>
             </c:if>
-            <c:if test="${el.level==1}">
+            <c:if test="${el.level=='Alert'}">
               <span class="job-status working"></span>
             </c:if>
-            <c:if test="${el.level==2}">
+            <c:if test="${el.level=='Info'}">
               <span class="job-status successful"></span>
             </c:if>
             <div class="job-details">

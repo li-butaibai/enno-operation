@@ -65,13 +65,13 @@
       <ol class="activities-items">
         <c:forEach items="${EventLogList}" var="el">
           <li>
-            <c:if test="${el.level==0}">
+            <c:if test="${el.level=='Error'}">
               <span class="job-status failed"></span>
             </c:if>
-            <c:if test="${el.level==1}">
+            <c:if test="${el.level=='Alert'}">
               <span class="job-status working"></span>
             </c:if>
-            <c:if test="${el.level==2}">
+            <c:if test="${el.level=='Info'}">
               <span class="job-status successful"></span>
             </c:if>
             <div class="job-details">
@@ -86,17 +86,6 @@
             </div>
           </li>
         </c:forEach>
-        <li>
-          <span class="job-status successful"></span>
-          <div class="job-details">
-            <a class="job-action" href="#">Create Subscriber</a>
-            <span class="consumed"></span>
-            <span class="job-time">2015-11-28 10:28:43</span>
-            <ul class="resources">
-              <li>Enno01 create subscriber to AMQ01!</li>
-            </ul>
-          </div>
-        </li>
       </ol>
     </div>
   </div>
