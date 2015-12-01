@@ -13,6 +13,7 @@
         <module>enno-operation-DAL</module>
         <module>enno-operation-Core</module>
         <module>enno-operation-web</module>
+        <module>enno-operation-ZKAgent</module>
     </modules>
     <properties>
 
