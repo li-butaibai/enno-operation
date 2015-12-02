@@ -17,10 +17,11 @@ import java.util.List;
  * Created by EriclLee on 15/11/15.
  */
 public class eventSourceTemplateOperation {
-    private Session session = null;
     private eventSourceTemplateActivityOperation etaOperation = null;
-    public List<EventSourceTemplateModel> getEventSourceTemplateList() throws Exception {
 
+    public List<EventSourceTemplateModel> getEventSourceTemplateList() throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
             List<EventSourceTemplateModel> estModelList = new ArrayList<EventSourceTemplateModel>();
             List<EventsourceTemplateEntity> eventsourceTemplateEntities = getEventSourceTemplateEntityList();
@@ -33,24 +34,22 @@ public class eventSourceTemplateOperation {
             LogUtil.SaveLog(eventSourceTemplateOperation.class.getName(), ex);
             throw ex;
         }
+        finally {
+            tx.commit();
+        }
     }
 
     private List<EventsourceTemplateEntity> getEventSourceTemplateEntityList() throws Exception {
         List<EventsourceTemplateEntity> estEntityList = new ArrayList<EventsourceTemplateEntity>();
 
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Query q = session.createQuery("select est from EventsourceTemplateEntity est fetch all properties");
             estEntityList = (List<EventsourceTemplateEntity>) q.list();
             return estEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceTemplateOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 

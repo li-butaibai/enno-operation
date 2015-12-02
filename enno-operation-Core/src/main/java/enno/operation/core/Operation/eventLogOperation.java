@@ -21,7 +21,6 @@ import java.util.List;
  * Created by sabermai on 2015/11/11.
  */
 public class eventLogOperation {
-    private Session session = null;
     private eventSourceOperation esOp = null;
     private subscriberOperation subOp = null;
     private static Logger logger = LogManager.getLogger(eventLogOperation.class.getName());
@@ -45,40 +44,50 @@ public class eventLogOperation {
 
     //��ȡָ��EventSource��EventLog
     public List<EventLogModel> getEventLogsByEventsourceId(int EventsourceId, int Count) throws Exception {
-        return ConvertEventlogList2ModelList(getEventLogListByEventsourceId(EventsourceId, Count));
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            return ConvertEventlogList2ModelList(getEventLogListByEventsourceId(EventsourceId, Count));
+        }finally {
+            tx.commit();
+        }
     }
 
     //��ȡָ��Subscriber��EventLog
     public List<EventLogModel> getEventLogsBySubscriberId(int SubscriberId, int Count) throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
+        try {
         return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId, Count));
+        }finally {
+            tx.commit();
+        }
     }
 
     public EventLogModel getEventLogById(int EventLogId) throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
             ApplicationContext context = new FileSystemXmlApplicationContext("/config/enno-operation/operation-server.xml");
-
-
-            //session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity log where log.id = :LogId");
             q.setParameter("LogId", EventLogId);
             EventLogEntity logEntity = (EventLogEntity) q.uniqueResult();
+            tx.commit();
             return ConvertEventlogEntity2Model(logEntity);
         } catch (Exception ex) {
             LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
+        }finally {
+            tx.commit();
         }
     }
     //endregion
 
 
     //region Private����
-    //��ȡEventLog�б?��ҳ
-    private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex) throws Exception {
+    //��ȡEventLog��??��ҳ
+    private PageDivisionQueryResultModel<EventLogEntity> getPageDivisionEventLogEntityList(int pageIndex) throws
+            Exception {
         pageDivisionQueryUtil<EventLogEntity> util = new pageDivisionQueryUtil();
 
         try {
@@ -96,8 +105,7 @@ public class eventLogOperation {
         List<EventLogEntity> elList = null;
 
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Query q = session.createQuery("from EventLogEntity el where el.subscriber.id = :SubscriberId order by el.createTime desc");
             q.setParameter("SubscriberId", SubscriberId);
             if (Count > 0) {
@@ -109,8 +117,6 @@ public class eventLogOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            session.close();
         }
     }
 
@@ -119,8 +125,7 @@ public class eventLogOperation {
         List<EventLogEntity> elList = null;
 
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Query q = session.createQuery("from EventLogEntity el where el.eventsource.id = :EventsourceId order by el.createTime desc");
             q.setParameter("EventsourceId", EventsourceId);
             if (Count > 0) {
@@ -132,8 +137,6 @@ public class eventLogOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            session.close();
         }
     }
 

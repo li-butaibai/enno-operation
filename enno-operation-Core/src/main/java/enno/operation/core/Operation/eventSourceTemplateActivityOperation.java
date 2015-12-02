@@ -17,13 +17,13 @@ import java.util.List;
  * Created by EriclLee on 15/11/15.
  */
 public class eventSourceTemplateActivityOperation {
-    private Session session = null;
-    public List<EventSourceTemplateActivityModel> getEventSourceTemplateActivityByTemplateId(int templateId) throws Exception
-    {
+    public List<EventSourceTemplateActivityModel> getEventSourceTemplateActivityByTemplateId(int templateId) throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
             List<EventSourceTemplateActivityModel> estaModelList = new ArrayList<EventSourceTemplateActivityModel>();
             List<EventsourceTemplateActivityEntity> eventsourceTemplateActivityEntities = getEventSourceTemplateActivityEntityList(templateId);
-            for(EventsourceTemplateActivityEntity eventsourceTemplateActivityEntity : eventsourceTemplateActivityEntities) {
+            for (EventsourceTemplateActivityEntity eventsourceTemplateActivityEntity : eventsourceTemplateActivityEntities) {
                 EventSourceTemplateActivityModel eventSourceTemplateActivityModelModel = ConvertESTAEntity2Model(eventsourceTemplateActivityEntity);
                 estaModelList.add(eventSourceTemplateActivityModelModel);
             }
@@ -31,14 +31,15 @@ public class eventSourceTemplateActivityOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceTemplateActivityOperation.class.getName(), ex);
             throw ex;
+        } finally {
+            tx.commit();
         }
     }
 
     private List<EventsourceTemplateActivityEntity> getEventSourceTemplateActivityEntityList(int templateId) throws Exception {
         List<EventsourceTemplateActivityEntity> estaEntityList = new ArrayList<EventsourceTemplateActivityEntity>();
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             String estaHql = "select esta from EventsourceTemplateActivityEntity esta join esta.eventsourceTemplate est where est.id =:templateId";
             Query q = session.createQuery(estaHql);
             q.setInteger("templateId", templateId);
@@ -47,10 +48,6 @@ public class eventSourceTemplateActivityOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceTemplateActivityOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 
