@@ -15,14 +15,14 @@ import java.util.List;
  * Created by sabermai on 2015/11/13.
  */
 public class eventSourceActivityOpeartion {
-    private Session session = null;
 
     //Done
     public List<EventSourceActivityModel> GetEventSourceActivityByEventsourceId(int EventsourceId, int EventsourceTemplateId) throws Exception {
         List<EventSourceActivityModel> activities = new ArrayList<EventSourceActivityModel>();
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
+
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("select ta.name,ta.comments,ta.displayName,ta.id,ae.value,ae.id from EventsourceActivityEntity ae join ae.eventsourceTemplateActivity ta where ae.eventsource.id = :EventsourceId and ta.eventsourceTemplate.id = :EventsourceTemplateId");
             q.setParameter("EventsourceId", EventsourceId);
             q.setParameter("EventsourceTemplateId", EventsourceTemplateId);
@@ -44,9 +44,7 @@ public class eventSourceActivityOpeartion {
             LogUtil.SaveLog(eventSourceActivityOpeartion.class.getName(), ex);
             throw ex;
         } finally {
-            if (null != session) {
-                session.close();
-            }
+            tx.commit();
         }
     }
 }

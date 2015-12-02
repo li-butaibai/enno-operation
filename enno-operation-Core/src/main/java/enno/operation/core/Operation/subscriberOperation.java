@@ -19,7 +19,6 @@ import java.util.List;
  * Created by sabermai on 2015/11/11.
  */
 public class subscriberOperation {
-    private Session session = null;
     private eventSourceOperation esOp = null;
 
     //region 对外提供的Public方法
@@ -44,6 +43,8 @@ public class subscriberOperation {
 
     //获取订阅者详情 Done
     public SubscriberModel getSubscriberById(int SubscriberId) throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
             esOp = new eventSourceOperation();
             SubscriberEntity subEntity = getSubscriberEntityById(SubscriberId);
@@ -53,13 +54,16 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
+        }finally {
+            tx.commit();
         }
     }
 
     //通过EventSource的id获取Subscriber列表
     public List<SubscriberModel> getSubscriberListByEventSourceId(int EventSourceId) throws Exception {
         List<SubscriberModel> suberList = new ArrayList<SubscriberModel>();
-
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
             List<SubscriberEntity> suberEntityList = getSubscriberEntityListByEventSourceId(EventSourceId);
             if (suberEntityList != null) {
@@ -74,13 +78,16 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
+        }finally {
+            tx.commit();
         }
     }
 
     //获取未订阅指定Eventsource的Subscriber列表
     public List<SubscriberModel> getUnSubscribeListByEventSourceId(int EventSourceId) throws Exception {
         List<SubscriberModel> suberList = new ArrayList<SubscriberModel>();
-
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
             List<SubscriberEntity> AllSuberEntites = getAllSubscriberEntities();
             List<SubscriberEntity> suberEntityList = getSubscriberEntityListByEventSourceId(EventSourceId);
@@ -97,15 +104,17 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
+        }finally {
+            tx.commit();
         }
     }
 
     public void DeleteSubscriber(int SubscriberId) throws Exception {
         try {
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             SubscriberEntity suber = getSubscriberEntityById(SubscriberId);
             if (suber.getStatus() == Enum.State.Offline.ordinal()) {
-                session = hibernateUtil.getSessionFactory().openSession();
-                Transaction tx = session.beginTransaction();
                 Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
                 q.setParameter("SubscriberId", SubscriberId);
                 List<EventsourceSubscriberMapEntity> MapEntities = q.list();
@@ -124,16 +133,12 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 
     public void UpdateSubscriber(SubscriberModel Subscriber) throws Exception {
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from SubscriberEntity sub where sub.id = :SubscriberId").setParameter("SubscriberId", Subscriber.getId());
             SubscriberEntity sub = (SubscriberEntity) q.uniqueResult();
@@ -144,17 +149,13 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 
     public SubscriberEntity getSubscriberEntityById(int SubscriberId) throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from SubscriberEntity sub where sub.id = :SubscriberId");
             q.setParameter("SubscriberId", SubscriberId);
             SubscriberEntity subEntity = (SubscriberEntity) q.uniqueResult();
@@ -163,31 +164,25 @@ public class subscriberOperation {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
         } finally {
-            if (null != session) {
-                session.close();
-            }
+            tx.commit();
         }
     }
 
     public void OfflineSubscriber(int subscriberId) throws Exception {
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
             q.setParameter("SubscriberId", subscriberId);
             List<EventsourceSubscriberMapEntity> MapEntities = q.list();
             if (MapEntities == null || MapEntities.size() == 0) {
                 SubscriberEntity suber = getSubscriberEntityById(subscriberId);
                 suber.setStatus(Enum.State.Offline.ordinal());
-                tx.commit();
             }
+            tx.commit();
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
     //endregion
@@ -197,8 +192,7 @@ public class subscriberOperation {
         List<SubscriberEntity> suberEntityList = new ArrayList<SubscriberEntity>();
 
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Query q = session.createQuery("select sub from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where sub.dataStatus = 1 and es.id = :EventsourceId");
             q.setParameter("EventsourceId", EventSourceId);
             suberEntityList = (List<SubscriberEntity>) q.list();
@@ -206,10 +200,6 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 
@@ -217,8 +207,7 @@ public class subscriberOperation {
         List<SubscriberEntity> suberEntityList = new ArrayList<SubscriberEntity>();
 
         try {
-            session = hibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Query q = session.createQuery("from SubscriberEntity sub where sub.dataStatus = :dataStatus");
             q.setParameter("dataStatus", Enum.validity.valid.ordinal());
             suberEntityList = (List<SubscriberEntity>) q.list();
@@ -226,10 +215,6 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            if (null != session) {
-                session.close();
-            }
         }
     }
 

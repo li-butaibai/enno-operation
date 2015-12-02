@@ -12,18 +12,15 @@ import java.util.List;
  * Created by sabermai on 2015/11/11.
  */
 public class pageDivisionQueryUtil<T> {
-    private static Session session = null;
-
     public pageDivisionQueryUtil() {
-        session = hibernateUtil.getSessionFactory().openSession();
     }
 
     public PageDivisionQueryResultModel<T> excutePageDivisionQuery(int currentPageIndex, String queryHqlStatement, String countHqlStatement) throws Exception {
         PageDivisionQueryResultModel<T> resultModel = new PageDivisionQueryResultModel();
         List<T> result = null;
-
+        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = session.beginTransaction();
         try {
-            Transaction tx = session.beginTransaction();
             Query q = session.createQuery(queryHqlStatement);
             q.setFirstResult((currentPageIndex - 1) * resultModel.getPageSize());
             q.setMaxResults(resultModel.getPageSize());
@@ -42,9 +39,7 @@ public class pageDivisionQueryUtil<T> {
             LogUtil.SaveLog(pageDivisionQueryUtil.class.getName(), ex);
             throw ex;
         } finally {
-            if (null != session) {
-                session.close();
-            }
+            tx.commit();
         }
     }
 }
