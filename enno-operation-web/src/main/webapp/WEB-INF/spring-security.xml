@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+       <http auto-config="true">
+              <intercept-url pattern="/login" access="permitAll"/>
+              <intercept-url pattern="/css/**" access="permitAll"/>
+              <intercept-url pattern="/scripts/**" access="permitAll"/>
+              <intercept-url pattern="/img/**" access="permitAll"/>
+              <intercept-url pattern="/font/**" access="permitAll"/>
+              <intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/>
+
+              <!--<form-login login-page="/login" default-target-url="/eventsources/list"/>-->
+              <http-basic/>
+       </http>
+       <authentication-manager>
+              <authentication-provider>
+                     <user-service>
+                            <user name="admin" password="admin" authorities="ROLE_ADMIN"></user>
+                     </user-service>
+              </authentication-provider>
+       </authentication-manager>
+</beans:beans>

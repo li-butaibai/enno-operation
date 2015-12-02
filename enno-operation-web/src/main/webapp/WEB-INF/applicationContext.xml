@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-       <!-- Scans the classpath of this application for @Components to deploy as beans -->
-       <context:component-scan base-package="enno.operation.web" />
-       <!-- Configures the @Controller programming model -->
-       <mvc:annotation-driven>
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
 
-       </mvc:annotation-driven>
-       <!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
-       <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-              <property name="prefix" value="/WEB-INF/jsp/" />
-              <property name="suffix" value=".jsp" />
-       </bean>
-</beans>
+       <http pattern="/css/themes/base/images" security="none"/>
+       <http pattern="/font" security="none"/>
+       <http pattern="/img" security="none"/>
+       <http pattern="/scripts/images" security="none"/>
+       <http auto-config="true">
+              <intercept-url pattern="/css/Bootstrap" access="ROLE_ADMIN"/>
+              <intercept-url pattern="/login.jsp" filters="none"/>
+              <form-login login-page="/"
+                          default-target-url="/eventsources/list.jsp"
+                          authentication-failure-url="/login.jsp"/>
+              <logout logout-success-url="/"/>
+
+       </http>
+       <authentication-manager>
+              <authentication-provider>
+                     <user-service>
+                            <user name="admin" password="admin" authorities="ROLE_ADMIN"></user>
+                     </user-service>
+              </authentication-provider>
+       </authentication-manager>
+</beans:beans>
