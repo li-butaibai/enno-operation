@@ -4,6 +4,7 @@ import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
 import enno.operation.core.model.Enum;
+import enno.operation.dal.CloseableSession;
 import enno.operation.dal.EventsourceSubscriberMapEntity;
 import enno.operation.dal.SubscriberEntity;
 import enno.operation.dal.hibernateUtil;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class subscriberOperation {
     private eventSourceOperation esOp = null;
+    private Session session = null;
 
     //region 对外提供的Public方法
     //获取订阅者列表，分页，PageIndex：当前页码，PageSize：每页记录条数
@@ -43,28 +45,26 @@ public class subscriberOperation {
 
     //获取订阅者详情 Done
     public SubscriberModel getSubscriberById(int SubscriberId) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             esOp = new eventSourceOperation();
             SubscriberEntity subEntity = getSubscriberEntityById(SubscriberId);
+            tx.commit();
             SubscriberModel suber = ConvertSubscriberEntity2Model(subEntity);
             suber.setEventsourceList(esOp.GetEventsourcesBySubscriberId(SubscriberId));
             return suber;
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        }finally {
-            tx.commit();
         }
     }
 
     //通过EventSource的id获取Subscriber列表
     public List<SubscriberModel> getSubscriberListByEventSourceId(int EventSourceId) throws Exception {
         List<SubscriberModel> suberList = new ArrayList<SubscriberModel>();
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             List<SubscriberEntity> suberEntityList = getSubscriberEntityListByEventSourceId(EventSourceId);
             if (suberEntityList != null) {
                 for (SubscriberEntity sub : suberEntityList) {
@@ -78,17 +78,14 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        }finally {
-            tx.commit();
         }
     }
 
     //获取未订阅指定Eventsource的Subscriber列表
     public List<SubscriberModel> getUnSubscribeListByEventSourceId(int EventSourceId) throws Exception {
         List<SubscriberModel> suberList = new ArrayList<SubscriberModel>();
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             List<SubscriberEntity> AllSuberEntites = getAllSubscriberEntities();
             List<SubscriberEntity> suberEntityList = getSubscriberEntityListByEventSourceId(EventSourceId);
             AllSuberEntites.removeAll(suberEntityList);
@@ -104,14 +101,12 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        }finally {
-            tx.commit();
         }
     }
 
     public void DeleteSubscriber(int SubscriberId) throws Exception {
-        try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             Transaction tx = session.beginTransaction();
             SubscriberEntity suber = getSubscriberEntityById(SubscriberId);
             if (suber.getStatus() == Enum.State.Offline.ordinal()) {
@@ -137,8 +132,8 @@ public class subscriberOperation {
     }
 
     public void UpdateSubscriber(SubscriberModel Subscriber) throws Exception {
-        try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from SubscriberEntity sub where sub.id = :SubscriberId").setParameter("SubscriberId", Subscriber.getId());
             SubscriberEntity sub = (SubscriberEntity) q.uniqueResult();
@@ -153,9 +148,8 @@ public class subscriberOperation {
     }
 
     public SubscriberEntity getSubscriberEntityById(int SubscriberId) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             Query q = session.createQuery("from SubscriberEntity sub where sub.id = :SubscriberId");
             q.setParameter("SubscriberId", SubscriberId);
             SubscriberEntity subEntity = (SubscriberEntity) q.uniqueResult();
@@ -163,15 +157,14 @@ public class subscriberOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            tx.commit();
         }
     }
 
     public void OfflineSubscriber(int subscriberId) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
+
             Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
             q.setParameter("SubscriberId", subscriberId);
             List<EventsourceSubscriberMapEntity> MapEntities = q.list();
@@ -192,10 +185,11 @@ public class subscriberOperation {
         List<SubscriberEntity> suberEntityList = new ArrayList<SubscriberEntity>();
 
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("select sub from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where sub.dataStatus = 1 and es.id = :EventsourceId");
             q.setParameter("EventsourceId", EventSourceId);
             suberEntityList = (List<SubscriberEntity>) q.list();
+            tx.commit();
             return suberEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);
@@ -207,10 +201,11 @@ public class subscriberOperation {
         List<SubscriberEntity> suberEntityList = new ArrayList<SubscriberEntity>();
 
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from SubscriberEntity sub where sub.dataStatus = :dataStatus");
             q.setParameter("dataStatus", Enum.validity.valid.ordinal());
             suberEntityList = (List<SubscriberEntity>) q.list();
+            tx.commit();
             return suberEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(subscriberOperation.class.getName(), ex);

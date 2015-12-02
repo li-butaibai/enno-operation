@@ -22,6 +22,7 @@ import java.util.*;
  * Created by sabermai on 2015/11/10.
  */
 public class eventSourceOperation {
+    private Session session = null;
     private eventSourceActivityOpeartion activityOp = null;
     private subscriberOperation subOp = null;
 
@@ -48,24 +49,22 @@ public class eventSourceOperation {
 
     //EventSource����
     public EventSourceModel GetEventsourceById(int EventsourceId) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             subOp = new subscriberOperation();
             EventsourceEntity entity = getEventSourceById(EventsourceId);
+            tx.commit();
             EventSourceModel eventsource = ConvertEventsourceEntity2Model(entity);
             eventsource.setSubscriberList(subOp.getSubscriberListByEventSourceId(EventsourceId));
             return eventsource;
-        } finally {
-            tx.commit();
         }
     }
 
     public List<EventSourceModel> GetEventsourcesBySubscriberId(int SubscriberId) throws Exception {
         List<EventSourceModel> eventsources = new ArrayList<EventSourceModel>();
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             List<EventsourceEntity> entities = getEventsourceEntityListBySubscriberId(SubscriberId);
             for (EventsourceEntity entity : entities) {
                 EventSourceModel eventsource = new EventSourceModel();
@@ -76,18 +75,16 @@ public class eventSourceOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            tx.commit();
         }
     }
 
     public void AddEventsource(EventSourceModel eventSource) throws Exception {
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
+
             ZKClient zkCilent = zkUtil.getZkClient();
             zkCilent.addEventSource(eventSource.getSourceId(), "");
-
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-            Transaction tx = session.beginTransaction();
 
             //Query Event Source Template
             int templateId = eventSource.getEventSourceTemplateId();
@@ -132,14 +129,13 @@ public class eventSourceOperation {
     }
 
     public void DeleteEventsource(int EventsourceId) throws Exception {
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             EventsourceEntity es = getEventSourceById(EventsourceId);
             if (es.getStatus() == Enum.State.Offline.ordinal()) {
                 ZKClient zkClient = zkUtil.getZkClient();
                 zkClient.removeEventSource(getEventSourceById(EventsourceId).getSourceId());
-
-                Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-                Transaction tx = session.beginTransaction();
 
                 //Delete Map Data
                 Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId");
@@ -154,8 +150,8 @@ public class eventSourceOperation {
                 q.setParameter("dataStatus", Enum.validity.invalid.ordinal());
                 q.setParameter("status", Enum.State.Offline.ordinal());
                 q.executeUpdate();
-                tx.commit();
             }
+            tx.commit();
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
@@ -163,13 +159,12 @@ public class eventSourceOperation {
     }
 
     public void AssignEventsource(int eventsourceId, int subscriberId) throws Exception {
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             subOp = new subscriberOperation();
             ZKClient zkClient = zkUtil.getZkClient();
             zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
-
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-            Transaction tx = session.beginTransaction();
 
             /*Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId and m.subscriber.id = :SubscriberId");
             q.setParameter("EventsourceId", eventsourceId);
@@ -207,12 +202,11 @@ public class eventSourceOperation {
     }
 
     public void RemoveEventsourceSubscription(int eventsourceId, int subscriberId) throws Exception {
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             ZKClient zkClient = zkUtil.getZkClient();
             zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
-
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-            Transaction tx = session.beginTransaction();
 
             /*Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId and m.subscriber.id = :SubscriberId");
             q.setParameter("EventsourceId", eventsourceId);
@@ -242,8 +236,8 @@ public class eventSourceOperation {
     }
 
     public void UpdateEventsource(EventSourceModel eventSource) throws Exception {
-        try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             Transaction tx = session.beginTransaction();
             //Query q = session.createQuery("from EventsourceEntity e where e.id = :EventsourceId").setParameter("EventsourceId", eventSource.getId());
             EventsourceEntity es = getEventSourceById(eventSource.getId());
@@ -269,8 +263,8 @@ public class eventSourceOperation {
     }
 
     public void OfflineEventsource(int eventsourceId) throws Exception {
-        try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId");
             q.setParameter("EventsourceId", eventsourceId);
@@ -287,13 +281,14 @@ public class eventSourceOperation {
     }
 
     public boolean IsEventsourceNameExist(String Name) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventsourceEntity es where es.dataStatus = :dataStatus and es.sourceId = :name");
             q.setParameter("dataStatus", Enum.validity.valid);
             q.setParameter("name", Name);
             List<EventsourceEntity> Entities = q.list();
+            tx.commit();
             if (Entities == null || Entities.size() == 0) {
                 return false;
             } else {
@@ -302,17 +297,14 @@ public class eventSourceOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            tx.commit();
         }
     }
 
     //��ȡδ��ָ��Subcriber���ĵ�Eventsource�б�
     public List<EventSourceModel> getUnSubscribedEventsourceListBySubscriberId(int SubscriberId) throws Exception {
         List<EventSourceModel> esList = new ArrayList<EventSourceModel>();
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             List<EventsourceEntity> AllEventSourceEntites = getAllEventSourceEntities();
             List<EventsourceEntity> esEntityList = getEventsourceEntityListBySubscriberId(SubscriberId);
             AllEventSourceEntites.removeAll(esEntityList);
@@ -327,8 +319,6 @@ public class eventSourceOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            tx.commit();
         }
     }
     //endregion
@@ -338,7 +328,6 @@ public class eventSourceOperation {
     private EventsourceEntity getEventSourceById(int EventsourceId) throws Exception {
         EventsourceEntity es = new EventsourceEntity();
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
             Query q = session.createQuery("from EventsourceEntity es where es.id = :EventsourceId order by es.sourceId");
             q.setParameter("EventsourceId", EventsourceId);
             es = (EventsourceEntity) q.uniqueResult();
@@ -382,10 +371,11 @@ public class eventSourceOperation {
     private List<EventsourceEntity> getEventsourceEntityListBySubscriberId(int SubscriberId) throws Exception {
         List<EventsourceEntity> esEntityList = new ArrayList<EventsourceEntity>();
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("select es from EventsourceSubscriberMapEntity m join m.eventsource es join m.subscriber sub where es.dataStatus = 1 and sub.id = :SubscriberId order by es.sourceId");
             q.setParameter("SubscriberId", SubscriberId);
             esEntityList = (List<EventsourceEntity>) q.list();
+            tx.commit();
             return esEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
@@ -410,11 +400,10 @@ public class eventSourceOperation {
     private List<EventSourceConnectModel> GetEventSourceConnectModels(int subscriberId) throws Exception {
         try {
             List<EventSourceConnectModel> ConnList = new ArrayList<EventSourceConnectModel>();
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.subscriber.id = :SubscriberId");
             q.setParameter("SubscriberId", subscriberId);
             List<EventsourceSubscriberMapEntity> SuberMapEntities = q.list();
-
             for (EventsourceSubscriberMapEntity mapEntity : SuberMapEntities) {
                 EventSourceModel eventSource = ConvertEventsourceEntity2Model(mapEntity.getEventsource());
                 EventSourceConnectModel connInfo = new EventSourceConnectModel();
@@ -429,7 +418,7 @@ public class eventSourceOperation {
                 connInfo.setEventSourceActivities(map);
                 ConnList.add(connInfo);
             }
-
+            tx.commit();
             return ConnList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);
@@ -440,10 +429,11 @@ public class eventSourceOperation {
     private List<EventsourceEntity> getAllEventSourceEntities() throws Exception {
         List<EventsourceEntity> esEntityList = new ArrayList<EventsourceEntity>();
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventsourceEntity es where es.dataStatus = :dataStatus");
             q.setParameter("dataStatus", Enum.validity.valid.ordinal());
             esEntityList = (List<EventsourceEntity>) q.list();
+            tx.commit();
             return esEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceOperation.class.getName(), ex);

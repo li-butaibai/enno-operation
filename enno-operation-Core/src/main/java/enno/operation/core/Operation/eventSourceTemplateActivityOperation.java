@@ -3,6 +3,7 @@ package enno.operation.core.Operation;
 import enno.operation.core.common.LogUtil;
 import enno.operation.core.model.EventSourceTemplateActivityModel;
 import enno.operation.core.model.EventSourceTemplateModel;
+import enno.operation.dal.CloseableSession;
 import enno.operation.dal.EventsourceTemplateActivityEntity;
 import enno.operation.dal.EventsourceTemplateEntity;
 import enno.operation.dal.hibernateUtil;
@@ -17,10 +18,11 @@ import java.util.List;
  * Created by EriclLee on 15/11/15.
  */
 public class eventSourceTemplateActivityOperation {
+    private Session session = null;
+
     public List<EventSourceTemplateActivityModel> getEventSourceTemplateActivityByTemplateId(int templateId) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())){
+            session = closeableSession.getSession();
             List<EventSourceTemplateActivityModel> estaModelList = new ArrayList<EventSourceTemplateActivityModel>();
             List<EventsourceTemplateActivityEntity> eventsourceTemplateActivityEntities = getEventSourceTemplateActivityEntityList(templateId);
             for (EventsourceTemplateActivityEntity eventsourceTemplateActivityEntity : eventsourceTemplateActivityEntities) {
@@ -31,19 +33,18 @@ public class eventSourceTemplateActivityOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceTemplateActivityOperation.class.getName(), ex);
             throw ex;
-        } finally {
-            tx.commit();
         }
     }
 
     private List<EventsourceTemplateActivityEntity> getEventSourceTemplateActivityEntityList(int templateId) throws Exception {
         List<EventsourceTemplateActivityEntity> estaEntityList = new ArrayList<EventsourceTemplateActivityEntity>();
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             String estaHql = "select esta from EventsourceTemplateActivityEntity esta join esta.eventsourceTemplate est where est.id =:templateId";
             Query q = session.createQuery(estaHql);
             q.setInteger("templateId", templateId);
             estaEntityList = (List<EventsourceTemplateActivityEntity>) q.list();
+            tx.commit();
             return estaEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceTemplateActivityOperation.class.getName(), ex);
