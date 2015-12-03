@@ -4,6 +4,7 @@ import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
 import enno.operation.core.model.Enum;
+import enno.operation.dal.CloseableSession;
 import enno.operation.dal.EventLogEntity;
 import enno.operation.dal.hibernateUtil;
 import org.apache.log4j.LogManager;
@@ -21,6 +22,7 @@ import java.util.List;
  * Created by sabermai on 2015/11/11.
  */
 public class eventLogOperation {
+    private Session session = null;
     private eventSourceOperation esOp = null;
     private subscriberOperation subOp = null;
     private static Logger logger = LogManager.getLogger(eventLogOperation.class.getName());
@@ -44,31 +46,24 @@ public class eventLogOperation {
 
     //��ȡָ��EventSource��EventLog
     public List<EventLogModel> getEventLogsByEventsourceId(int EventsourceId, int Count) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
+            session = closeableSession.getSession();
             return ConvertEventlogList2ModelList(getEventLogListByEventsourceId(EventsourceId, Count));
-        }finally {
-            tx.commit();
         }
     }
 
     //��ȡָ��Subscriber��EventLog
     public List<EventLogModel> getEventLogsBySubscriberId(int SubscriberId, int Count) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
-        return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId, Count));
-        }finally {
-            tx.commit();
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())){
+            session = closeableSession.getSession();
+            return ConvertEventlogList2ModelList(getEventLogListBySubscriberId(SubscriberId, Count));
         }
     }
 
     public EventLogModel getEventLogById(int EventLogId) throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
-            ApplicationContext context = new FileSystemXmlApplicationContext("/config/enno-operation/operation-server.xml");
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())){
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity log where log.id = :LogId");
             q.setParameter("LogId", EventLogId);
             EventLogEntity logEntity = (EventLogEntity) q.uniqueResult();
@@ -77,8 +72,6 @@ public class eventLogOperation {
         } catch (Exception ex) {
             LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
             throw ex;
-        }finally {
-            tx.commit();
         }
     }
     //endregion
@@ -105,7 +98,7 @@ public class eventLogOperation {
         List<EventLogEntity> elList = null;
 
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity el where el.subscriber.id = :SubscriberId order by el.createTime desc");
             q.setParameter("SubscriberId", SubscriberId);
             if (Count > 0) {
@@ -113,6 +106,7 @@ public class eventLogOperation {
                 q.setMaxResults(Count);
             }
             elList = (List<EventLogEntity>) q.list();
+            tx.commit();
             return elList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventLogOperation.class.getName(), ex);
@@ -125,7 +119,7 @@ public class eventLogOperation {
         List<EventLogEntity> elList = null;
 
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("from EventLogEntity el where el.eventsource.id = :EventsourceId order by el.createTime desc");
             q.setParameter("EventsourceId", EventsourceId);
             if (Count > 0) {
@@ -133,6 +127,7 @@ public class eventLogOperation {
                 q.setMaxResults(Count);
             }
             elList = (List<EventLogEntity>) q.list();
+            tx.commit();
             return elList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventLogOperation.class.getName(), ex);

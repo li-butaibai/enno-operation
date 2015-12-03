@@ -8,12 +8,13 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 public class ZKAgentUtil {
     private ZKAgent zkAgent;
-    public ZKAgent newZKAgentInstance(String subscriberId){
+    public ZKAgent newZKAgentInstance(String subscriberId, String comments){
         try {
             ApplicationContext context=
                     new FileSystemXmlApplicationContext("/config/enno-operation/operation-server.xml");
             zkAgent = (ZKAgent) context.getBean("zkAgent");
             zkAgent.setSubscriberId(subscriberId);
+            zkAgent.setComments(comments);
             zkAgent.connect();
             zkAgent.initializeZKAgent();
             return zkAgent;

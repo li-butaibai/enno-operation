@@ -1,6 +1,7 @@
 package enno.operation.core.common;
 
 import enno.operation.core.model.PageDivisionQueryResultModel;
+import enno.operation.dal.CloseableSession;
 import enno.operation.dal.hibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,12 +16,15 @@ public class pageDivisionQueryUtil<T> {
     public pageDivisionQueryUtil() {
     }
 
+    private Session session = null;
+
     public PageDivisionQueryResultModel<T> excutePageDivisionQuery(int currentPageIndex, String queryHqlStatement, String countHqlStatement) throws Exception {
         PageDivisionQueryResultModel<T> resultModel = new PageDivisionQueryResultModel();
         List<T> result = null;
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())){
+            session = closeableSession.getSession();
+            Transaction tx = session.beginTransaction();
+
             Query q = session.createQuery(queryHqlStatement);
             q.setFirstResult((currentPageIndex - 1) * resultModel.getPageSize());
             q.setMaxResults(resultModel.getPageSize());
@@ -28,6 +32,7 @@ public class pageDivisionQueryUtil<T> {
 
             q = session.createQuery(countHqlStatement);
             long count = (Long) q.uniqueResult();
+            tx.commit();
 
             resultModel.setCurrentPageIndex(currentPageIndex);
             //resultModel.setPageSize(pageSize);
@@ -38,8 +43,6 @@ public class pageDivisionQueryUtil<T> {
         } catch (Exception ex) {
             LogUtil.SaveLog(pageDivisionQueryUtil.class.getName(), ex);
             throw ex;
-        } finally {
-            tx.commit();
         }
     }
 }

@@ -3,6 +3,7 @@ package enno.operation.core.Operation;
 import enno.operation.core.common.LogUtil;
 import enno.operation.core.common.pageDivisionQueryUtil;
 import enno.operation.core.model.*;
+import enno.operation.dal.CloseableSession;
 import enno.operation.dal.EventsourceEntity;
 import enno.operation.dal.EventsourceTemplateEntity;
 import enno.operation.dal.hibernateUtil;
@@ -18,11 +19,11 @@ import java.util.List;
  */
 public class eventSourceTemplateOperation {
     private eventSourceTemplateActivityOperation etaOperation = null;
+private Session session = null;
 
     public List<EventSourceTemplateModel> getEventSourceTemplateList() throws Exception {
-        Session session = hibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        try {
+        try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())){
+            session = closeableSession.getSession();
             List<EventSourceTemplateModel> estModelList = new ArrayList<EventSourceTemplateModel>();
             List<EventsourceTemplateEntity> eventsourceTemplateEntities = getEventSourceTemplateEntityList();
             for(EventsourceTemplateEntity eventsourceTemplateEntity : eventsourceTemplateEntities) {
@@ -34,18 +35,16 @@ public class eventSourceTemplateOperation {
             LogUtil.SaveLog(eventSourceTemplateOperation.class.getName(), ex);
             throw ex;
         }
-        finally {
-            tx.commit();
-        }
     }
 
     private List<EventsourceTemplateEntity> getEventSourceTemplateEntityList() throws Exception {
         List<EventsourceTemplateEntity> estEntityList = new ArrayList<EventsourceTemplateEntity>();
 
         try {
-            Session session = hibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx = session.beginTransaction();
             Query q = session.createQuery("select est from EventsourceTemplateEntity est fetch all properties");
             estEntityList = (List<EventsourceTemplateEntity>) q.list();
+            tx.commit();
             return estEntityList;
         } catch (Exception ex) {
             LogUtil.SaveLog(eventSourceTemplateOperation.class.getName(), ex);

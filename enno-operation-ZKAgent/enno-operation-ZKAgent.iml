@@ -18,8 +18,6 @@
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.4.1" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.json-lib:json-lib:jdk15:2.2.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.hadoop:zookeeper:3.3.1" level="project" />
     <orderEntry type="module" module-name="enno-operation-ZKL" />
   </component>
 </module>

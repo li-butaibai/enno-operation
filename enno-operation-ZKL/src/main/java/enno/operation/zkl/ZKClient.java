@@ -295,11 +295,11 @@ public class ZKClient {
         eventSourceEvent = zkListener;
     }
 
-    public ZKSource getZkSource() {
+    public ZKSource getzkSource() {
         return zkSource;
     }
 
-    public void setZkSource(ZKSource zkSource) {
+    public void setzkSource(ZKSource zkSource) {
         this.zkSource = zkSource;
     }
 }
