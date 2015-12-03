@@ -1163,7 +1163,7 @@ td .error-2 {
 }
 
 .toggle.toggle-off .toggle-radio {
-    background-image: url(/static/images/icon-off.png);
+    /*background-image: url(/static/images/icon-off.png);*/
     background-position: 0 0;
     color: #fff;
     left: 0;
@@ -1177,7 +1177,7 @@ td .error-2 {
 }
 
 .toggle .toggle-radio {
-    background: url(/static/images/icon-on.png) right top no-repeat;
+    /*background: url(/static/images/icon-on.png) right top no-repeat;*/
     color: #1abc9c;
     display: block;
     font-weight: 700;
@@ -1223,12 +1223,12 @@ td .error-2 {
 }
 
 .toggle.toggle-icon.toggle-off .toggle-radio {
-    background-image: url(/static/images/block-off.png);
+    /*background-image: url(/static/images/block-off.png);*/
     background-position: 0 0
 }
 
 .toggle.toggle-icon .toggle-radio {
-    background-image: url(/static/images/block-on.png);
+    /*background-image: url(/static/images/block-on.png);*/
     background-position: 62px 0;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
@@ -1419,7 +1419,6 @@ textarea, input[type=text], input[type=password], input[type=datetime], input[ty
     -moz-border-radius: 3px;
     border-radius: 3px;
     -webkit-appearance: none;
-rgba(0, 0, 0, .075)
 }
 
 textarea:focus, input[type=text]:focus, input[type=password]:focus, input[type=datetime]:focus, input[type=datetime-local]:focus, input[type=date]:focus, input[type=month]:focus, input[type=time]:focus, input[type=week]:focus, input[type=number]:focus, input[type=email]:focus, input[type=url]:focus, input[type=search]:focus, input[type=tel]:focus, input[type=color]:focus, .uneditable-input:focus {
@@ -2144,29 +2143,29 @@ table {
 
 @font-face {
     font-family: Entypo;
-    src: url(/static/fonts/entypo.woff?v=1) format('woff'), url(/static/fonts/entypo.eot?v=1), url(/static/fonts/entypo.eot?#iefix?v=1) format('embedded-opentype'), url(/static/fonts/entypo.ttf?v=1) format('truetype'), url(/static/fonts/entypo.svg#entypo?v=1) format('svg');
+    /*src: url(/static/fonts/entypo.woff?v=1) format('woff'), url(/static/fonts/entypo.eot?v=1), url(/static/fonts/entypo.eot?#iefix?v=1) format('embedded-opentype'), url(/static/fonts/entypo.ttf?v=1) format('truetype'), url(/static/fonts/entypo.svg#entypo?v=1) format('svg');*/
     font-weight: 400;
     font-style: normal
 }
 
 @font-face {
     font-family: 'Open Sans';
-    src: url(/static/fonts/OpenSans-Regular.ttf) format('woff'), url(/static/fonts/OpenSans-Regular.ttf) format('truetype');
+    /*src: url(/static/fonts/OpenSans-Regular.ttf) format('woff'), url(/static/fonts/OpenSans-Regular.ttf) format('truetype');*/
     font-weight: 400;
     font-style: normal
 }
 
 @font-face {
     font-family: 'Open Sans Bold';
-    src: url(/static/fonts/OpenSans-Bold.ttf) format('woff'), url(/static/fonts/OpenSans-Bold.ttf) format('truetype');
+    /*src: url(/static/fonts/OpenSans-Bold.ttf) format('woff'), url(/static/fonts/OpenSans-Bold.ttf) format('truetype');*/
     font-weight: 400;
     font-style: normal
 }
 
 @font-face {
     font-family: FontAwesome;
-    src: url(/static/fonts/fontawesome-webfont.eot?v=4.3);
-    src: url(/static/fonts/fontawesome-webfont.eot?#iefix&v=4.3) format('embedded-opentype'), url(/static/fonts/fontawesome-webfont.woff?v=4.3) format('woff'), url(/static/fonts/fontawesome-webfont.ttf?v=4.3) format('truetype'), url(/static/fonts/fontawesome-webfont.svg?v=4.3#fontawesomeregular) format('svg');
+    /*src: url(/static/fonts/fontawesome-webfont.eot?v=4.3);*/
+    /*src: url(/static/fonts/fontawesome-webfont.eot?#iefix&v=4.3) format('embedded-opentype'), url(/static/fonts/fontawesome-webfont.woff?v=4.3) format('woff'), url(/static/fonts/fontawesome-webfont.ttf?v=4.3) format('truetype'), url(/static/fonts/fontawesome-webfont.svg?v=4.3#fontawesomeregular) format('svg');*/
     font-weight: 400;
     font-style: normal
 }
@@ -2415,7 +2414,7 @@ table {
 }
 
 [class*=Router], .icon-routers, .icon-router {
-    background-image: url(/static/images/icon_router.png?v=3);
+    /*background-image: url(/static/images/icon_router.png?v=3);*/
     background-position: 0 0;
     background-repeat: no-repeat;
     display: inline-block;
@@ -3503,7 +3502,7 @@ table {
     text-indent: -9999px;
     width: 44px;
     height: 62px;
-    background: url(/static/images/files_icon.png);
+    /*background: url(/static/images/files_icon.png);*/
     background-size: 440px 372px
 }
 
@@ -10295,7 +10294,7 @@ form .item.upload-picture .example .preview img:hover {
 }
 
 .object-storage-file-view .object-storage-infobox .bucket-name .svg-bucket {
-    background: url(/static/images/bucket_icon.svg);
+    /*background: url(/static/images/bucket_icon.svg);*/
     display: block;
     width: 72px;
     height: 60px;
@@ -11273,7 +11272,7 @@ html, body {
     height: 112px;
     width: 146px;
     margin: 0 auto 20px;
-    background-image: url(/static/images/graph/instance.svg);
+    /*background-image: url(/static/images/graph/instance.svg);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
@@ -11381,7 +11380,7 @@ html, body {
 .component-instance-volume {
     display: inline-block;
     height: 64px;
-    background-image: url(/static/images/graph/volume.svg);
+    /*background-image: url(/static/images/graph/volume.svg);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
@@ -11502,7 +11501,7 @@ html, body {
     margin: 0 auto 40px;
     border-top: 6px solid #333;
     border-bottom: 6px solid #333;
-    background-image: url(/static/images/graph/instance.sg.svg);
+    /*background-image: url(/static/images/graph/instance.sg.svg);*/
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
@@ -11618,7 +11617,7 @@ html, body {
 
 .component-instance-router .component-router-cloud, .component-instance-cloud {
     height: 96px;
-    background-image: url(/static/images/graph/cloud.svg?v=1);
+    /*background-image: url(/static/images/graph/cloud.svg?v=1);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
@@ -11646,7 +11645,7 @@ html, body {
 }
 
 .component-instance-router .component-router-vxnet0, .component-vxnet0 {
-    background-image: url(/static/images/graph/vxnet0.svg);
+    /*background-image: url(/static/images/graph/vxnet0.svg);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
@@ -11693,7 +11692,7 @@ html, body {
 .component-managed-vxnet {
     width: 50px;
     height: 50px;
-    background-image: url(/static/images/graph/vxnet.svg);
+    /*background-image: url(/static/images/graph/vxnet.svg);*/
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -11830,7 +11829,7 @@ html, body {
 .component-instance-router .component-router, .component-instance-router-self {
     width: 64px;
     height: 64px;
-    background-image: url(/static/images/graph/router.svg);
+    /*background-image: url(/static/images/graph/router.svg);*/
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -11890,7 +11889,7 @@ html, body {
 .graph-router .component-router-cloud {
     width: 140px;
     height: 250px;
-    background-image: url(/static/images/graph/cloud.svg?v=1);
+    /*background-image: url(/static/images/graph/cloud.svg?v=1);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center 42%;
@@ -11922,7 +11921,7 @@ html, body {
 }
 
 .graph-router .component-router-vxnet0 {
-    background-image: url(/static/images/graph/router.vxnet0.svg);
+    /*background-image: url(/static/images/graph/router.vxnet0.svg);*/
     background-repeat: no-repeat;
     background-position: center center;
     height: 250px;
@@ -11961,7 +11960,7 @@ html, body {
 }
 
 .graph-router .component-router-sg {
-    background-image: url(/static/images/graph/router.sg.svg);
+    /*background-image: url(/static/images/graph/router.sg.svg);*/
     background-repeat: no-repeat;
     background-position: center center;
     background-color: #fff;
@@ -12015,7 +12014,7 @@ html, body {
 .graph-router .component-router {
     width: 64px;
     height: 250px;
-    background-image: url(/static/images/graph/router.svg);
+    /*background-image: url(/static/images/graph/router.svg);*/
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -12086,7 +12085,7 @@ html, body {
 .graph-router .component-router-vxnet {
     width: 48px;
     height: 250px;
-    background-image: url(/static/images/graph/vxnet.svg);
+    /*background-image: url(/static/images/graph/vxnet.svg);*/
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -12203,7 +12202,7 @@ html, body {
     min-width: 245px;
     margin-left: 48px;
     padding: 0 15px;
-    background-image: url(/static/images/graph/router.line.svg);
+    /*background-image: url(/static/images/graph/router.line.svg);*/
     background-repeat: repeat-x;
     background-position: center center
 }
@@ -12276,7 +12275,7 @@ html, body {
     float: left;
     margin-left: 10px;
     margin-right: 10px;
-    background-image: url(/static/images/graph/instance.svg);
+    /*background-image: url(/static/images/graph/instance.svg);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: top center;
@@ -12324,7 +12323,7 @@ html, body {
 }
 
 .graph-router .component-vxnet-rdb {
-    background-image: url(/static/images/graph/rdb.svg)
+    /*background-image: url(/static/images/graph/rdb.svg)*/
 }
 
 .graph-router .component-vxnet-rdb .private-ip {
@@ -12333,7 +12332,7 @@ html, body {
 }
 
 .graph-router .component-vxnet-mongo {
-    background-image: url(/static/images/graph/rdb.svg)
+    /*background-image: url(/static/images/graph/rdb.svg)*/
 }
 
 .graph-router .component-vxnet-mongo .private-ip {
@@ -12342,7 +12341,7 @@ html, body {
 }
 
 .graph-router .component-vxnet-cache {
-    background-image: url(/static/images/graph/rdb.svg)
+    /*background-image: url(/static/images/graph/rdb.svg)*/
 }
 
 .graph-router .component-vxnet-cache .private-ip {
@@ -12351,16 +12350,16 @@ html, body {
 }
 
 .graph-router .component-vxnet-loadbalancer {
-    background-image: url(/static/images/graph/loadbalancer.svg)
+    /*background-image: url(/static/images/graph/loadbalancer.svg)*/
 }
 
 .graph-router .component-vxnet-s2_server {
-    background-image: url(/static/images/graph/s2server.svg);
+    /*background-image: url(/static/images/graph/s2server.svg);*/
     background-size: 100% 50%
 }
 
 .graph-router .component-vxnet-zookeeper {
-    background-image: url(/static/images/graph/rdb.svg)
+    /*background-image: url(/static/images/graph/rdb.svg)*/
 }
 
 .graph-router .component-vxnet-zookeeper .private-ip {
@@ -12370,7 +12369,7 @@ html, body {
 
 .graph-router .component-vxnet-queue {
     width: 60px;
-    background-image: url(/static/images/graph/queue.svg)
+    /*background-image: url(/static/images/graph/queue.svg)*/
 }
 
 .graph-router .component-vxnet-queue .private-ip {
@@ -12379,7 +12378,7 @@ html, body {
 }
 
 .graph-router .component-vxnet-spark {
-    background-image: url(/static/images/graph/rdb.svg)
+    /*background-image: url(/static/images/graph/rdb.svg)*/
 }
 
 .graph-router .component-vxnet-spark .private-ip {
@@ -12440,7 +12439,7 @@ html, body {
     width: 48px;
     height: 48px;
     float: left;
-    background-image: url(/static/images/graph/router.svg);
+    /*background-image: url(/static/images/graph/router.svg);*/
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -12452,7 +12451,7 @@ html, body {
     width: 48px;
     height: 48px;
     float: left;
-    background-image: url(/static/images/graph/vxnet.svg);
+    /*background-image: url(/static/images/graph/vxnet.svg);*/
     background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -12565,7 +12564,7 @@ html, body {
 .component-LB-listener {
     min-width: 245px;
     padding: 0 10px;
-    background-image: url(/static/images/graph/router.line.svg);
+    /*background-image: url(/static/images/graph/router.line.svg);*/
     background-repeat: repeat-x;
     background-position: center center
 }
@@ -12618,11 +12617,11 @@ html, body {
 }
 
 .component-LB-listener .component-LB-backends .component-LB-backend.instance {
-    background-image: url(/static/images/graph/instance.svg)
+    /*background-image: url(/static/images/graph/instance.svg)*/
 }
 
 .component-LB-listener .component-LB-backends .component-LB-backend.router {
-    background-image: url(/static/images/graph/router.svg)
+    /*background-image: url(/static/images/graph/router.svg)*/
 }
 
 .component-LB-listener .component-LB-backends .component-LB-backend:hover .btn-delete {
@@ -13019,7 +13018,7 @@ html, body {
     height: 123px;
     width: 146px;
     margin: 0 auto 20px;
-    background-image: url(/static/images/graph/s2server.svg);
+    /*background-image: url(/static/images/graph/s2server.svg);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
@@ -13165,7 +13164,7 @@ html, body {
     position: relative;
     margin: 0 auto;
     width: 80%;
-    background-image: url(/static/images/graph/router.line.h1.svg);
+    /*background-image: url(/static/images/graph/router.line.h1.svg);*/
     background-repeat: repeat-y;
     background-position: center center
 }
@@ -13175,7 +13174,7 @@ html, body {
     margin-left: calc(50% + 10px);
     max-width: 70px;
     height: 100px;
-    background-image: url(/static/images/graph/volume.svg);
+    /*background-image: url(/static/images/graph/volume.svg);*/
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain
@@ -13229,7 +13228,7 @@ html, body {
 }
 
 .component-s2server-backstores .component-s2server-backstore.none {
-    background-image: url(/static/images/graph/volume.gray.svg)
+    /*background-image: url(/static/images/graph/volume.gray.svg)*/
 }
 
 .component-s2server-backstores .component-s2server-backstore.none::before {
@@ -13564,7 +13563,7 @@ html, body {
 }
 
 .qcuc .banner {
-    background-image: url(/static/images/qcuc_banner.png?v=1);
+    /*background-image: url(/static/images/qcuc_banner.png?v=1);*/
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 110%;
@@ -13591,7 +13590,7 @@ html, body {
 }
 
 .qcuc .qrcode {
-    background-image: url(/static/images/qrcode_qcuc.png);
+    /*background-image: url(/static/images/qrcode_qcuc.png);*/
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
@@ -13651,7 +13650,7 @@ html, body {
     display: inline-block;
     width: 100%;
     height: 48px;
-    background-image: url(/static/images/logo.svg?v=30);
+    /*background-image: url(/static/images/logo.svg?v=30);*/
     background-repeat: no-repeat;
     background-size: 146px;
     vertical-align: middle;
@@ -14068,7 +14067,7 @@ html, body {
 }
 
 .ios-download .qrcode {
-    background-image: url(/static/images/qrcode_ios_app.svg);
+    /*background-image: url(/static/images/qrcode_ios_app.svg);*/
     width: 84px;
     height: 84px;
     background-size: contain;
@@ -15508,7 +15507,7 @@ span.user-verify-new-dot {
 }
 
 .page-home .home-logo {
-    background-image: url(/static/images/home_logo.svg);
+    /*background-image: url(/static/images/home_logo.svg);*/
     height: 80px;
     background-size: 240px;
     background-position: center center;
@@ -15517,7 +15516,7 @@ span.user-verify-new-dot {
 }
 
 .page-home .home-logo.en {
-    background-image: url(/static/images/home_logo_en.svg);
+    /*background-image: url(/static/images/home_logo_en.svg);*/
     background-size: 200px
 }
 
@@ -15573,7 +15572,7 @@ span.user-verify-new-dot {
 .header-logo {
     float: left;
     text-indent: -9999px;
-    background-image: url(/static/images/home_logo.svg);
+    /*background-image: url(/static/images/home_logo.svg);*/
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -17499,7 +17498,7 @@ pre.task-script code {
 }
 
 .os-family {
-    background: url(/static/images/all-os-family.png?v=7) no-repeat;
+    /*background: url(/static/images/all-os-family.png?v=7) no-repeat;*/
     display: inline-block;
     width: 16px;
     height: 18px;
@@ -17557,7 +17556,7 @@ pre.task-script code {
 }
 
 .os-family.os-desktop {
-    background: url(/static/images/os-desktop.svg) no-repeat;
+    /*background: url(/static/images/os-desktop.svg) no-repeat;*/
     background-size: contain
 }
 
@@ -19208,7 +19207,7 @@ a.switch-graph {
 }
 
 .icon-vdi {
-    background-image: url(/static/images/os-desktop.svg);
+    /*background-image: url(/static/images/os-desktop.svg);*/
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center
@@ -19219,12 +19218,12 @@ a.switch-graph {
 }
 
 .os-family.os-cloud {
-    background: url(/static/images/os-desktop.svg) no-repeat;
+    /*background: url(/static/images/os-desktop.svg) no-repeat;*/
     background-size: contain
 }
 
 .selected .os-family.os-cloud {
-    background: url(/static/images/os-desktop-reverse.svg) no-repeat
+    /*background: url(/static/images/os-desktop-reverse.svg) no-repeat*/
 }
 
 .run-instances .illustrate span.help {
@@ -20008,7 +20007,7 @@ td.ip:hover a.btn-copy {
     background: -o-linear-gradient(top, #fff 0, #f4f8fa 73%);
     background: -ms-linear-gradient(top, #fff 0, #f4f8fa 73%);
     background: linear-gradient(to bottom, #fff 0, #f4f8fa 73%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#f4f8fa', GradientType=0)
+    /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#f4f8fa', GradientType=0)*/
 }
 
 .xdsoft_datetimepicker .blue-gradient-button:hover, .xdsoft_datetimepicker .blue-gradient-button:focus, .xdsoft_datetimepicker .blue-gradient-button:hover span, .xdsoft_datetimepicker .blue-gradient-button:focus span {
@@ -20019,7 +20018,7 @@ td.ip:hover a.btn-copy {
     background: -o-linear-gradient(top, #f4f8fa 0, #FFF 73%);
     background: -ms-linear-gradient(top, #f4f8fa 0, #FFF 73%);
     background: linear-gradient(to bottom, #f4f8fa 0, #FFF 73%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f8fa', endColorstr='#FFF', GradientType=0)
+    /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f8fa', endColorstr='#FFF', GradientType=0)*/
 }
 
 .ui-rangeSlider {

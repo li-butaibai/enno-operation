@@ -8,21 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false" %>
-<%
-  String path = request.getContextPath();
-  String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
 <html>
 <head>
-  <base href="<%=basePath%>"/>
   <title>Enno-Operation Login Page</title>
-  <script src="${pageContext.request.contextPath}/scripts/jquery.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"  type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/scripts/jquery.pager.js"  type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/scripts/bootstrap.min.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/scripts/enno.operation.js" type="text/javascript"></script>
   <link href="${pageContext.request.contextPath}/css/Console.css" rel="stylesheet" />
-  <link href="${pageContext.request.contextPath}/css/Pager.css" rel="stylesheet" />
 </head>
 <body class="modal-ready">
 <div class="container">

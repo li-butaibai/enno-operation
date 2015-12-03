@@ -6,7 +6,7 @@ $().ready(function(){
     onHashChanged();
 });
 
-function highlightMenuTab(menuId){
+function highlightMenuTab(menuId) {
     $(".level-1 > li > a").click(function () {
         $(".selected").removeClass("selected");
         $(this).parent().addClass("selected");
@@ -16,7 +16,6 @@ function highlightMenuTab(menuId){
         $("#" + menuId).addClass("selected");
     }
 }
-
 function onHashChanged(){
     var hash = location.hash;
     var url = "/eventsources/list?pageIndex=1";
@@ -55,6 +54,8 @@ function closeDialog(){
 }
 
 function submitForm(formId, actionUrl){
+
+    //alert(token+header);
     $.ajax({
         url:actionUrl,
         type:"post",
@@ -62,6 +63,9 @@ function submitForm(formId, actionUrl){
         dataType:"json",
         data:$("#"+formId).serialize(),
         beforeSend: function (XMLHttpRequest) {
+            var token=$("meta[name='_csrf']").attr("content");
+            var header=$("meta[name='_csrf_header']").attr("content");
+            XMLHttpRequest.setRequestHeader(header,token);
             $("#waiting").show();
         },
         success: function (data) {
@@ -103,7 +107,7 @@ function getCreateEventSourceForm(){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
+            //$('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (small ? 345 : 690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             $("#waiting").hide();
@@ -147,7 +151,7 @@ function getAddSubscriber2ESForm(eventSourceId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
+            //$('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             $("#waiting").hide();
@@ -164,6 +168,11 @@ function removeSubscriberFromES(eventSourceId,subscriberId){
         async:false,
         dataType:"json",
         data:{eventSourceId:eventSourceId, subscriberId:subscriberId},
+        beforeSend: function (XMLHttpRequest) {
+            var token=$("meta[name='_csrf']").attr("content");
+            var header=$("meta[name='_csrf_header']").attr("content");
+            XMLHttpRequest.setRequestHeader(header,token);
+        },
         success: function (data) {
             if(data.success)
             {
@@ -192,7 +201,7 @@ function getEditESForm(eventSourceId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
+            //$('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             alert(data);
@@ -209,6 +218,11 @@ function offlineEventSource(eventSourceId){
         type:"post",
         async:false,
         dataType:"json",
+        beforeSend: function (XMLHttpRequest) {
+            var token=$("meta[name='_csrf']").attr("content");
+            var header=$("meta[name='_csrf_header']").attr("content");
+            XMLHttpRequest.setRequestHeader(header,token);
+        },
         success: function (data) {
             if(data.success)
             {
@@ -232,6 +246,11 @@ function deleteEventSource(eventSourceId){
         type:"post",
         async:false,
         dataType:"json",
+        beforeSend: function (XMLHttpRequest) {
+            var token=$("meta[name='_csrf']").attr("content");
+            var header=$("meta[name='_csrf_header']").attr("content");
+            XMLHttpRequest.setRequestHeader(header,token);
+        },
         success: function (data) {
             if(data.success)
             {
@@ -261,7 +280,7 @@ function getAddES2SubscriberForm(subscriberId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
+            //$('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             $("#waiting").hide();
@@ -283,7 +302,7 @@ function getEditSubscriberForm(subscriberId){
         success: function (data) {
             $("#waiting").hide();
             $('#dialogDiv').html(data);
-            $('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
+            //$('#dialogDiv').dialog({ autoOpen: true, modal: true, width: (690), show: "drop", hide: "drop", position: [295, 40] });
         },
         error: function (data) {
             alert(data);
@@ -323,6 +342,11 @@ function deleteSubscriber(subscriberId){
         type:"post",
         async:false,
         dataType:"json",
+        beforeSend: function (XMLHttpRequest) {
+            var token=$("meta[name='_csrf']").attr("content");
+            var header=$("meta[name='_csrf_header']").attr("content");
+            XMLHttpRequest.setRequestHeader(header,token);
+        },
         success: function (data) {
             if(data.success)
             {

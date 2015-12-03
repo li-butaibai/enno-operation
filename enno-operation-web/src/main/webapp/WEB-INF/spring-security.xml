@@ -31,9 +31,7 @@
               <intercept-url pattern="/font/**" access="permitAll"/>
               <intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/>
 
-              <!--<form-login login-page="/login"-->
-                          <!--default-target-url="/"-->
-                          <!--authentication-failure-url="http://www.baidu.com"/>-->
+              <form-login login-page="/login" default-target-url="/"/>
        </http>
        <authentication-manager alias="authenticationManager">
               <authentication-provider>

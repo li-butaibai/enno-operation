@@ -4,6 +4,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <title>Enno-Operation/></title>
 	<script src="${pageContext.request.contextPath}/scripts/jquery.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"  type="text/javascript"></script>
