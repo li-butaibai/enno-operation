@@ -8,8 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false" %>
+<%
+  String path = request.getContextPath();
+  String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <html>
 <head>
+  <base href="<%=basePath%>"/>
   <title>Enno-Operation Login Page</title>
   <script src="${pageContext.request.contextPath}/scripts/jquery.js" type="text/javascript"></script>
   <script src="${pageContext.request.contextPath}/scripts/jquery.validity.js"  type="text/javascript"></script>
@@ -25,17 +30,18 @@
     <div class="wrapper">
       <div class="home-logo en"></div>
       <div class="form-wrapper" style="width:246px">
-        <form class="form" action="/account/login" method="POST">
+        <form class="form" action="/login" method="POST">
           <%--<c:if test="${loginFaild==true}">--%>
             <%--<span>${loginMessage}</span>--%>
           <%--</c:if>--%>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
           <div style="">
             <fieldset><legend>Login</legend>
               <div class="item user">
-                <input type="text" name="userName" placeholder="User Name">
+                <input type="text" id="username" name="username" placeholder="User Name">
               </div>
               <div class="item password">
-                <input type="password" name="password" placeholder="Password">
+                <input type="password" id="password" name="password" placeholder="Password">
               </div>
               <div class="item">
                 <input class="btn btn-primary" type="submit" value="Login" style="width:246px">
