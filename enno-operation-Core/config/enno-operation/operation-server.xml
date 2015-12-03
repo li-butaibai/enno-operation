@@ -61,7 +61,7 @@
         <property name="connectString" value="127.0.0.1:2181"/>
         <property name="sessionTimeout" value="100000"/>
         <property name="subscriberRootName" value="/SubscriberClusterRoot"/>
-        <property name="eventLogRootName" value="/EventSourceRoot"/>
-        <property name="eventSourceRootName" value="/ConnectLogRoot"/>
+        <property name="eventLogRootName" value="/ConnectLogRoot"/>
+        <property name="eventSourceRootName" value="/EventSourceRoot"/>
     </bean>
 </beans>

@@ -21,6 +21,7 @@ public class Operation_Server extends HttpServlet {
      */
     //private static Logger LOGGER = Logger.getLogger(Operation_Server.class);
     private static final ZK_Loader zk_Loader = new ZK_Loader();
+    private static final ZKAgent_Loader zka_Loader = new ZKAgent_Loader();
 
     //private static final
     /*
@@ -33,10 +34,7 @@ public class Operation_Server extends HttpServlet {
         try {
             super.init();
             zk_Loader.start();
-            ZKAgentUtil util = new ZKAgentUtil();
-            for (int i = 0; i < 3; i++) {
-                util.newZKAgentInstance("TestSub" + i, "For Test");
-            }
+            zka_Loader.loadZKAgent();
         } catch (Exception ex) {
             throw new ServletException(ex);
         }

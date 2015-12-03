@@ -161,31 +161,28 @@ public class eventSourceOperation {
     public void AssignEventsource(int eventsourceId, int subscriberId) throws Exception {
         try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
             session = closeableSession.getSession();
-            Transaction tx = session.beginTransaction();
             subOp = new subscriberOperation();
-            ZKClient zkClient = zkUtil.getZkClient();
-            zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
 
-            /*Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId and m.subscriber.id = :SubscriberId");
-            q.setParameter("EventsourceId", eventsourceId);
-            q.setParameter("SubscriberId", subscriberId);
-            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
-            if (MapEntities == null || MapEntities.size() <= 0) {
-                EventsourceSubscriberMapEntity map = new EventsourceSubscriberMapEntity();
-                EventsourceEntity es = new EventsourceEntity();
-                es.setId(eventsourceId);
-                SubscriberEntity sub = new SubscriberEntity();
-                sub.setId(subscriberId);
-                map.setEventsource(es);
-                map.setSubscriber(sub);
-                session.save(map);
-                tx.commit();
-            }*/
             EventsourceEntity es = new EventsourceEntity();
             es = getEventSourceById(eventsourceId);
             SubscriberEntity suber = new SubscriberEntity();
             suber = subOp.getSubscriberEntityById(subscriberId);
+            List<EventSourceConnectModel> connList = GetEventSourceConnectModels(subscriberId);
+            EventSourceModel eventSource = ConvertEventsourceEntity2Model(es);
+            Map<String, String> map = new HashMap<String, String>();
+            for (EventSourceActivityModel activity : eventSource.getEventSourceActivities()) {
+                map.put(activity.getName(), activity.getValue());
+            }
+            EventSourceConnectModel connectModel = new EventSourceConnectModel();
+            connectModel.setSourceId(es.getSourceId());
+            connectModel.setEventDecoder(es.getEventDecoder());
+            connectModel.setEventSourceActivities(map);
+            connList.add(connectModel);
 
+            ZKClient zkClient = zkUtil.getZkClient();
+            zkClient.setSubscriberData(suber.getName(), connList);
+
+            Transaction tx = session.beginTransaction();
             EventLogEntity logEntity = new EventLogEntity();
             logEntity.setCreateTime(new Timestamp((new Date()).getTime()));
             logEntity.setEventsource(es);

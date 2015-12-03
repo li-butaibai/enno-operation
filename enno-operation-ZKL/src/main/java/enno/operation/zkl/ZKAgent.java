@@ -27,12 +27,15 @@ public class ZKAgent {
     public void setSubscriberId(String subscriberId) {
         this.subscriberId = subscriberId;
     }
+
     public void setComments(String comments) {
         this.comments = comments;
     }
+
     public void setZkSource(ZKSource zkSource) {
         this.zkSource = zkSource;
     }
+
     public void setSubscriptionEvent(SubscriptionListener subscriptionEvent) {
         this.subscriptionEvent = subscriptionEvent;
     }
@@ -83,7 +86,7 @@ public class ZKAgent {
             zooKeeper.getData(ennoNodePath, new Watcher() {
                 public void process(WatchedEvent event) {
                     try {
-                        String nodeData = zooKeeper.getData(ennoNodePath, this, null).toString();
+                        String nodeData = new String(zooKeeper.getData(ennoNodePath, this, null));
                         JSONArray jsonArray = JSONArray.fromObject(nodeData);
                         List<EventSourceConnectModel> connectModelList = (List<EventSourceConnectModel>) JSONArray.toCollection(jsonArray, EventSourceConnectModel.class);
                         processSubscription(connectModelList);
@@ -99,10 +102,8 @@ public class ZKAgent {
 
     private void processSubscription(List<EventSourceConnectModel> connectModelList) throws KeeperException, InterruptedException {
         //compare new data to old data
-        List<EventSourceConnectModel> addData = new ArrayList<EventSourceConnectModel>();
-        List<EventSourceConnectModel> removeData = new ArrayList<EventSourceConnectModel>();
-        Collections.copy(addData, connectModelList);
-        Collections.copy(removeData, subscriberData);
+        List<EventSourceConnectModel> addData = new ArrayList<EventSourceConnectModel>(connectModelList);
+        List<EventSourceConnectModel> removeData = new ArrayList<EventSourceConnectModel>(subscriberData);
         addData.removeAll(subscriberData);
         removeData.removeAll(connectModelList);
         //call enno server to add or remove subscription, return the process result
@@ -121,7 +122,7 @@ public class ZKAgent {
                 System.out.println("Created the enno server node under event source node named " + es.getSourceId());
             }
             byte[] logContent = (subscriberId + "successfully subscribed the event source named " + es.getSourceId()).getBytes();
-            zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+            zooKeeper.create(zkSource.getEventLogRootName() + "/" + es.getSourceId() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
         }
         for (EventSourceConnectModel es : removeEventsources) {
             if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, false) != null) {
@@ -129,7 +130,7 @@ public class ZKAgent {
                 System.out.println("Removed the enno server node under event source node named " + es.getSourceId());
             }
             byte[] logContent = (subscriberId + "successfully unsubscribed the event source named " + es.getSourceId()).getBytes();
-            zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+            zooKeeper.create(zkSource.getEventLogRootName() + "/" + es.getSourceId() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
         }
     }
 }

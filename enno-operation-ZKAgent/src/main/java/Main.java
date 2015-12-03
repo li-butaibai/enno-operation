@@ -6,9 +6,6 @@ import enno.operation.zkl.ZKAgentUtil;
  */
 public class Main {
     public static void main(String[] args) {
-        ZKAgentUtil util = new ZKAgentUtil();
-        for (int i = 0; i < 3; i++) {
-            util.newZKAgentInstance("TestSub" + i);
-        }
+
     }
 }
