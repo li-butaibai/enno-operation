@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class ZKAgent {
     private String subscriberId = null;
+    private String comments = null;
     private String ennoNodePath = null;
     private ZooKeeper zooKeeper = null;
     private ZKSource zkSource;
@@ -25,6 +26,9 @@ public class ZKAgent {
 
     public void setSubscriberId(String subscriberId) {
         this.subscriberId = subscriberId;
+    }
+    public void setComments(String comments) {
+        this.comments = comments;
     }
     public void setZkSource(ZKSource zkSource) {
         this.zkSource = zkSource;
@@ -57,6 +61,7 @@ public class ZKAgent {
     public void initializeZKAgent() throws Exception {
         try {
             System.out.println("Start initialize the zookeeper agent, event source id: " + subscriberId);
+            ennoNodePath = zkSource.getSubscriberRootName() + "/" + subscriberId;
 
             //initialize the enno cluster root node
             if (zooKeeper.exists(zkSource.getSubscriberRootName(), false) == null) {
@@ -70,7 +75,7 @@ public class ZKAgent {
 
             // check the enno cluster root children include current enno server(specified by the argument subscriberId)
             if (zooKeeper.exists(ennoNodePath, false) == null) {
-                zooKeeper.create(ennoNodePath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+                zooKeeper.create(ennoNodePath, comments.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
                 System.out.println("Created the enno server node under EventsourceRoot node.");
             }
 

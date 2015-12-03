@@ -227,7 +227,7 @@ public class EventSourceController {
     //region add or remove subscriber for event source
     @RequestMapping(value = "/getAddSubscriberForm", method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView getAddSubscriberForm(@RequestParam int eventSourceId) {
+    public ModelAndView getAddSubscriberForm(@RequestParam int eventSourceId)   {
         ModelAndView model = new ModelAndView("/eventsources/addsubscriber");
         try {
             //TODO:get active subscribers, but not in the current event source subscriber list
