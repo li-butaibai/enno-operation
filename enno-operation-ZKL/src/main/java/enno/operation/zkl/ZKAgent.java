@@ -2,9 +2,12 @@ package enno.operation.zkl;
 
 import enno.operation.ZKListener.SubscriptionListener;
 import enno.operation.zkException.InitializeSchemaFailedException;
+import enno.operation.zkmodel.EventLogData;
 import enno.operation.zkmodel.EventSourceConnectModel;
+import enno.operation.zkmodel.EventType;
 import enno.operation.zkmodel.ZKSource;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.zookeeper.*;
 
 import java.util.ArrayList;
@@ -63,7 +66,7 @@ public class ZKAgent {
 
     public void initializeZKAgent() throws Exception {
         try {
-            System.out.println("Start initialize the zookeeper agent, event source id: " + subscriberId);
+            //System.out.println("Start initialize the zookeeper agent, event source id: " + subscriberId);
             ennoNodePath = zkSource.getSubscriberRootName() + "/" + subscriberId;
 
             //initialize the enno cluster root node
@@ -79,7 +82,7 @@ public class ZKAgent {
             // check the enno cluster root children include current enno server(specified by the argument subscriberId)
             if (zooKeeper.exists(ennoNodePath, false) == null) {
                 zooKeeper.create(ennoNodePath, comments.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-                System.out.println("Created the enno server node under EventsourceRoot node.");
+                //System.out.println("Created the enno server node under SubscriberClusterRoot node.");
             }
 
             //watch the enno server node
@@ -89,7 +92,7 @@ public class ZKAgent {
                         String nodeData = new String(zooKeeper.getData(ennoNodePath, this, null));
                         JSONArray jsonArray = JSONArray.fromObject(nodeData);
                         List<EventSourceConnectModel> connectModelList = (List<EventSourceConnectModel>) JSONArray.toCollection(jsonArray, EventSourceConnectModel.class);
-                        processSubscription(connectModelList);
+                        subscriberData = subscriptionEvent.process(subscriberId, connectModelList, subscriberData);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -100,37 +103,49 @@ public class ZKAgent {
         }
     }
 
-    private void processSubscription(List<EventSourceConnectModel> connectModelList) throws KeeperException, InterruptedException {
-        //compare new data to old data
-        List<EventSourceConnectModel> addData = new ArrayList<EventSourceConnectModel>(connectModelList);
-        List<EventSourceConnectModel> removeData = new ArrayList<EventSourceConnectModel>(subscriberData);
-        addData.removeAll(subscriberData);
-        removeData.removeAll(connectModelList);
-        //call enno server to add or remove subscription, return the process result
-        Map<String, List<EventSourceConnectModel>> map = subscriptionEvent.process(subscriberId, addData, removeData);
-
-        //add and remove enno node under eventsource node
-        List<EventSourceConnectModel> addEventsources = map.get("add");
-        List<EventSourceConnectModel> removeEventsources = map.get("remove");
-
-        subscriberData.addAll(addData);
-        subscriberData.removeAll(removeData);
-
-        for (EventSourceConnectModel es : addEventsources) {
-            if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, false) == null) {
-                zooKeeper.create(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-                System.out.println("Created the enno server node under event source node named " + es.getSourceId());
-            }
-            byte[] logContent = (subscriberId + "successfully subscribed the event source named " + es.getSourceId()).getBytes();
-            zooKeeper.create(zkSource.getEventLogRootName() + "/" + es.getSourceId() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+    public void CreateSubscriberNodeUnderEventSource(String eventSourceName) throws KeeperException, InterruptedException {
+        if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, false) == null) {
+            zooKeeper.create(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
         }
-        for (EventSourceConnectModel es : removeEventsources) {
-            if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, false) != null) {
-                zooKeeper.delete(zkSource.getEventSourceRootName() + "/" + es.getSourceId() + "/" + subscriberId, -1);
-                System.out.println("Removed the enno server node under event source node named " + es.getSourceId());
-            }
-            byte[] logContent = (subscriberId + "successfully unsubscribed the event source named " + es.getSourceId()).getBytes();
-            zooKeeper.create(zkSource.getEventLogRootName() + "/" + es.getSourceId() + "/ConnectLog", logContent, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+    }
+
+    public void DeleteSubscriberNodeUnderEventSource(String eventSourceName) throws KeeperException, InterruptedException {
+        if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, false) != null) {
+            zooKeeper.delete(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, -1);
         }
+    }
+
+    public void CreateSubscribeConnectLogNode(String eventSourceId, boolean isSuccess) throws KeeperException, InterruptedException {
+        byte[] logContent;
+        if (isSuccess) {
+            logContent = (subscriberId + " successfully subscribed the event source -- id: " + eventSourceId).getBytes();
+        } else {
+            logContent = (subscriberId + " failed subscribed the event source -- id: " + eventSourceId).getBytes();
+        }
+        EventLogData eventLogData = generateEventLogData(eventSourceId, isSuccess, "Create Subscription", new String(logContent));
+        JSONObject jsonObject = JSONObject.fromObject(eventLogData);
+        zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", jsonObject.toString().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+    }
+
+    public void CreateUnsubscribeConnectLogNode(String eventSourceId, boolean isSuccess) throws KeeperException, InterruptedException {
+        byte[] logContent;
+        if (isSuccess) {
+            logContent = (subscriberId + " successfully unsubscribed the event source -- id: " + eventSourceId).getBytes();
+        } else {
+            logContent = (subscriberId + " failed unsubscribed the event source -- id: " + eventSourceId).getBytes();
+        }
+        EventLogData eventLogData = generateEventLogData(eventSourceId, isSuccess, "Release Subscription", new String(logContent));
+        JSONObject jsonObject = JSONObject.fromObject(eventLogData);
+        zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", jsonObject.toString().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+    }
+
+    private EventLogData generateEventLogData(String eventSourceid, boolean result, String title, String message) {
+        EventLogData eventLogData = new EventLogData();
+        eventLogData.setSubscriberId(subscriberId);
+        eventLogData.setEventSourceId(eventSourceid);
+        eventLogData.setEventType(result ? EventType.Info : EventType.Error);
+        eventLogData.setMessage(message);
+        eventLogData.setTitle(title);
+        return eventLogData;
     }
 }
