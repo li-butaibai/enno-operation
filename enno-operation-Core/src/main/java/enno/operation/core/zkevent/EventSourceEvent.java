@@ -41,8 +41,10 @@ public class EventSourceEvent implements EventSourceListener {
                 session.delete(eventsourceSubscriberMapEntity);
             }
             for (SubscriberData subscriberData : eventSourceData.getSubscribers()) {
-                SubscriberEntity subscriberEntity = (SubscriberEntity)session.createQuery("from SubscriberEntity se " +
-                        "where se.dataStatus=1 and se.name = " + subscriberData.getSubscriberId()).uniqueResult();
+                String subHQL = "from SubscriberEntity se where se.dataStatus=1 and se.name  = :subName";
+                Query subQuery = session.createQuery(subHQL);
+                subQuery.setParameter("subName", subscriberData.getSubscriberId());
+                SubscriberEntity subscriberEntity = (SubscriberEntity)subQuery.uniqueResult();
                 EventsourceSubscriberMapEntity eventsourceSubscriberMapEntity = new EventsourceSubscriberMapEntity();
                 eventsourceSubscriberMapEntity.setEventsource(eventsourceEntity);
                 eventsourceSubscriberMapEntity.setSubscriber(subscriberEntity);

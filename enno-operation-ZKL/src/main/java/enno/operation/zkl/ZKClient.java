@@ -139,12 +139,12 @@ public class ZKClient {
             }
 
             //initialize the event source root node
-            if (zooKeeper.exists(zkSource.getEventLogRootName(), false) == null) {
-                zooKeeper.create(zkSource.getEventLogRootName(), zkSource.getEventLogRootName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            if (zooKeeper.exists(zkSource.getEventSourceRootName(), false) == null) {
+                zooKeeper.create(zkSource.getEventSourceRootName(), zkSource.getEventSourceRootName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
             //initialize the sub event source node
             for (final Map.Entry<String, String> eventSource : eventSourceList.entrySet()) {
-                String path = zkSource.getEventLogRootName() + "/" + eventSource.getKey();
+                String path = zkSource.getEventSourceRootName() + "/" + eventSource.getKey();
                 //create the sub event source node
                 boolean newEventSource = false;
                 if (zooKeeper.exists(path, false) == null) {
@@ -163,7 +163,9 @@ public class ZKClient {
                         }
                     }
                 }, null);
-                processEventSource(eventSource.getKey(), eventSourceChildrenNodes);
+                if(eventSourceChildrenNodes.size()>0) {
+                    processEventSource(eventSource.getKey(), eventSourceChildrenNodes);
+                }
             }
 
             //initialize the event log root node
