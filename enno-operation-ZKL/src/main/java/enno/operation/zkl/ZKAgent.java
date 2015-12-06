@@ -103,45 +103,45 @@ public class ZKAgent {
         }
     }
 
-    public void CreateSubscriberNodeUnderEventSource(String eventSourceName) throws KeeperException, InterruptedException {
-        if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, false) == null) {
-            zooKeeper.create(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+    public void CreateSubscriberNodeUnderEventSource(String subId, String eventSourceName) throws KeeperException, InterruptedException {
+        if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subId, false) == null) {
+            zooKeeper.create(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subId, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
         }
     }
 
-    public void DeleteSubscriberNodeUnderEventSource(String eventSourceName) throws KeeperException, InterruptedException {
-        if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, false) != null) {
-            zooKeeper.delete(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subscriberId, -1);
+    public void DeleteSubscriberNodeUnderEventSource(String subId, String eventSourceName) throws KeeperException, InterruptedException {
+        if (zooKeeper.exists(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subId, false) != null) {
+            zooKeeper.delete(zkSource.getEventSourceRootName() + "/" + eventSourceName + "/" + subId, -1);
         }
     }
 
-    public void CreateSubscribeConnectLogNode(String eventSourceId, boolean isSuccess) throws KeeperException, InterruptedException {
+    public void CreateSubscribeConnectLogNode(String subId, String eventSourceId, boolean isSuccess) throws KeeperException, InterruptedException {
         byte[] logContent;
         if (isSuccess) {
-            logContent = (subscriberId + " successfully subscribed the event source -- id: " + eventSourceId).getBytes();
+            logContent = (subId + " successfully subscribed the event source -- id: " + eventSourceId).getBytes();
         } else {
-            logContent = (subscriberId + " failed subscribed the event source -- id: " + eventSourceId).getBytes();
+            logContent = (subId + " failed subscribed the event source -- id: " + eventSourceId).getBytes();
         }
-        EventLogData eventLogData = generateEventLogData(eventSourceId, isSuccess, "Create Subscription", new String(logContent));
+        EventLogData eventLogData = generateEventLogData(subId, eventSourceId, isSuccess, "Create Subscription", new String(logContent));
         JSONObject jsonObject = JSONObject.fromObject(eventLogData);
         zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", jsonObject.toString().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
     }
 
-    public void CreateUnsubscribeConnectLogNode(String eventSourceId, boolean isSuccess) throws KeeperException, InterruptedException {
+    public void CreateUnsubscribeConnectLogNode(String subId, String eventSourceId, boolean isSuccess) throws KeeperException, InterruptedException {
         byte[] logContent;
         if (isSuccess) {
-            logContent = (subscriberId + " successfully unsubscribed the event source -- id: " + eventSourceId).getBytes();
+            logContent = (subId + " successfully unsubscribed the event source -- id: " + eventSourceId).getBytes();
         } else {
-            logContent = (subscriberId + " failed unsubscribed the event source -- id: " + eventSourceId).getBytes();
+            logContent = (subId + " failed unsubscribed the event source -- id: " + eventSourceId).getBytes();
         }
-        EventLogData eventLogData = generateEventLogData(eventSourceId, isSuccess, "Release Subscription", new String(logContent));
+        EventLogData eventLogData = generateEventLogData(subId, eventSourceId, isSuccess, "Release Subscription", new String(logContent));
         JSONObject jsonObject = JSONObject.fromObject(eventLogData);
         zooKeeper.create(zkSource.getEventLogRootName() + "/ConnectLog", jsonObject.toString().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
     }
 
-    private EventLogData generateEventLogData(String eventSourceid, boolean result, String title, String message) {
+    private EventLogData generateEventLogData(String subId, String eventSourceid, boolean result, String title, String message) {
         EventLogData eventLogData = new EventLogData();
-        eventLogData.setSubscriberId(subscriberId);
+        eventLogData.setSubscriberId(subId);
         eventLogData.setEventSourceId(eventSourceid);
         eventLogData.setEventType(result ? EventType.Info : EventType.Error);
         eventLogData.setMessage(message);

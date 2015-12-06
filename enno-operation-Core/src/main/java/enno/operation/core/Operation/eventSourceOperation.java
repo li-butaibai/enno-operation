@@ -188,7 +188,7 @@ public class eventSourceOperation {
             logEntity.setEventsource(es);
             logEntity.setLevel(Enum.Level.Info.ordinal());
             logEntity.setSubscriber(suber);
-            logEntity.setMessage(es.getSourceId() + "add subscription to " + suber.getName());
+            logEntity.setMessage(es.getSourceId() + " add subscription to " + suber.getName());
             logEntity.setTitle("Add Subscription");
             session.save(logEntity);
             tx.commit();
@@ -201,29 +201,29 @@ public class eventSourceOperation {
     public void RemoveEventsourceSubscription(int eventsourceId, int subscriberId) throws Exception {
         try (CloseableSession closeableSession = new CloseableSession(hibernateUtil.getSessionFactory().openSession())) {
             session = closeableSession.getSession();
-            Transaction tx = session.beginTransaction();
+            subOp = new subscriberOperation();
+            EventsourceEntity es = getEventSourceById(eventsourceId);
+            List<EventSourceConnectModel> connList = GetEventSourceConnectModels(subscriberId);
+            EventSourceConnectModel rmvItem = new EventSourceConnectModel();
+            for (EventSourceConnectModel item : connList){
+                if(item.getSourceId() == es.getSourceId()){
+                    rmvItem = item;
+                }
+            }
+            connList.remove(rmvItem);
+            SubscriberEntity suber = subOp.getSubscriberEntityById(subscriberId);
+
             ZKClient zkClient = zkUtil.getZkClient();
-            zkClient.setSubscriberData(String.valueOf(subscriberId), GetEventSourceConnectModels(subscriberId));
+            zkClient.setSubscriberData(suber.getName(), connList);
 
-            /*Query q = session.createQuery("from EventsourceSubscriberMapEntity m where m.eventsource.id = :EventsourceId and m.subscriber.id = :SubscriberId");
-            q.setParameter("EventsourceId", eventsourceId);
-            q.setParameter("SubscriberId", subscriberId);
-            List<EventsourceSubscriberMapEntity> MapEntities = q.list();
-            for (EventsourceSubscriberMapEntity MapEntity : MapEntities) {
-                session.delete(MapEntity);
-            }*/
-            EventsourceEntity es = new EventsourceEntity();
-            es = getEventSourceById(eventsourceId);
-            SubscriberEntity suber = new SubscriberEntity();
-            suber = subOp.getSubscriberEntityById(subscriberId);
-
+            Transaction tx = session.beginTransaction();
             EventLogEntity logEntity = new EventLogEntity();
             logEntity.setCreateTime(new Timestamp((new Date()).getTime()));
             logEntity.setEventsource(es);
             logEntity.setLevel(Enum.Level.Info.ordinal());
             logEntity.setSubscriber(suber);
-            logEntity.setMessage(es.getSourceId() + "cancels subscription to " + suber.getName());
-            logEntity.setTitle("Cancel Subscription");
+            logEntity.setMessage(es.getSourceId() + " remove subscription to " + suber.getName());
+            logEntity.setTitle("Remove Subscription");
             session.save(logEntity);
             tx.commit();
         } catch (Exception ex) {

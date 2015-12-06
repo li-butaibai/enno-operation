@@ -28,19 +28,19 @@ public class SubscriptionEvent implements SubscriptionListener {
         for (EventSourceConnectModel esc : addData) {
             boolean result = processSubscription();
             if (result) {
-                zkAgent.CreateSubscriberNodeUnderEventSource(esc.getSourceId());
+                zkAgent.CreateSubscriberNodeUnderEventSource(subscriberId, esc.getSourceId());
                 subscriberData.add(esc);
             }
-            zkAgent.CreateSubscribeConnectLogNode(esc.getSourceId(), result);
+            zkAgent.CreateSubscribeConnectLogNode(subscriberId, esc.getSourceId(), result);
         }
 
         for (EventSourceConnectModel esc : removeData) {
             boolean result = processSubscription();
             if (result) {
-                zkAgent.DeleteSubscriberNodeUnderEventSource(esc.getSourceId());
+                zkAgent.DeleteSubscriberNodeUnderEventSource(subscriberId, esc.getSourceId());
                 subscriberData.remove(esc);
             }
-            zkAgent.CreateUnsubscribeConnectLogNode(esc.getSourceId(), result);
+            zkAgent.CreateUnsubscribeConnectLogNode(subscriberId, esc.getSourceId(), result);
         }
 
         return subscriberData;
